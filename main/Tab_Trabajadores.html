@@ -4,60 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../styles/Register_Tab.css">
+    <link rel="stylesheet" href="../styles/Global.css">
 </head>
 <body>
+
+  <nav class="nav_menu">
+    <div class="menu-container">
+        <h2>pcDcoctor</h2>
+        <ul class="menu">
+            <li><a href="index.html">Inicio</a></li>
+
+            <li><a href="#">Formularios</a>
+                <ul class="sub_menu">
+                    <li><a href="#">Ingresar nuevo trabajador</a>
+                    <li><a href="#">Ingresar nuevo producto</a>
+                </ul>
+            </li>
+
+            <li><a href="#">Registros</a>
+                <ul class="sub_menu">
+                    <li><a href="Tab_Trabajadores.html">Registro de trabajdoes</a>
+                </ul>
+            </li>
+
+            <li><a href="#">Servicio de venta</a>
+                <ul class="sub_menu">
+                    <li><a href="#">Productos del local "La Esquina"</a>
+                    <li><a href="#">Productos del local "Doctor"</a>
+                </ul>
+            </li>
+
+            <li><a href="#">Almacen</a></li>
+
+
+        </ul>
+        
+    </div>
+
+</nav>
 
     <header class="header">
         <h1>Registro de trabajadores</h1>
     </header>
 
-    <main class="main_content">
-        <table class="table">
+    <div class="container">
+
+        <div class="table-header">
+            <h2>Trabajadores</h2>
+        </div>
+
+        <div class="search-area-container">
+            <div class="search-area">
+                <label for="search">Buscar:</label>
+                <input type="text" id="search" placeholder="Buscar aqui..">
+            </div>
+        </div>
+
+        <table>
             <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>CI</th>
-                  <th>Nombre de usuario</th>
-                  <th>Contraseña</th>
-                </tr>
-    
+              <tr>
+                <th> # </th>
+                <th>Nombre de Producto</th>
+                <th>Precio unitario</th>
+                <th>Cantidad</th>
+                <th>Calidad</th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Juan</td>
-                    <td>12345678</td>
-                    <td>User1</td>
-                    <td>password234</td>
-                </tr>
-    
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-    
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-    
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-    
+              <tr>
+                <td> 1 </td>
+                <td>Refresco de Limón</td>
+                <td> $12 </td>
+                <td> 2 </td>
+                <td>buena</td>
+              </tr>
+              <tr>
+                <td> 2 </td>
+                <td>Refresco de Toronja</td>
+                <td> $11 </td>
+                <td> 3 </td>
+                <td>buena</td>
+              </tr>
             </tbody>
-        </table>
+          </table>
     </main>
 
-    <footer class="footer">
-
-    </footer>
     
     
 </body>

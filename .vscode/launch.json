@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Open index.html",
-            "file": "d:\\MIS COSAS\\Escuela\\UNIV\\Progam_Web\\Proyecto\\index.html"
+            "file": "d:\\MIS COSAS\\Escuela\\UNIV\\Proyecto-Prog-web\\main\\index.html"
         }
     ]
 }
