@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <link rel="stylesheet" href="../styles/Forms.css">
+</head>
+<body>
+   <div class="wrapper">
+      <div class="title">Nuevo cliente:</div>
+      <form action="">
+        <div class="field">
+          <input type="text" name="nombre" maxlength="250" placeholder="Nombre">
+        </div>
+        <div class="field">
+          <input type="text" name="carnet" maxlength="11" required placeholder="Carnet">
+        </div>
+        <div class="field">
+          <input type="text" name="telefono" maxlength="11" required placeholder="Teléfono">
+        </div>
+        <div class="field">
+          <input type="text" name="direccion" maxlength="250" required placeholder="Dirección">
+        </div>
+        <div class="field">
+         <input type="text" name="cuenta" maxlength="20" required placeholder="Cuenta bancaria">
+        </div>
+        <div class="options">
+          <div class="enviar">
+            <input type="submit" value="Enviar" onclick="check()">
+          </div>
+          <div class="cancelar">
+            <input type="submit" value="Cancelar" onclick="">
+          </div>
+        </div>
+    </form>
+   </div>
+    <script src="../functions/Validations.js">
+      function check(){
+        validationNumbersWithAlert(cuenta)
+        validationNumbersWithAlert(telefono)
+        validationNumbersWithAlert(carnet)
+        validationLettersWithAlert(Nombre)
+      }
+    </script>
+</body>
+</html>
