@@ -9,41 +9,7 @@
 </head>
 <body> 
 
-    <nav class="nav_menu">
-        <div class="menu-container">
-            <h2>Web de pcDcoctor</h2>
-            <ul class="menu">
-                <li><a href="index.html">Inicio</a></li>
-
-                <li><a href="#">Formularios</a>
-                    <ul class="sub_menu">
-                        <li><a href="../forms/Form_Worker.html">Nuevo trabajador</a>
-                        <li><a href="../forms/Form_Product.html">Nuevo producto</a>
-                        <li><a href="../forms/Form_Store.html">Nuevo local</a>
-                    </ul>
-                </li>
-    
-                <li><a href="#">Registros</a>
-                    <ul class="sub_menu">
-                        <li><a href="Tab_Trabajadores.html">Trabajdoes</a>
-                    </ul>
-                </li>
-    
-                <li><a href="#">Servicio de venta</a>
-                    <ul class="sub_menu">
-                        <li><a href="#">Productos del local "La Esquina"</a>
-                        <li><a href="#">Productos del local "Doctor"</a>
-                    </ul>
-                </li>
-    
-                <li><a href="#">Almacen</a></li>
-    
-    
-            </ul>
-            
-        </div>
-    
-    </nav>
+    <div id="menu-nav"></div>
 
     <h1>Web con fines de organización para la mypime pcDcotor</h1>
 
@@ -75,6 +41,13 @@
         <span>Mypime pcDoctor</span>
         <span>Número: 59 47 24 31</span>
     </footer>
+
+    <script>
+        fetch('menu.html')
+        .then(response => response.text())
+        .then(data => document.getElementById('menu-nav').innerHTML = data);
+    </script>
+    
 
 </body>
 </html>

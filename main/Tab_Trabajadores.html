@@ -5,44 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../styles/Register_Tab.css">
-    <link rel="stylesheet" href="../styles/Global.css">
 </head>
 <body>
 
-  <nav class="nav_menu">
-    <div class="menu-container">
-        <h2>pcDcoctor</h2>
-        <ul class="menu">
-            <li><a href="index.html">Inicio</a></li>
-
-            <li><a href="#">Formularios</a>
-                <ul class="sub_menu">
-                    <li><a href="#">Ingresar nuevo trabajador</a>
-                    <li><a href="#">Ingresar nuevo producto</a>
-                </ul>
-            </li>
-
-            <li><a href="#">Registros</a>
-                <ul class="sub_menu">
-                    <li><a href="Tab_Trabajadores.html">Registro de trabajdoes</a>
-                </ul>
-            </li>
-
-            <li><a href="#">Servicio de venta</a>
-                <ul class="sub_menu">
-                    <li><a href="#">Productos del local "La Esquina"</a>
-                    <li><a href="#">Productos del local "Doctor"</a>
-                </ul>
-            </li>
-
-            <li><a href="#">Almacen</a></li>
-
-
-        </ul>
-        
-    </div>
-
-</nav>
+    <div id="menu-nav"></div>
 
     <header class="header">
         <h1>Registro de trabajadores</h1>
@@ -90,7 +56,11 @@
           </table>
     </main>
 
-    
+    <script>
+        fetch('menu.html')
+        .then(response => response.text())
+        .then(data => document.getElementById('menu-nav').innerHTML = data);
+    </script>
     
 </body>
 </html>
