@@ -1,3 +1,7 @@
+<?php
+include '../model/conect.php';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,28 +34,29 @@
         <table>
             <thead>
               <tr>
-                <th> # </th>
-                <th>Nombre de Producto</th>
-                <th>Precio unitario</th>
-                <th>Cantidad</th>
-                <th>Calidad</th>
+                <th>Nombre</th>
+                <th>Carnet</th>
+                <th>Rol</th>
+                <th>Salario</th>
+                <th>Accion</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td> 1 </td>
-                <td>Refresco de Limón</td>
-                <td> $12 </td>
-                <td> 2 </td>
-                <td>buena</td>
-              </tr>
-              <tr>
-                <td> 2 </td>
-                <td>Refresco de Toronja</td>
-                <td> $11 </td>
-                <td> 3 </td>
-                <td>buena</td>
-              </tr>
+
+            <?php
+              $sql = conect->query("SELECT * FROM trabajador");
+              while($datos =$sql->fetch_object()) { ?>
+                <tr>
+                 <td><?=$datos->id_local ?></td>
+                 <td><?=$datos->carnet ?></td>
+                 <td><?=$datos->rol ?></td>
+                 <td><?=$datos->salario ?></td>
+                 <td><?=$datos->id ?></td>
+                </tr>
+              <?php }
+              
+              ?>
+
             </tbody>
           </table>
     </main>
