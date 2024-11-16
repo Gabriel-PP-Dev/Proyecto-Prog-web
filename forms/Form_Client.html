@@ -9,38 +9,37 @@
 <body>
    <div class="wrapper">
       <div class="title">Nuevo cliente:</div>
-      <form action="">
+      <form action="" id="FormClient">
         <div class="field">
-          <input type="text" name="nombre" maxlength="250" placeholder="Nombre">
+          <input type="text" name="nombre" maxlength="250" placeholder="Nombre" id="nombre">
+          <p class ="error" id="nombreError">El nombre solo puede contener letras y espacios</p>
         </div>
         <div class="field">
-          <input type="text" name="carnet" maxlength="11" required placeholder="Carnet">
+          <input type="text" name="carnet" maxlength="11" required placeholder="Carnet" id="carnet">
+          <p class ="error" id="carnetError">El carnet solo puede contener números</p>
         </div>
         <div class="field">
-          <input type="text" name="telefono" maxlength="11" required placeholder="Teléfono">
+          <input type="text" name="telefono" maxlength="11" required placeholder="Teléfono" id="telefono">
+          <p class ="error" id="telefonoError">El teléfono solo puede contener números</p>
         </div>
         <div class="field">
-          <input type="text" name="direccion" maxlength="250" required placeholder="Dirección">
-        </div>
-        <div class="field">
-         <input type="text" name="cuenta" maxlength="20" required placeholder="Cuenta bancaria">
+          <input type="text" name="direccion" maxlength="250" required placeholder="Dirección" id="direccion">
+          <p class ="error" id="direccionError">La dirección solo puede contener números, letras, espacios, puntos y comas</p>
         </div>
         <div class="options">
           <div class="enviar">
-            <input type="submit" value="Enviar" onclick="check()">
+            <input type="submit" value="Enviar">
           </div>
           <div class="cancelar">
-            <input type="submit" value="Cancelar" onclick="">
+            <input type="button" value="Cancelar" onclick="toIndex()" >
           </div>
         </div>
     </form>
    </div>
-    <script src="../functions/Validations.js">
-      function check(){
-        validationNumbersWithAlert(cuenta)
-        validationNumbersWithAlert(telefono)
-        validationNumbersWithAlert(carnet)
-        validationLettersWithAlert(Nombre)
+    <script src="../forms_validations/Validation_Form_Client.js"></script>
+    <script>
+      function toIndex(){
+        window.location.href = "../main/index.html";
       }
     </script>
 </body>
