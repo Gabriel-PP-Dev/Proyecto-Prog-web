@@ -1,7 +1,3 @@
-<?php
-include '../model/conect.php';
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,6 +7,11 @@ include '../model/conect.php';
     <link rel="stylesheet" href="../styles/Register_Tab.css">
 </head>
 <body>
+
+    <?php
+    include_once ("conect.php");
+    cconection::conectionDB();
+    ?>
 
     <div id="menu-nav"></div>
 
@@ -42,20 +43,26 @@ include '../model/conect.php';
               </tr>
             </thead>
             <tbody>
-
-            <?php
-              $sql = conect->query("SELECT * FROM trabajador");
-              while($datos =$sql->fetch_object()) { ?>
-                <tr>
-                 <td><?=$datos->id_local ?></td>
-                 <td><?=$datos->carnet ?></td>
-                 <td><?=$datos->rol ?></td>
-                 <td><?=$datos->salario ?></td>
-                 <td><?=$datos->id ?></td>
-                </tr>
-              <?php }
               
-              ?>
+            <?php
+            $conect;
+             $sql = $conect->query("SELECT * FROM trabajador");
+             while($datos =$sql->fetch_object()){
+              $id_local = $datos->id_local;
+              $carnet = $datos->carnet;
+              $rol = $datos->rol;
+              $salario = $datos->salario;
+              $id = $datos->id;
+             }
+            ?>
+              
+              <tr>
+              <td><?=$id_local ?></td>
+              <td><?=$carnet ?></td>
+              <td><?=$rol ?></td>
+              <td><?=$salario ?></td>
+              <td><?=$id ?></td>
+              </tr>
 
             </tbody>
           </table>
