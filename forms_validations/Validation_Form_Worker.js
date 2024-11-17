@@ -4,7 +4,6 @@ const inputs = document.querySelectorAll("#FormWorker input");
 const regExp = {   //expresiones regulares
     re1: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, //letras y espacios
     re2: /^[0-9]+$/, //números
-    re3: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9.,]+$/ ,     //direccion
     re4: /^[0-9\s]+$/
 }
 
@@ -12,7 +11,6 @@ const fields = {
     nombre: false,
     carnet: false,
     telefono: false,
-    direccion: false,
     rol:false,
     salario:false,
 }
@@ -27,9 +25,6 @@ const validateForm = (e) => {
         break;
         case "telefono":
             validate(regExp.re2, e.target, "telefonoError");   
-        break;
-        case "direccion":
-            validate(regExp.re3, e.target, "direccionError"); 
         break;
         case "rol":
             validate(regExp.re1, e.target, "rolError"); 
@@ -61,7 +56,7 @@ inputs.forEach((input) => {
 
 form.addEventListener("submit", (e) =>{
     e.preventDefault();
-    if(fields.nombre && fields.carnet && fields.telefono && fields.direccion && fields.rol && fields.salario){
-        form.reset();
+    if(fields.nombre && fields.carnet && fields.telefono && fields.rol && fields.salario){
+        form.submit();
     }
 });

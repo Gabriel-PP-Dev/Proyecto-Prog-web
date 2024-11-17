@@ -3,7 +3,6 @@ const inputs = document.querySelectorAll("#FormStore input");
 
 const regExp = {   //expresiones regulares
     re1: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, //letras y espacios
-    re3: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9.,]+$/      //direccion
 }
 
 const fields = {
@@ -17,7 +16,7 @@ const validateForm = (e) => {
            validate(regExp.re1, e.target, "nombreError");
         break;
         case "direccion":
-            validate(regExp.re3, e.target, "direccionError"); 
+            validate(regExp.re1, e.target, "direccionError"); 
         break;
     }
  }
@@ -44,6 +43,6 @@ inputs.forEach((input) => {
 form.addEventListener("submit", (e) =>{
     e.preventDefault();
     if(fields.nombre && fields.direccion){
-        form.reset();
+        form.submit();
     }
 });

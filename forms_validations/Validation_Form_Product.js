@@ -48,6 +48,6 @@ inputs.forEach((input) => {
 form.addEventListener("submit", (e) =>{
     e.preventDefault();
     if(fields.nombre && fields.costo && fields.precio){
-        form.reset();
+        form.submit();
     }
 });

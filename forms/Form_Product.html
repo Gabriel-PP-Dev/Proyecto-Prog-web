@@ -9,17 +9,17 @@
 <body>
     <div class="wrapper">
       <div class="title">Nuevo producto:</div>
-        <form action="" id="FormProduct">
+        <form action="../forms_post/Product.php" id="FormProduct" method="post" enctype="multipart/form-data">
           <div class="field">
             <input type="text" name="nombre" maxlength="250" placeholder="Nombre" id="nombre">
             <p class ="error" id="nombreError">El nombre solo puede contener letras y espacios</p>
           </div>
           <div class="field">
-            <input type="text" name="costo" maxlength="11" required placeholder="Carnet" id="costo">
+            <input type="text" name="costo" maxlength="11" required placeholder="Costo" id="costo">
             <p class ="error" id="costoError">El costo solo puede contener números</p>
           </div>
           <div class="field">
-            <input type="text" name="precio" maxlength="11" required placeholder="Carnet" id="precio">
+            <input type="text" name="precio" maxlength="11" required placeholder="Precio" id="precio">
             <p class ="error" id="precioError">El precio solo puede contener números</p>
           </div>
           <div class="image">
