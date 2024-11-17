@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/Register_Tab.css">
+</head>
+<body>
+
+    <div id="menu-nav"></div>
+
+    <header class="header">
+        <h1>Registro del almacen</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="table-header">
+            <h2>Productos</h2>
+        </div>
+
+        <div class="search-area-container">
+            <div class="search-area">
+                <label for="search">Buscar:</label>
+                <input type="text" id="search" placeholder="Buscar aqui..">
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre de Producto</th>
+                    <th>Precio unitario</th>
+                    <th>Cantidad</th>
+                    <th>Costo</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Refresco de Limón</td>
+                    <td>$12</td>
+                    <td>2</td>
+                    <td>$7</td>
+                    <td><button title="Mover a tienda">Mover a tienda</button></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Refresco de Toronja</td>
+                    <td>$11</td>
+                    <td>3</td>
+                    <td>$9</td>
+                    <td><button title="Mover a tienda">Mover a tienda</button></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
+    </main>
+
+    <script>
+        fetch('menu.html')
+        .then(response => response.text())
+        .then(data => document.getElementById('menu-nav').innerHTML = data);
+    </script>
+    
+</body>
+</html>
