@@ -2,7 +2,7 @@
     $host = "localhost";
     $dtb_name = "PCDoctor";
     $user = "postgres";
-    $password = "corazoncito*2024";
+    $password = "pg";
     
     try{
         $conn = new PDO("pgsql:host=$host; dbname=$dtb_name", $user, $password);
@@ -20,8 +20,6 @@
         $query = "INSERT INTO local(nombre, direccion) VALUES($nombre, $direccion)";
         $stmt = $conn->prepare($query);
         $stmt->execute();
-        echo $nombre;
-        echo $direccion;
     }catch(PDOException $exp){
         echo("No se pudo conectar, $exp");
     }

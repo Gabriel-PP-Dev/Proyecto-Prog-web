@@ -39,11 +39,11 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         <div class="search-area-container">
             <div class="search-area">
                 <label for="search">Buscar:</label>
-                <input type="text" id="search" placeholder="Buscar aquí..">
+                <input type="text" id="search" placeholder="Buscar aqui.." oninput="filterTable()">
             </div>
         </div>
 
-        <table>
+        <table id="productTable">
             <thead>
               <tr>
                 <th>#</th>
@@ -81,6 +81,30 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         fetch('menu.html')
         .then(response => response.text())
         .then(data => document.getElementById('menu-nav').innerHTML = data);
+
+        function filterTable() {
+            const input = document.getElementById("search");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("productTable");
+            const trs = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < trs.length; i++) {
+                const tds = trs[i].getElementsByTagName("td");
+                let rowContainsText = false;
+
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        const cellText = tds[j].textContent || tds[j].innerText;
+                        if (cellText.toLowerCase().indexOf(filter) > -1) {
+                            rowContainsText = true;
+                            break;
+                        }
+                    }
+                }
+
+                trs[i].style.display = rowContainsText ? "" : "none";
+            }
+        }
     </script>
     
 </body>

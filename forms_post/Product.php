@@ -2,7 +2,7 @@
   $host = "localhost";
   $dtb_name = "PCDoctor";
   $user = "postgres";
-  $password = "corazoncito*2024";
+  $password = "pg";
   
   try{
       $conn = new PDO("pgsql:host=$host; dbname=$dtb_name", $user, $password);
@@ -11,10 +11,10 @@
       $fileName = $_FILES['imagen'] ['name'];
       $fileTempPath = $_FILES['imagen'] ['tmp_name'];
       //definir la carpeta de almacenamiento de la imagen
-      $uploadFileDir = '../images_user/';
+      $uploadFileDir = '../imgDeProductos/';
       $destPath = $uploadFileDir . basename($fileName);
       if(move_uploaded_file($fileTempPath, $destPath)){
-      $urImage = "images_user/" . basename( $fileName); //almacenamiento en la base de datos
+      $urImage = "http://localhost/Main-Branch/Proyecto-Prog-web/imgDeProductos/" . basename( $fileName); //almacenamiento en la base de datos
       //obtener el nombre del formulario(protección contre inyecciones SQL)
       $nombre = $_POST["nombre"];
       $costo = $_POST["costo"];

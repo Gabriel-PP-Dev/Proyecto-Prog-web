@@ -57,7 +57,7 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                           <td><?php echo htmlspecialchars($row['direccion']); ?></td>
                           <td><?php echo htmlspecialchars($row['nombre']); ?></td>
                           <td>
-                          <a href="../model/eliminarL.php?carnet=<?php echo ($row['nombre']); ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este local?');">Eliminar Local</a>
+                          <a href="../model/eliminarL.php?nombre=<?php echo ($row['nombre']); ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este local?');">Eliminar Local</a>
                           </td>
                             
                       </tr>
