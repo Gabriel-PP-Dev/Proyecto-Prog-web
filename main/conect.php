@@ -1,30 +1,19 @@
 <?php
 
-class cconection {
+$host = "localhost";
+$port = "5432";
+$dbname = "PCDoctor";
+$user = "postgres";
+$password = "postgreMi@";
 
-    public static function conectionDB(){
 
-        $host = "localhost";
-        $dtbname = "newP";
-        $user = "postgres";
-        $password = "postgreMi@";
+$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
-        try {
-            $conn = new PDO ("pgsql:host=$host; dbname=$dtbname", $user, $password);
-            echo "Se conecta correctamente la base de datos";
-        }
-        catch (PDOException $exp){
-            echo ("No se pudo conectar, $exp");
-        }
-
-        return $conn;
-
-    }
-    
-
+// Verificar conexión
+if (!$conn) {
+    die("Error en la conexión a la base de datos.");
+} else {
+    // Si la conexión es exitosa, imprime un mensaje en la consola
+    echo "<script>console.log('Conexión exitosa a la base de datos.');</script>";
 }
-
-$query = "SELECT * FROM trabajadores";
-$consulta = pg_query(conectionDB, $query);
-
 ?>

@@ -3,18 +3,10 @@
 include 'conect.php';
 
 $sql = "SELECT 
-    t.carnet,
-    l.nombre,
-    t.nombre,
-    t.telefono,
-    t.rol,
-    t.salario
+    direccion,
+    nombre
 FROM 
-    Trabajador t
-JOIN 
-    Local l ON t.id_local = l.id
-WHERE 
-    t.id_local = l.id";
+    Local";
 $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
 ?>
 
@@ -31,13 +23,13 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
     <div id="menu-nav"></div>
 
     <header class="header">
-        <h1>Registro de trabajadores</h1>
+        <h1>Registro de locales</h1>
     </header>
 
     <div class="container">
 
         <div class="table-header">
-            <h2>Trabajadores</h2>
+            <h2>Locales</h2>
         </div>
 
         <div class="search-area-container">
@@ -51,11 +43,8 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
             <thead>
               <tr>
                 <th>#</th>
-                <th>Carnet</th>
+                <th>Direccion</th>
                 <th>Nombre</th>
-                <th>Telefono</th>
-                <th>Cargo</th>
-                <th>Salario</th>
                 <th>Accion</th>
               </tr>
             </thead>
@@ -65,22 +54,17 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                   <?php while ($row = pg_fetch_assoc($result)): ?>
                       <tr>
                           <td><?php echo $index++; ?></td>
-                          <td><?php echo htmlspecialchars($row['carnet']); ?></td>
+                          <td><?php echo htmlspecialchars($row['direccion']); ?></td>
                           <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-                          <td><?php echo htmlspecialchars($row['telefono']); ?></td>
-                          <td><?php echo htmlspecialchars($row['rol']); ?></td>
-                          <td><?php echo htmlspecialchars($row['salario']); ?></td>
                           <td>
-                              <a href="editar.php?carnet=<?php echo urlencode($row['carnet']); ?>" class="btn-edit">Editar</a>
-
-                              <a href="../model/eliminarT.php?carnet=<?php echo ($row['carnet']); ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este trabajador?');">Eliminar Trabajador</a>
+                          <a href="../model/eliminarL.php?carnet=<?php echo ($row['nombre']); ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este local?');">Eliminar Local</a>
                           </td>
                             
                       </tr>
                   <?php endwhile; ?>
               <?php else: ?>
                   <tr>
-                      <td colspan="5">No se encontraron trabajadores.</td>
+                      <td colspan="5">No se encontraron locales.</td>
                   </tr>
               <?php endif; ?>
             </tbody>
