@@ -1,4 +1,4 @@
-Estefany:
+﻿Estefany:
 	Agregar a los formularios el menú de navegación
 	Terminar los formularios
 	Validar los campos del formulario
@@ -6,9 +6,8 @@ Estefany:
 	Base de datos. Agregar "cantidad" a producto_almacen
 	Arreglar pantalla en blanco en los formularios
 Pupo:
-	Terminar la vista de cervicios de venta
 	Arreglar el buscador de local
-	Arreglar los eliminar
+                Terminar los editar de las tablas
 	Crear un nuevo botn en ventas de producto que redirija al formulario de ventas
 Davi:
 	terminar de conectaer el mover de producto dl almacen cuando se termine lo de la base de datos

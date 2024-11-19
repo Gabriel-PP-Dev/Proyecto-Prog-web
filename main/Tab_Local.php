@@ -4,7 +4,8 @@ include 'conect.php';
 
 $sql = "SELECT 
     direccion,
-    nombre
+    nombre,
+    id
 FROM 
     Local";
 $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
@@ -45,6 +46,7 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                 <th>#</th>
                 <th>Direccion</th>
                 <th>Nombre</th>
+                <th>ID</th>
                 <th>Accion</th>
               </tr>
             </thead>
@@ -56,8 +58,10 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                           <td><?php echo $index++; ?></td>
                           <td><?php echo htmlspecialchars($row['direccion']); ?></td>
                           <td><?php echo htmlspecialchars($row['nombre']); ?></td>
+                          <td><?php echo htmlspecialchars($row['id']); ?></td>
                           <td>
-                          <a href="../model/eliminarL.php?nombre=<?php echo ($row['nombre']); ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este local?');">Eliminar Local</a>
+
+                          <button class="btn-remov" onclick="eliminarL(<?php echo $row['id']; ?>)">Eliminar</button>
                           </td>
                             
                       </tr>
@@ -75,6 +79,22 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         fetch('menu.html')
         .then(response => response.text())
         .then(data => document.getElementById('menu-nav').innerHTML = data);
+
+        function eliminarL(id) {
+    if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+        fetch(`../model/eliminarL.php?id=${id}`, {
+            method: 'GET'
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error al eliminar el producto:', error);
+        });
+    }
+}
     </script>
     
 </body>

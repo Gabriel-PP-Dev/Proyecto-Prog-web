@@ -73,7 +73,7 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                           <td>
                               <a href="editar.php?carnet=<?php echo urlencode($row['carnet']); ?>" class="btn-edit">Editar</a>
 
-                              <a href="../model/eliminarT.php?carnet=<?php echo ($row['carnet']); ?>" onclick="return confirm('¿Estás seguro de que deseas eliminar este trabajador?');">Eliminar Trabajador</a>
+                              <button class="btn-remov" onclick="eliminarTrabajador(<?php echo $row['telefono']; ?>)">Eliminar</button>
                           </td>
                             
                       </tr>
@@ -91,6 +91,22 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         fetch('menu.html')
         .then(response => response.text())
         .then(data => document.getElementById('menu-nav').innerHTML = data);
+
+        function eliminarTrabajador(telefono) {
+    if (confirm("¿Estás seguro de que deseas eliminar?")) {
+        fetch(`../model/eliminarT.php?telefono=${telefono}`, {
+            method: 'GET'
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data); // Muestra el mensaje de éxito o error
+            location.reload(); // Recarga la tabla para actualizar la lista de productos
+        })
+        .catch(error => {
+            console.error('Error al eliminar:', error);
+        });
+    }
+}
     </script>
     
 </body>

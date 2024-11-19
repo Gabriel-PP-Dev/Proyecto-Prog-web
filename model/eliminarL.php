@@ -1,28 +1,25 @@
 <?php
 include '../main/conect.php';
 
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = intval($_GET['id']);
 
-if (isset($_GET['nombre'])) {
-    $carnet = $_GET['nombre'];
+    $sqlCheck = "SELECT * FROM Local WHERE id = $1";
+    $resultCheck = pg_query_params($conn, $sqlCheck, array($id));
 
-
-    $sql = "DELETE FROM local WHERE nombre = $1";
-    $result = pg_query_params($conn, $sql, array($nombre));
-
-    if ($result) {
-
-        header("Location: ../main/Tab_Local.php?mensaje=Local eliminado con éxito");
-        exit();
-    } else {
-
-        header("Location: ../main/Tab_Local.php?mensaje=Error al eliminar");
-        exit();
-    }
+if (pg_num_rows($resultCheck) > 0) {
+    
 } else {
-
-    header("Location: ../main/Tab_Local.php?mensaje=Nombre no proporcionado");
-    exit();
+    echo "No se encontró un trabajador con ese ID.";
 }
 
-pg_close($conn);
+    // Proceder con la eliminación
+
+    $sql = "DELETE FROM Local WHERE id = $1"; 
+    $result = pg_query_params($conn, $sql, array($id));
+
+} else {
+    echo "ID de producto no válido.";
+}
+
 ?>

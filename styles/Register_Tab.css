@@ -75,8 +75,36 @@ table {
     color: black;
   }
 
+  .btn-vend {
+    color: white;
+    background-color: rgb(0, 158, 21);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+
+  .btn-edit {
+    color: white;
+    background-color: rgb(117, 0, 128);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+
+  .btn-remov {
+    color: white;
+    background-color: rgb(177, 0, 0);
+    text-decoration: solid;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+
   /*Selector*/
   
   tr:hover {
     background-color:  rgba(177, 92, 211, 0.295);
   }
+

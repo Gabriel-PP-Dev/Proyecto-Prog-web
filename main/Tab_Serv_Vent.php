@@ -3,17 +3,17 @@
 include 'conect.php';
 
 $sql = "SELECT 
-    p.id_producto,
+    sv.carnet_cliente,
+    sv.carnet_trabajador,
     pa.nombre AS nombre_producto,
-    l.nombre
+    l.nombre AS nombre_local,
+    sv.id
 FROM 
-    producto_local p
+    servicio_venta sv
 JOIN 
-    Local l ON p.id_local = l.id
-JOIN
-    producto_almacen pa ON pa.id = p.id_producto
-WHERE 
-    p.id_local = l.id";
+    producto_almacen pa ON sv.id_producto = pa.id
+JOIN 
+    local l ON sv.id_local = l.id";
 $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
 ?>
 
@@ -30,29 +30,31 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
     <div id="menu-nav"></div>
 
     <header class="header">
-        <h1>Productos para venta</h1>
+        <h1>Registro de ventas</h1>
     </header>
 
     <div class="container">
 
         <div class="table-header">
-            <h2>Productos</h2>
+            <h2>Ventas</h2>
         </div>
 
         <div class="search-area-container">
             <div class="search-area">
                 <label for="search">Buscar:</label>
-                <input type="text" id="search" placeholder="Buscar aqui.." oninput="filterTable()">
+                <input type="text" id="search" placeholder="Buscar aquí..">
             </div>
         </div>
 
-        <table id="productTable">
+        <table>
             <thead>
               <tr>
-                <th>#</th>
-                <th>ID</th>
+                
+                <th>Carnet cliente</th>
+                <th>Carnet trabajador</th>
                 <th>Nombre</th>
                 <th>Local</th>
+                <th>Serial</th>
                 <th>Accion</th>
               </tr>
             </thead>
@@ -61,21 +63,23 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                   <?php $index = 1; ?>
                   <?php while ($row = pg_fetch_assoc($result)): ?>
                       <tr>
-                          <td><?php echo $index++; ?></td>
-                          <td><?php echo htmlspecialchars($row['id_producto']); ?></td>
+                          
+                          <td><?php echo htmlspecialchars($row['carnet_cliente']); ?></td>
+                          <td><?php echo htmlspecialchars($row['carnet_trabajador']); ?></td>
                           <td><?php echo htmlspecialchars($row['nombre_producto']); ?></td>
-                          <td><?php echo htmlspecialchars($row['nombre']); ?></td>
+                          <td><?php echo htmlspecialchars($row['nombre_local']); ?></td>
+                          <td><?php echo htmlspecialchars($row['id']); ?></td>
                           <td>
-                          <a href="#" class="btn-vend" >Vender</a>
+                            
+                            <button class="btn-remov" onclick="eliminarProducto(<?php echo $row['id']; ?>)">Eliminar</button>
 
-                          <button class="btn-remov" onclick="eliminarProducto(<?php echo $row['id_producto']; ?>)">Eliminar</button>
-                          </td>
+                           </td>
                             
                       </tr>
                   <?php endwhile; ?>
               <?php else: ?>
                   <tr>
-                      <td colspan="5">No se encontraron productos.</td>
+                      <td colspan="5">No se encontraron ventas.</td>
                   </tr>
               <?php endif; ?>
             </tbody>
@@ -87,9 +91,9 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         .then(response => response.text())
         .then(data => document.getElementById('menu-nav').innerHTML = data);
 
-        function eliminarProducto(id_producto) {
+        function eliminarProducto(id) {
     if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-        fetch(`../model/eliminarP.php?id_producto=${id_producto}`, {
+        fetch(`../model/eliminarSV.php?id=${id}`, {
             method: 'GET'
         })
         .then(response => response.text())
@@ -102,6 +106,8 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         });
     }
 }
+
+
     </script>
     
 </body>
