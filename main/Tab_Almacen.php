@@ -1,6 +1,6 @@
 <?php
 // Incluir el archivo de conexión
-include 'conexion.php';
+include 'conect.php';
 
 // Consulta SQL para obtener todos los productos
 $query = "SELECT 

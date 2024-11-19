@@ -1,6 +1,6 @@
 <?php
 // Incluir el archivo de conexión
-include 'conexion.php';
+include 'conect.php';
 
 // Verificar si se ha recibido un ID
 if (!isset($_GET['id'])) {
@@ -30,7 +30,7 @@ $producto = pg_fetch_assoc($result);
     <link rel="stylesheet" href="../styles/Forms.css" />
 </head>
 <body>
-
+<div id="menu-nav"></div>
 <div class="wrapper">
     <div class="title">Mover producto desde almacen a tienda:</div>
     <form action="procesar_mover_producto.php" method="post">
@@ -132,6 +132,12 @@ $producto = pg_fetch_assoc($result);
     }
 </style>
 
+<script>
+        fetch('menu.html')
+        .then(response => response.text())
+        .then(data => document.getElementById('menu-nav').innerHTML = data);
+    </script>
+    
 </body>
 </html>
 
