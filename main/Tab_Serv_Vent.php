@@ -11,7 +11,7 @@ $sql = "SELECT
 FROM 
     servicio_venta sv
 JOIN 
-    prodcuto_almacen pa ON sv.id_producto = pa.id
+    producto_almacen pa ON sv.id_producto = pa.id
 JOIN 
     local l ON sv.id_local = l.id";
 $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta

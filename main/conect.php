@@ -2,9 +2,9 @@
 
 $host = "localhost";
 $port = "5432";
-$dbname = "PCDoctorF";
+$dbname = "PCDoctor";
 $user = "postgres";
-$password = "postgreMi@";
+$password = "pg";
 
 
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");

@@ -8,11 +8,11 @@ $sql = "SELECT
     l.nombre,
     p.cantidad
 FROM 
-    prodcuto_local p
+    producto_local p
 JOIN 
     Local l ON p.id_local = l.id
 JOIN
-    prodcuto_almacen pa ON pa.id = p.id_producto
+    producto_almacen pa ON pa.id = p.id_producto
 WHERE 
     p.id_local = l.id";
 $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta

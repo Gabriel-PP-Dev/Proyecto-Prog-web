@@ -10,7 +10,7 @@ if (!isset($_GET['id'])) {
 $id_producto = intval($_GET['id']);
 
 // Consulta SQL para obtener los datos del producto
-$query = "SELECT * FROM producto_almacen WHERE id = $id_producto";
+$query = "SELECT * FROM public.producto_almacen WHERE id = $id_producto";
 $result = pg_query($conn, $query);
 
 // Verificar si se encontró el producto
@@ -136,7 +136,7 @@ $producto = pg_fetch_assoc($result);
         fetch('menu.html')
         .then(response => response.text())
         .then(data => document.getElementById('menu-nav').innerHTML = data);
-    </script>
+</script>
     
 </body>
 </html>
