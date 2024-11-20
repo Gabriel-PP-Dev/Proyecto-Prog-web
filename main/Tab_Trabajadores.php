@@ -43,11 +43,11 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         <div class="search-area-container">
             <div class="search-area">
                 <label for="search">Buscar:</label>
-                <input type="text" id="search" placeholder="Buscar aquí..">
+                <input type="text" id="search" placeholder="Buscar aqui.." oninput="filterTable()">
             </div>
         </div>
 
-        <table>
+        <table id="workerTable">
             <thead>
               <tr>
                 <th>#</th>
@@ -71,7 +71,7 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                           <td><?php echo htmlspecialchars($row['rol']); ?></td>
                           <td><?php echo htmlspecialchars($row['salario']); ?></td>
                           <td>
-                              <a href="editar.php?carnet=<?php echo urlencode($row['carnet']); ?>" class="btn-edit">Editar</a>
+                              <a href="editarT.php?carnet=<?php echo urlencode($row['carnet']); ?>" class="btn-edit">Editar</a>
 
                               <button class="btn-remov" onclick="eliminarTrabajador(<?php echo $row['telefono']; ?>)">Eliminar</button>
                           </td>
@@ -107,6 +107,30 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         });
     }
 }
+
+            function filterTable() {
+            const input = document.getElementById("search");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("workerTable");
+            const trs = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < trs.length; i++) {
+                const tds = trs[i].getElementsByTagName("td");
+                let rowContainsText = false;
+
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        const cellText = tds[j].textContent || tds[j].innerText;
+                        if (cellText.toLowerCase().indexOf(filter) > -1) {
+                            rowContainsText = true;
+                            break;
+                        }
+                    }
+                }
+
+                trs[i].style.display = rowContainsText ? "" : "none";
+            }
+        }
     </script>
     
 </body>

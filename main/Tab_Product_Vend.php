@@ -5,13 +5,14 @@ include 'conect.php';
 $sql = "SELECT 
     p.id_producto,
     pa.nombre AS nombre_producto,
-    l.nombre
+    l.nombre,
+    p.cantidad
 FROM 
-    producto_local p
+    prodcuto_local p
 JOIN 
     Local l ON p.id_local = l.id
 JOIN
-    producto_almacen pa ON pa.id = p.id_producto
+    prodcuto_almacen pa ON pa.id = p.id_producto
 WHERE 
     p.id_local = l.id";
 $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
@@ -49,10 +50,10 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         <table id="productTable">
             <thead>
               <tr>
-                <th>#</th>
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Local</th>
+                <th>Cantidad</th>
                 <th>Accion</th>
               </tr>
             </thead>
@@ -61,12 +62,13 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                   <?php $index = 1; ?>
                   <?php while ($row = pg_fetch_assoc($result)): ?>
                       <tr>
-                          <td><?php echo $index++; ?></td>
+                    
                           <td><?php echo htmlspecialchars($row['id_producto']); ?></td>
                           <td><?php echo htmlspecialchars($row['nombre_producto']); ?></td>
                           <td><?php echo htmlspecialchars($row['nombre']); ?></td>
+                          <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
                           <td>
-                          <a href="#" class="btn-vend" >Vender</a>
+                          <button class="btn-vend" onclick=""></button>
 
                           <button class="btn-remov" onclick="eliminarProducto(<?php echo $row['id_producto']; ?>)">Eliminar</button>
                           </td>
@@ -102,6 +104,30 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
         });
     }
 }
+
+            function filterTable() {
+            const input = document.getElementById("search");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("productTable");
+            const trs = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < trs.length; i++) {
+                const tds = trs[i].getElementsByTagName("td");
+                let rowContainsText = false;
+
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        const cellText = tds[j].textContent || tds[j].innerText;
+                        if (cellText.toLowerCase().indexOf(filter) > -1) {
+                            rowContainsText = true;
+                            break;
+                        }
+                    }
+                }
+
+                trs[i].style.display = rowContainsText ? "" : "none";
+            }
+        }
     </script>
     
 </body>
