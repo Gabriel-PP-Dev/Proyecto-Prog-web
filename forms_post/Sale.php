@@ -5,8 +5,8 @@
         $conn = new PDO("pgsql:host=$host; dbname=$dbname", $user, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //manejar excepciones
         //verificar que el trabajador y el producto pertenezcan al mismo local
-        $idtrabajador= (string)$_POST["idTrabajador"];
-        $idproducto = intval($_POST["idProducto"]);
+        $idtrabajador= $_POST["idTrabajador"];
+        $idproducto = ($_POST["idProducto"]);
         $query = "SELECT pl.id_local AS idLocal
               FROM local l1
               INNER JOIN producto_local pl ON l1.id = pl.id_local
@@ -17,8 +17,8 @@
        $stmt = $conn->prepare($query);
     
         // Asignar los valores de los parámetros
-       $stmt->bindParam(':idProducto', $idproducto);
-       $stmt->bindParam(':idTrabajador', $idtrabajador);
+       $stmt->bindParam(':idProducto', $idproducto, PDO::PARAM_INT);
+       $stmt->bindParam(':idTrabajador', $idtrabajador, PDO::PARAM_STR);
        // Ejecutar la consulta
        $stmt->execute();
        // Obtener los resultados de la consulta
@@ -27,16 +27,13 @@
         if ($result) {
              $idLocalProducto = $result['idLocal'];
              //pprotección contre inyecciones SQL
-             $cantidad = $_POST["cantidad"];
              $carnetUsuario = $_POST["carnet"];
              //escapar caracteres especiales del html
-             $cantidad = htmlspecialchars($cantidad); 
              $carnetUsuario = htmlspecialchars($carnetUsuario);
              $idtrabajador = htmlspecialchars($idtrabajador); 
              $idproducto = htmlspecialchars($idproducto);
              $idlocal = htmlspecialchars($idLocalProducto);
              //escapar para sql
-             $cantidad =  $conn->quote($cantidad); 
              $carnetUsuario = $conn->quote($carnetUsuario);
              $idtrabajador =  $conn->quote($idtrabajador); 
              $idproducto = $conn->quote($idproducto);

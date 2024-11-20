@@ -7,16 +7,12 @@ const regExp = {   //expresiones regulares
 
 const fields = {
     carnet: false,
-    cantidad: false
 }
 
 const validateForm = (e) => {
     switch(e.target.name){
         case "carnet":
            validate(regExp.re1, e.target, "carnetError");
-        break;
-        case "cantidad":
-            validate(regExp.re1, e.target, "cantidadError"); 
         break;
     }
  }
@@ -42,7 +38,7 @@ inputs.forEach((input) => {
 
 form.addEventListener("submit", (e) =>{
     e.preventDefault();
-    if(fields.cantidad && fields.carnet){
+    if(fields.carnet){
         form.submit();
     }
 });
