@@ -1,36 +1,22 @@
-const form = document.getElementById("FormWorker");
-const inputs = document.querySelectorAll("#FormWorker input");
+const form = document.getElementById("FormSale");
+const inputs = document.querySelectorAll("#FormSale input");
 
 const regExp = {   //expresiones regulares
-    re1: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, //letras y espacios
-    re2: /^[0-9]+$/, //números
-    re3: /^\d*(\.\d+)?$/, //números y punto
+    re1: /^[0-9]+$/, //números
 }
 
 const fields = {
-    nombre: false,
     carnet: false,
-    telefono: false,
-    rol:false,
-    salario:false,
+    cantidad: false
 }
 
 const validateForm = (e) => {
     switch(e.target.name){
-        case "nombre":
-           validate(regExp.re1, e.target, "nombreError");
-        break;
         case "carnet":
-            validate(regExp.re2, e.target, "carnetError");
+           validate(regExp.re1, e.target, "carnetError");
         break;
-        case "telefono":
-            validate(regExp.re2, e.target, "telefonoError");   
-        break;
-        case "rol":
-            validate(regExp.re1, e.target, "rolError"); 
-        break;
-        case "salario":
-            validate(regExp.re3, e.target, "salarioError"); 
+        case "cantidad":
+            validate(regExp.re1, e.target, "cantidadError"); 
         break;
     }
  }
@@ -56,7 +42,7 @@ inputs.forEach((input) => {
 
 form.addEventListener("submit", (e) =>{
     e.preventDefault();
-    if(fields.nombre && fields.carnet && fields.telefono && fields.rol && fields.salario){
+    if(fields.cantidad && fields.carnet){
         form.submit();
     }
 });

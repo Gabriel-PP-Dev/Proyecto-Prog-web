@@ -1,11 +1,8 @@
 <?php
-    $host = "localhost";
-    $dtb_name = "PCDoctor";
-    $user = "postgres";
-    $password = "pg";
+    include '../main/conect.php';
     
     try{
-        $conn = new PDO("pgsql:host=$host; dbname=$dtb_name", $user, $password);
+        $conn = new PDO("pgsql:host=$host; dbname=$dbname", $user, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //manejar excepciones
         //obtener el nombre del formulario(protección contre inyecciones SQL)
         $nombre = $_POST["nombre"];
@@ -20,6 +17,9 @@
         $query = "INSERT INTO local(nombre, direccion) VALUES($nombre, $direccion)";
         $stmt = $conn->prepare($query);
         $stmt->execute();
+        $conn=null; //cerrar la conexión
+        header("Location: ../main/index.html");
+        exit();
     }catch(PDOException $exp){
         echo("No se pudo conectar, $exp");
     }
