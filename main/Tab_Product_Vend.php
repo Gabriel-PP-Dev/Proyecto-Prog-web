@@ -68,8 +68,6 @@ $result = pg_query($conn, $sql); // Usar pg_query() para ejecutar la consulta
                           <td><?php echo htmlspecialchars($row['nombre']); ?></td>
                           <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
                           <td>
-                          <button class="btn-vend" onclick=""></button>
-
                           <button class="btn-remov" onclick="eliminarProducto(<?php echo $row['id_producto']; ?>)">Eliminar</button>
                           </td>
                             
