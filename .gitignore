@@ -1,0 +1,5 @@
+# Ignorar la carpeta de módulos de Node
+node_modules/
+
+# Ignorar el archivo yarn.lock
+yarn.lock
