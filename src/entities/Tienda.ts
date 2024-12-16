@@ -21,6 +21,4 @@ export class Tienda {
   @OneToMany(() => TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.tienda)
   tiendaProductoPrecios!: TiendaProductoPrecio[]; // Relación con la tabla de unión
 
-  @OneToMany(() => Venta, venta => venta.tienda)
-  ventas!: Venta[]; // Relación con la entidad Venta
 }

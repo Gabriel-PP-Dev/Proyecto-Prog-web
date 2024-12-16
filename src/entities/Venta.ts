@@ -8,7 +8,7 @@ export class Venta {
   @PrimaryGeneratedColumn()
   id_venta!: number; // ID de la venta
 
-  @ManyToOne(() => Tienda, tienda => tienda.ventas)
+  @ManyToOne(() => TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.ventas)
   tienda!: Tienda; // Relación con la entidad Tienda
 
   @ManyToOne(() => TiendaProductoPrecio, producto_precio => producto_precio.ventas)
