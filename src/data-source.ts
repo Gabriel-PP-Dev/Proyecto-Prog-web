@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
     host: "localhost",
     port: 5432,
     username: "postgres", // Cambia esto por tu usuario
-    password: "postgreMi@", // Cambia esto por tu contraseña
+    password: "pg", // Cambia esto por tu contraseña
     database: "WebPCDoctor", // Cambia esto por el nombre de tu base de datos
     synchronize: true, // Solo para desarrollo
     logging: false,

@@ -1,6 +1,7 @@
 import express from 'express';
 import { AppDataSource } from './data-source'; // Importa la configuración de la base de datos
-import { Usuario } from './entities/Usuario'; // Importa la entidad Usuario
+import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuario
+import tiendaRoutes from "./rutes/tiendaRoutes";
 
 const app = express();
 app.use(express.json());
@@ -10,12 +11,10 @@ AppDataSource.initialize()
     .then(() => {
         console.log("Conexión a la base de datos establecida");
 
-        // Ejemplo de ruta
-        app.get('/usuarios', async (req, res) => {
-            const usuarioRepository = AppDataSource.getRepository(Usuario);
-            const usuarios = await usuarioRepository.find();
-            res.json(usuarios);
-        });
+        // Usa las rutas de usuario
+        app.use('/', usuarioRoutes); // Puedes cambiar '/api' por la ruta base que desees
+        // Usa las rutas de tienda
+        app.use("/", tiendaRoutes)
 
         const PORT = process.env.PORT || 4000;
         app.listen(PORT, () => {
