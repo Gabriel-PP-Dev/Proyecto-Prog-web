@@ -19,5 +19,20 @@ class TiendaServices {
             return yield tiendaRepository.find();
         });
     }
+    static addTienda(nombre, direccion) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tienda = new Tienda_1.Tienda();
+            tienda.nombre = nombre;
+            tienda.direccion = direccion;
+            try {
+                const tiendaRepository = data_source_1.AppDataSource.getRepository(Tienda_1.Tienda);
+                const nuevaTienda = yield tiendaRepository.save(tienda);
+                return nuevaTienda;
+            }
+            catch (error) {
+                throw new Error("Error al crear la tienda.");
+            }
+        });
+    }
 }
 exports.TiendaServices = TiendaServices;
