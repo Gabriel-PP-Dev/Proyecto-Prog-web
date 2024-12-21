@@ -13,4 +13,6 @@ router.get('/tienda/:id', tiendaController_1.getTiendaByIdController);
 router.put('/tienda/updateTienda/:id', tiendaController_1.updateTiendaController);
 // Eliminar una tienda
 router.delete('/tienda/deleteTienda/:id', tiendaController_1.deleteTiendaController);
+// Ruta para buscar una tienda por nombre
+router.get('/tienda/searchByName/:name', tiendaController_1.getTiendaByNameController); // Nueva ruta
 exports.default = router;

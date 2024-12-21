@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTienda = exports.updateTienda = exports.getTiendaById = exports.addTienda = exports.getAllTiendas = void 0;
+exports.getTiendaByName = exports.deleteTienda = exports.updateTienda = exports.getTiendaById = exports.addTienda = exports.getAllTiendas = void 0;
 const data_source_1 = require("../data-source");
 const Tienda_1 = require("../entities/Tienda");
+const AuxiliarFunctions_1 = require("../helpers/AuxiliarFunctions");
 // Obtener todas las tiendas
 const getAllTiendas = () => __awaiter(void 0, void 0, void 0, function* () {
     const tiendaRepository = data_source_1.AppDataSource.getRepository(Tienda_1.Tienda);
@@ -46,3 +47,16 @@ const deleteTienda = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
 });
 exports.deleteTienda = deleteTienda;
+// Obtener tiendas cuyo nombre contenga la cadena proporcionada
+const getTiendaByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!name) {
+        throw new Error("El nombre no puede ser vacío");
+    }
+    const tiendaRepository = data_source_1.AppDataSource.getRepository(Tienda_1.Tienda);
+    const normalizedName = (0, AuxiliarFunctions_1.removeAccents)(name.toLowerCase()); // Normalizar el nombre buscado
+    // Obtener todas las tiendas y filtrar en memoria
+    const tiendas = yield tiendaRepository.find();
+    // Filtrar tiendas que contengan el nombre normalizado
+    return tiendas.filter(tienda => (0, AuxiliarFunctions_1.removeAccents)(tienda.nombre.toLowerCase()).includes(normalizedName));
+});
+exports.getTiendaByName = getTiendaByName;

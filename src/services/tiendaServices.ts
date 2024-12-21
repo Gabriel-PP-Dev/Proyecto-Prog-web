@@ -1,5 +1,6 @@
 import { AppDataSource } from '../data-source';
 import { Tienda } from '../entities/Tienda';
+import { removeAccents } from "../helpers/AuxiliarFunctions";
 
 // Obtener todas las tiendas
 export const getAllTiendas = async (): Promise<Tienda[]> => {
@@ -34,4 +35,22 @@ export const deleteTienda = async (id: number): Promise<boolean> => {
     
     // Verifica que result.affected no sea null o undefined
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
+};
+
+// Obtener tiendas cuyo nombre contenga la cadena proporcionada
+export const getTiendaByName = async (name: string): Promise<Tienda[]> => {
+    if (!name) {
+        throw new Error("El nombre no puede ser vacío");
+    }
+    
+    const tiendaRepository = AppDataSource.getRepository(Tienda);
+    const normalizedName = removeAccents(name.toLowerCase()); // Normalizar el nombre buscado
+
+    // Obtener todas las tiendas y filtrar en memoria
+    const tiendas = await tiendaRepository.find();
+
+    // Filtrar tiendas que contengan el nombre normalizado
+    return tiendas.filter(tienda => 
+        removeAccents(tienda.nombre.toLowerCase()).includes(normalizedName)
+    );
 };

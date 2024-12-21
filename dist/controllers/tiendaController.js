@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTiendaController = exports.updateTiendaController = exports.getTiendaByIdController = exports.addTiendaController = exports.getAllTiendasController = void 0;
+exports.getTiendaByNameController = exports.deleteTiendaController = exports.updateTiendaController = exports.getTiendaByIdController = exports.addTiendaController = exports.getAllTiendasController = void 0;
 const tiendaServices_1 = require("../services/tiendaServices");
 // Obtener todas las tiendas
 const getAllTiendasController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -101,3 +101,21 @@ const deleteTiendaController = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.deleteTiendaController = deleteTiendaController;
+// Obtener tiendas cuyo nombre contenga la cadena proporcionada
+const getTiendaByNameController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name } = req.params;
+    try {
+        const tiendas = yield (0, tiendaServices_1.getTiendaByName)(name);
+        if (tiendas.length > 0) {
+            res.status(200).json(tiendas);
+        }
+        else {
+            res.status(404).json({ message: 'No se encontraron tiendas con ese nombre' });
+        }
+    }
+    catch (error) {
+        console.error('Error al obtener la tienda por nombre:', error);
+        res.status(500).json({ message: 'Error al obtener la tienda por nombre', error });
+    }
+});
+exports.getTiendaByNameController = getTiendaByNameController;

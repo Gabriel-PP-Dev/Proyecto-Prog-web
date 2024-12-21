@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllUsersController, addUserController, getUserByIdController, updateUserController, deleteUserController } from '../controllers/usuarioController';
+import { getAllUsersController, addUserController, getUserByIdController, updateUserController, deleteUserController, getUserByNameController } from '../controllers/usuarioController';
 
 const router = Router();
 
@@ -17,5 +17,8 @@ router.put('/usuario/updateUsuarii/:id', updateUserController);
 
 // Ruta para eliminar un usuario
 router.delete('/usuario/deleteUsuario:id', deleteUserController);
+
+// Ruta para buscar un usuario por nombre
+router.get('/usuario/searchByName/:name', getUserByNameController);
 
 export default router;

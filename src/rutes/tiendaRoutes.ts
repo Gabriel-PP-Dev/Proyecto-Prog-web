@@ -4,7 +4,8 @@ import {
     addTiendaController,
     getTiendaByIdController,
     updateTiendaController,
-    deleteTiendaController
+    deleteTiendaController,
+    getTiendaByNameController
 } from '../controllers/tiendaController';
 
 const router = Router();
@@ -23,5 +24,9 @@ router.put('/tienda/updateTienda/:id', updateTiendaController);
 
 // Eliminar una tienda
 router.delete('/tienda/deleteTienda/:id', deleteTiendaController);
+
+// Ruta para buscar una tienda por nombre
+router.get('/tienda/searchByName/:name', getTiendaByNameController); // Nueva ruta
+
 
 export default router;

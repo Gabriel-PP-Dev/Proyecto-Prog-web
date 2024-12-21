@@ -19,5 +19,5 @@ export class TiendaProductoPrecio {
   cantidad_en_tienda!: string;
 
   @OneToMany(() => Venta, venta => venta.producto_precio)
-    ventas!: Venta[]; // Relación con la entidad Venta
+  ventas!: Venta[]; // Relación con la entidad Venta
 }

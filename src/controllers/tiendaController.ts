@@ -4,6 +4,7 @@ import {
     deleteTienda,
     getAllTiendas, 
     getTiendaById,
+    getTiendaByName,
     updateTienda
 } from '../services/tiendaServices';
 
@@ -90,5 +91,21 @@ export const deleteTiendaController = async (req: Request, res: Response): Promi
     } catch (error) {
         console.error('Error al eliminar la tienda:', error);
         res.status(500).json({ message: 'Error al eliminar la tienda', error });
+    }
+};
+
+// Obtener tiendas cuyo nombre contenga la cadena proporcionada
+export const getTiendaByNameController = async (req: Request, res: Response): Promise<void> => {
+    const { name } = req.params;
+    try {
+        const tiendas = await getTiendaByName(name);
+        if (tiendas.length > 0) {
+            res.status(200).json(tiendas);
+        } else {
+            res.status(404).json({ message: 'No se encontraron tiendas con ese nombre' });
+        }
+    } catch (error) {
+        console.error('Error al obtener la tienda por nombre:', error);
+        res.status(500).json({ message: 'Error al obtener la tienda por nombre', error });
     }
 };

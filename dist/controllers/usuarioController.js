@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserController = exports.updateUserController = exports.getUserByIdController = exports.addUserController = exports.getAllUsersController = void 0;
+exports.getUserByNameController = exports.deleteUserController = exports.updateUserController = exports.getUserByIdController = exports.addUserController = exports.getAllUsersController = void 0;
 const usuarioServices_1 = require("../services/usuarioServices");
 // Obtener todos los usuarios
 const getAllUsersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -113,3 +113,22 @@ const deleteUserController = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.deleteUserController = deleteUserController;
+// Obtener un usuario por nombre
+const getUserByNameController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name } = req.params;
+    console.log("Nombre recibido:", name); // Agregar esta línea para depuración
+    try {
+        const users = yield (0, usuarioServices_1.getUserByName)(name);
+        if (users.length > 0) {
+            res.status(200).json(users);
+        }
+        else {
+            res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+    }
+    catch (error) {
+        console.error('Error al obtener el usuario por nombre:', error);
+        res.status(500).json({ message: 'Error al obtener el usuario por nombre', error });
+    }
+});
+exports.getUserByNameController = getUserByNameController;

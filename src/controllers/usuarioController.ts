@@ -4,6 +4,7 @@ import {
     deleteUser,
     getAllUsers, 
     getUserById,
+    getUserByName,
     updateUser
 } from '../services/usuarioServices';
 
@@ -104,5 +105,22 @@ export const deleteUserController = async (req: Request, res: Response): Promise
     } catch (error) {
         console.error('Error al eliminar el usuario:', error);
         res.status(500).json({ message: 'Error al eliminar el usuario', error });
+    }
+};
+
+// Obtener un usuario por nombre
+export const getUserByNameController = async (req: Request, res: Response): Promise<void> => {
+    const { name } = req.params;
+    console.log("Nombre recibido:", name); // Agregar esta línea para depuración
+    try {
+        const users = await getUserByName(name);
+        if (users.length > 0) {
+            res.status(200).json(users);
+        } else {
+            res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al obtener el usuario por nombre:', error);
+        res.status(500).json({ message: 'Error al obtener el usuario por nombre', error });
     }
 };

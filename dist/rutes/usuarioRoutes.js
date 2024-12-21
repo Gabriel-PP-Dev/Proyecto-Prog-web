@@ -13,4 +13,6 @@ router.get('/usuario/:id', usuarioController_1.getUserByIdController);
 router.put('/usuario/updateUsuarii/:id', usuarioController_1.updateUserController);
 // Ruta para eliminar un usuario
 router.delete('/usuario/deleteUsuario:id', usuarioController_1.deleteUserController);
+// Ruta para buscar un usuario por nombre
+router.get('/usuario/searchByName/:name', usuarioController_1.getUserByNameController);
 exports.default = router;
