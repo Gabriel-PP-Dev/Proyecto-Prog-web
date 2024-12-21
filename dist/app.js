@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const data_source_1 = require("./data-source"); // Importa la configuración de la base de datos
 const usuarioRoutes_1 = __importDefault(require("./rutes/usuarioRoutes")); // Importa las rutas de usuario
 const tiendaRoutes_1 = __importDefault(require("./rutes/tiendaRoutes"));
+const productoRoutes_1 = __importDefault(require("./rutes/productoRoutes"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Inicializa la conexión a la base de datos
@@ -17,6 +18,8 @@ data_source_1.AppDataSource.initialize()
     app.use('/', usuarioRoutes_1.default); // Puedes cambiar '/api' por la ruta base que desees
     // Usa las rutas de tienda
     app.use("/", tiendaRoutes_1.default);
+    //Usa las rutas de producto
+    app.use("/", productoRoutes_1.default);
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
         console.log(`Servidor corriendo en el puerto ${PORT}`);
