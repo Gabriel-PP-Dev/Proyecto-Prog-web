@@ -12,9 +12,6 @@ export class Producto_Precio {
   @Column()
   precio!: number;
 
-  @Column()
-  productoId!: number; // ID del producto (puedes usar una relación si tienes una entidad Producto)
-
   @OneToMany(() => TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.producto_precio)
   tiendaProductoPrecios!: TiendaProductoPrecio[]; // Relación con la tabla de unión
 

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { 
+    
     moveProducto,
     getProductosByTiendaSortedByQuantity,
     addProducto,
@@ -111,8 +112,8 @@ export const deleteProductoController = async (req: Request, res: Response): Pro
     const { id } = req.params;
     try {
         const deletedProducto = await deleteProducto(Number(id));
-        if (deletedProducto) {
-            res.status(204).send(); // No content
+        if (deletedProducto!=null) {
+            res.status(204).json({ message: 'Producto eliminado correctamente' }); 
         } else {
             res.status(404).json({ message: 'Producto no encontrado' });
         }

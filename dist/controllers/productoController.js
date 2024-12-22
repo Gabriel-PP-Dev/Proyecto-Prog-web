@@ -112,8 +112,8 @@ const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0,
     const { id } = req.params;
     try {
         const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
-        if (deletedProducto) {
-            res.status(204).send(); // No content
+        if (deletedProducto != null) {
+            res.status(204).json({ message: 'Producto eliminado correctamente' });
         }
         else {
             res.status(404).json({ message: 'Producto no encontrado' });

@@ -13,14 +13,20 @@ export const getAllProductos = async (): Promise<Producto[]> => {
 
 // Agregar un nuevo producto
 export const addProducto = async (productoData: Partial<Producto> & { precio: number }): Promise<Producto | null> => {
-    if((await getProductosByName(String(productoData.nombre))).length==0){
-        //agregar producto a la tabla Producto
+    if ((await getProductosByName(String(productoData.nombre))).length == 0) {
         const productoRepository = AppDataSource.getRepository(Producto);
+        const precioRepository = AppDataSource.getRepository(Producto_Precio);
+
+        // Crear un nuevo producto
         const newProducto = productoRepository.create(productoData);
         await productoRepository.save(newProducto);
-        return await productoRepository.findOneBy({nombre: productoData.nombre});
-    }else
-    return null
+
+        // Crear un nuevo precio asociado al producto
+        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        await precioRepository.save(newPrecio);
+        return newProducto; // Devolver el producto recién creado
+    }
+    return null;
 };
 
 
@@ -79,9 +85,23 @@ export const moveProducto = async (idTiendaProductoPrecio: number, idTienda:numb
 // Eliminar un producto
 export const deleteProducto = async (id: number): Promise<boolean> => {
     const productoRepository = AppDataSource.getRepository(Producto);
+
+    // Obtener el producto por su ID
+    const producto = await productoRepository.findOneBy({id_producto: id});
+
+    if (!producto) {
+        return false; // Devolver false si no se encuentra el producto
+    }
+
+    // Eliminar los registros relacionados en la tabla Producto_Precio
+    await producto.producto_precios.forEach(async (productoPrecio) => {
+        await AppDataSource.getRepository(Producto_Precio).delete(productoPrecio.id_producto_precio);
+    });
+
+    // Eliminar el producto en la tabla Producto
     const result = await productoRepository.delete(id);
-    
-    // Verifica que result.affected no sea null o undefined
+
+    // Verificar que se haya eliminado al menos un registro
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
 };
 

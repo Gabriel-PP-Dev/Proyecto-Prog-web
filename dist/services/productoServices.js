@@ -13,6 +13,7 @@ exports.getProductosByTiendaSortedByQuantity = exports.getProductosByName = expo
 const data_source_1 = require("../data-source");
 const Producto_1 = require("../entities/Producto");
 const Tienda_1 = require("../entities/Tienda");
+const Producto_Precio_1 = require("../entities/Producto_Precio");
 const AuxiliarFunctions_1 = require("../helpers/AuxiliarFunctions");
 const TiendaProductoPrecio_1 = require("../entities/TiendaProductoPrecio");
 // Obtener todos los productos
@@ -24,14 +25,17 @@ exports.getAllProductos = getAllProductos;
 // Agregar un nuevo producto
 const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function* () {
     if ((yield (0, exports.getProductosByName)(String(productoData.nombre))).length == 0) {
-        //agregar producto a la tabla Producto
         const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
+        const precioRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);
+        // Crear un nuevo producto
         const newProducto = productoRepository.create(productoData);
         yield productoRepository.save(newProducto);
-        return yield productoRepository.findOneBy({ nombre: productoData.nombre });
+        // Crear un nuevo precio asociado al producto
+        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        yield precioRepository.save(newPrecio);
+        return newProducto; // Devolver el producto recién creado
     }
-    else
-        return null;
+    return null;
 });
 exports.addProducto = addProducto;
 // Obtener un producto por ID
@@ -81,8 +85,18 @@ exports.moveProducto = moveProducto;
 // Eliminar un producto
 const deleteProducto = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
+    // Obtener el producto por su ID
+    const producto = yield productoRepository.findOneBy({ id_producto: id });
+    if (!producto) {
+        return false; // Devolver false si no se encuentra el producto
+    }
+    // Eliminar los registros relacionados en la tabla Producto_Precio
+    yield producto.producto_precios.forEach((productoPrecio) => __awaiter(void 0, void 0, void 0, function* () {
+        yield data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio).delete(productoPrecio.id_producto_precio);
+    }));
+    // Eliminar el producto en la tabla Producto
     const result = yield productoRepository.delete(id);
-    // Verifica que result.affected no sea null o undefined
+    // Verificar que se haya eliminado al menos un registro
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
 });
 exports.deleteProducto = deleteProducto;
