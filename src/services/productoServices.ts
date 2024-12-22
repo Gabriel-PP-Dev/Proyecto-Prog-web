@@ -1,7 +1,9 @@
 import { AppDataSource } from '../data-source';
 import { Producto } from '../entities/Producto';
+import { Tienda } from '../entities/Tienda';
 import { Producto_Precio } from '../entities/Producto_Precio';
 import { removeAccents } from "../helpers/AuxiliarFunctions";
+import { TiendaProductoPrecio } from '../entities/TiendaProductoPrecio';
 
 // Obtener todos los productos
 export const getAllProductos = async (): Promise<Producto[]> => {
@@ -12,47 +14,15 @@ export const getAllProductos = async (): Promise<Producto[]> => {
 // Agregar un nuevo producto
 export const addProducto = async (productoData: Partial<Producto> & { precio: number }): Promise<Producto | null> => {
     if((await getProductosByName(String(productoData.nombre))).length==0){
+        //agregar producto a la tabla Producto
         const productoRepository = AppDataSource.getRepository(Producto);
         const newProducto = productoRepository.create(productoData);
-        const productoID = await getIdByName(String(productoData.nombre));
         await productoRepository.save(newProducto);
-        var newPrecio;
-        if(productoID!=null){
-         newPrecio = { productoId: productoID, precio: productoData.precio};
-         await addPrecio(newPrecio); // Llamada a addPrecio
-        }
-        return newProducto;
+        return await productoRepository.findOneBy({nombre: productoData.nombre});
     }else
     return null
 };
 
-// Obtener id de producto por nombre 
-export const getIdByName = async (name: string): Promise<number | null> => {
-    if (!name) {
-        throw new Error("El nombre no puede ser vacío");
-    }
-    
-    const productoRepository = AppDataSource.getRepository(Producto);
-    const normalizedName = removeAccents(name.toLowerCase()); // Normalizar el nombre buscado
-
-    // Obtener todos los productos y filtrar en memoria
-    const productos = await productoRepository.find();
-
-    // Buscar el primer producto que contenga el nombre normalizado
-    const productoEncontrado = productos.find(producto => 
-        removeAccents(producto.nombre.toLowerCase()).includes(normalizedName)
-    );
-
-    // Si se encontró un producto, retornar su ID. Si no, retornar null.
-    return productoEncontrado ? productoEncontrado.id_producto : null;
-};
-
-//Agregar precio a Producto_Precio
-export const addPrecio = async (productoPrecio: Partial<Producto_Precio>): Promise<Producto_Precio> => {
-    const productoPrecioRepository = AppDataSource.getRepository(Producto_Precio);
-    const newProductoPrecio = productoPrecioRepository.create(productoPrecio);
-    return await productoPrecioRepository.save(newProductoPrecio);
-};
 
 // Obtener un producto por ID
 export const getProductoById = async (id: number): Promise<Producto | null> => {
@@ -60,11 +30,50 @@ export const getProductoById = async (id: number): Promise<Producto | null> => {
     return await productoRepository.findOneBy({ id_producto: id });
 };
 
+
+// Obtener un producto por nombre
+export const getProductoByName = async (name: string): Promise<Producto | null> => {
+    const productoRepository = AppDataSource.getRepository(Producto);
+    return await productoRepository.findOneBy({ nombre: name});
+};
+
+
 // Actualizar un producto
 export const updateProducto = async (id: number, productoData: Partial<Producto>): Promise<Producto | null> => {
+    if((await getProductosByName(String(productoData.nombre))).length<=1 ){
     const productoRepository = AppDataSource.getRepository(Producto);
     await productoRepository.update(id, productoData);
     return await productoRepository.findOneBy({ id_producto: id });
+    }else
+    return null;
+};
+
+//mover producto a una tienda
+export const moveProducto = async (idTiendaProductoPrecio: number, idTienda:number): Promise<TiendaProductoPrecio | null> => {
+    const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
+    const tiendaRepository = AppDataSource.getRepository(Tienda);
+
+    // Buscar el registro de TiendaProductoPrecio por su ID
+    const elemento = await tiendaProductoPrecioRepository.findOneBy({ id_tiendaProductoPrecio: idTiendaProductoPrecio });
+
+    if (!elemento) {
+        return null; // Devolver null si no se encuentra el registro
+    }
+
+    // Obtener la nueva tienda basada en el ID proporcionado
+    const nuevaTienda = await tiendaRepository.findOneBy({ id_tienda: idTienda });
+
+    if (!nuevaTienda) {
+        return null; // Devolver null si no se encuentra la nueva tienda
+    }
+
+    // Cambiar la tienda asociada al registro de TiendaProductoPrecio
+    elemento.tienda = nuevaTienda;
+
+    // Guardar los cambios en la base de datos
+    await tiendaProductoPrecioRepository.save(elemento);
+
+    return elemento; // Devolver el registro actualizado
 };
 
 // Eliminar un producto
@@ -76,14 +85,6 @@ export const deleteProducto = async (id: number): Promise<boolean> => {
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
 };
 
-// Eliminar producto en ProductoPrecio
-export const deleteProductoPrecio = async (id: number): Promise<boolean> => {
-    const productoPrecioRepository = AppDataSource.getRepository(Producto_Precio);
-    const deleteResult = await productoPrecioRepository.delete(id);
-    
-    // Verifica que deleteResult.affected no sea null o undefined
-    return deleteResult.affected !== null && deleteResult.affected !== undefined && deleteResult.affected > 0;
-};
 
 // Obtener productos por nombre (array)
 export const getProductosByName = async (name: string): Promise<Producto[]> => {
@@ -101,4 +102,16 @@ export const getProductosByName = async (name: string): Promise<Producto[]> => {
     return productos.filter(producto => 
         removeAccents(producto.nombre.toLowerCase()).includes(normalizedName)
     );
+};
+
+
+// Obtener productos de Tienda (id) ordenados por cantidad 
+export const getProductosByTiendaSortedByQuantity = async (id: number): Promise<TiendaProductoPrecio[]> => {
+    const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
+    const productos = await tiendaProductoPrecioRepository.find({
+        where: { tienda: { id_tienda : id } }, // Filtrar por id de la tienda
+        order: { cantidad_en_tienda: "ASC" }, // Ordenar por cantidad
+        relations: ["tienda", "producto_precio"] // Cargar las relaciones con Tienda y Producto_Precio
+    });
+    return productos;
 };

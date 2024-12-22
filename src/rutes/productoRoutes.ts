@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import {
-    addPrecioController,
+    moveProductoController,
+    getProductosByTiendaSortedByQuantityController,
     getAllProductosController,
     addProductoController,
-    getProductoByIdController,
     updateProductoController,
     deleteProductoController,
     getProductosByNameController
@@ -17,12 +17,6 @@ router.get('/producto', getAllProductosController);
 // Agregar un nuevo producto
 router.post('/producto/createProducto', addProductoController);
 
-// Agregar precio a producto
-router.post('/producto/addPrecio', addPrecioController);
-
-// Obtener un producto por ID
-router.get('/producto/:id', getProductoByIdController);
-
 // Actualizar un producto
 router.put('/producto/updateProducto/:id', updateProductoController);
 
@@ -32,7 +26,10 @@ router.delete('/producto/deleteProducto/:id', deleteProductoController);
 // Buscar un producto por nombre
 router.get('/producto/searchByName/:name', getProductosByNameController);
 
+// Obtener productos de una tienda ordenados por cantidad ascendentemente
+router.get('/producto/searchByTienda/:id', getProductosByTiendaSortedByQuantityController);
 
-
+//mover producto de una tienda a otra
+router.put('/producto/move', moveProductoController);
 
 export default router;

@@ -9,8 +9,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductosByNameController = exports.deleteProductoController = exports.updateProductoController = exports.getProductoByIdController = exports.addProductoController = exports.addPrecioController = exports.getAllProductosController = void 0;
+exports.getProductosByNameController = exports.deleteProductoController = exports.updateProductoController = exports.addProductoController = exports.getAllProductosController = exports.moveProductoController = exports.getProductosByTiendaSortedByQuantityController = void 0;
 const productoServices_1 = require("../services/productoServices");
+//obtener productos de tienda (id) ordenados ascendentemente
+const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const productos = yield (0, productoServices_1.getProductosByTiendaSortedByQuantity)(Number(id));
+        if (productos != null) {
+            res.status(200).json(productos);
+        }
+        else {
+            res.status(404).json({ message: 'Tienda no encontrada' });
+        }
+    }
+    catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ message: 'Error al obtener los productos', error });
+    }
+});
+exports.getProductosByTiendaSortedByQuantityController = getProductosByTiendaSortedByQuantityController;
+//mover producto a otra tienda
+const moveProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { idTiendaProductoPrecio, idTienda } = req.body;
+        // Validación básica
+        if (!idTiendaProductoPrecio || !idTienda) {
+            res.status(400).json({ message: 'Aegúrese de pasar como información: idTiendaProductoPrecio, idTienda' });
+            return;
+        }
+        const newChange = yield (0, productoServices_1.moveProducto)(idTiendaProductoPrecio, idTienda);
+        if (newChange != null)
+            res.status(201).json(newChange);
+        else
+            res.status(201).json({ message: 'La tienda o el producto no existen' });
+    }
+    catch (error) {
+        console.error('Error al agregar producto:', error);
+        res.status(500).json({ message: 'Error al agregar producto', error });
+    }
+});
+exports.moveProductoController = moveProductoController;
 // Obtener todos los productos
 const getAllProductosController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -23,24 +62,6 @@ const getAllProductosController = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.getAllProductosController = getAllProductosController;
-// Agregar un nuevo precio
-const addPrecioController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { productoId, precio } = req.body;
-        // Validación básica
-        if (!productoId || !precio) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: productoId (identificador del producto), precio' });
-            return;
-        }
-        const newPrecio = yield (0, productoServices_1.addPrecio)(req.body);
-        res.status(201).json(newPrecio);
-    }
-    catch (error) {
-        console.error('Error al agregar precio:', error);
-        res.status(500).json({ message: 'Error al agregar producto', error });
-    }
-});
-exports.addPrecioController = addPrecioController;
 // Agregar un nuevo producto
 const addProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -62,24 +83,6 @@ const addProductoController = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.addProductoController = addProductoController;
-// Obtener un producto por ID
-const getProductoByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const producto = yield (0, productoServices_1.getProductoById)(Number(id));
-        if (producto) {
-            res.status(200).json(producto);
-        }
-        else {
-            res.status(404).json({ message: 'Producto no encontrado' });
-        }
-    }
-    catch (error) {
-        console.error('Error al obtener el producto:', error);
-        res.status(500).json({ message: 'Error al obtener el producto', error });
-    }
-});
-exports.getProductoByIdController = getProductoByIdController;
 // Actualizar un producto
 const updateProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -90,12 +93,12 @@ const updateProductoController = (req, res) => __awaiter(void 0, void 0, void 0,
             res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo' });
             return;
         }
-        const updatedTienda = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
-        if (updatedTienda) {
-            res.status(200).json(updatedTienda);
+        const updatedProducto = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
+        if (updatedProducto != null) {
+            res.status(200).json(updatedProducto);
         }
         else {
-            res.status(404).json({ message: 'Producto no encontrado' });
+            res.status(404).json({ message: 'Producto no encontrado o existente' });
         }
     }
     catch (error) {
@@ -108,9 +111,8 @@ exports.updateProductoController = updateProductoController;
 const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const deletedPrecio = yield (0, productoServices_1.deleteProductoPrecio)(Number(id));
         const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
-        if (deletedProducto && deletedPrecio) {
+        if (deletedProducto) {
             res.status(204).send(); // No content
         }
         else {

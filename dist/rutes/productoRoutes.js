@@ -7,14 +7,14 @@ const router = (0, express_1.Router)();
 router.get('/producto', productoController_1.getAllProductosController);
 // Agregar un nuevo producto
 router.post('/producto/createProducto', productoController_1.addProductoController);
-// Agregar precio a producto
-router.post('/producto/addPrecio', productoController_1.addPrecioController);
-// Obtener un producto por ID
-router.get('/producto/:id', productoController_1.getProductoByIdController);
 // Actualizar un producto
 router.put('/producto/updateProducto/:id', productoController_1.updateProductoController);
 // Eliminar un producto
 router.delete('/producto/deleteProducto/:id', productoController_1.deleteProductoController);
 // Buscar un producto por nombre
 router.get('/producto/searchByName/:name', productoController_1.getProductosByNameController);
+// Obtener productos de una tienda ordenados por cantidad ascendentemente
+router.get('/producto/searchByTienda/:id', productoController_1.getProductosByTiendaSortedByQuantityController);
+//mover producto de una tienda a otra
+router.put('/producto/move', productoController_1.moveProductoController);
 exports.default = router;
