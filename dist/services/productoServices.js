@@ -22,17 +22,20 @@ const getAllProductos = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.getAllProductos = getAllProductos;
 // Agregar un nuevo producto
 const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function* () {
-    const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    const productoPrecioRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);
-    const newProducto = productoRepository.create(productoData);
-    const productoID = yield (0, exports.getIdByName)(String(productoData.nombre));
-    yield productoRepository.save(newProducto);
-    var newPrecio;
-    if (productoID != null) {
-        newPrecio = { productoId: productoID, precio: productoData.precio };
-        yield (0, exports.addPrecio)(newPrecio); // Llamada a addPrecio
+    if ((yield (0, exports.getProductosByName)(String(productoData.nombre))).length == 0) {
+        const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
+        const newProducto = productoRepository.create(productoData);
+        const productoID = yield (0, exports.getIdByName)(String(productoData.nombre));
+        yield productoRepository.save(newProducto);
+        var newPrecio;
+        if (productoID != null) {
+            newPrecio = { productoId: productoID, precio: productoData.precio };
+            yield (0, exports.addPrecio)(newPrecio); // Llamada a addPrecio
+        }
+        return newProducto;
     }
-    return newProducto;
+    else
+        return null;
 });
 exports.addProducto = addProducto;
 // Obtener id de producto por nombre 
@@ -80,13 +83,13 @@ const deleteProducto = (id) => __awaiter(void 0, void 0, void 0, function* () {
 exports.deleteProducto = deleteProducto;
 // Eliminar producto en ProductoPrecio
 const deleteProductoPrecio = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const productoRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);
-    const result = yield productoRepository.delete(id);
-    // Verifica que result.affected no sea null o undefined
-    return result.affected !== null && result.affected !== undefined && result.affected > 0;
+    const productoPrecioRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);
+    const deleteResult = yield productoPrecioRepository.delete(id);
+    // Verifica que deleteResult.affected no sea null o undefined
+    return deleteResult.affected !== null && deleteResult.affected !== undefined && deleteResult.affected > 0;
 });
 exports.deleteProductoPrecio = deleteProductoPrecio;
-// Obtener productos 
+// Obtener productos por nombre (array)
 const getProductosByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     if (!name) {
         throw new Error("El nombre no puede ser vacío");

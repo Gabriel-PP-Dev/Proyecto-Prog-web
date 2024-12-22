@@ -10,19 +10,20 @@ export const getAllProductos = async (): Promise<Producto[]> => {
 };
 
 // Agregar un nuevo producto
-export const addProducto = async (productoData: Partial<Producto> & { precio: number }): Promise<Producto> => {
-    const productoRepository = AppDataSource.getRepository(Producto);
-    const productoPrecioRepository = AppDataSource.getRepository(Producto_Precio);
-    const newProducto = productoRepository.create(productoData);
-    const productoID = await getIdByName(String(productoData.nombre));
-    await productoRepository.save(newProducto);
-    var newPrecio;
-    if(productoID!=null){
-        newPrecio = { productoId: productoID, precio: productoData.precio};
-        await addPrecio(newPrecio); // Llamada a addPrecio
-
-    }
-    return newProducto;
+export const addProducto = async (productoData: Partial<Producto> & { precio: number }): Promise<Producto | null> => {
+    if((await getProductosByName(String(productoData.nombre))).length==0){
+        const productoRepository = AppDataSource.getRepository(Producto);
+        const newProducto = productoRepository.create(productoData);
+        const productoID = await getIdByName(String(productoData.nombre));
+        await productoRepository.save(newProducto);
+        var newPrecio;
+        if(productoID!=null){
+         newPrecio = { productoId: productoID, precio: productoData.precio};
+         await addPrecio(newPrecio); // Llamada a addPrecio
+        }
+        return newProducto;
+    }else
+    return null
 };
 
 // Obtener id de producto por nombre 
@@ -84,7 +85,7 @@ export const deleteProductoPrecio = async (id: number): Promise<boolean> => {
     return deleteResult.affected !== null && deleteResult.affected !== undefined && deleteResult.affected > 0;
 };
 
-// Obtener productos 
+// Obtener productos por nombre (array)
 export const getProductosByName = async (name: string): Promise<Producto[]> => {
     if (!name) {
         throw new Error("El nombre no puede ser vacío");

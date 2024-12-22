@@ -29,7 +29,7 @@ const addPrecioController = (req, res) => __awaiter(void 0, void 0, void 0, func
         const { productoId, precio } = req.body;
         // Validación básica
         if (!productoId || !precio) {
-            res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            res.status(400).json({ message: 'Aegúrese de pasar como información: productoId (identificador del producto), precio' });
             return;
         }
         const newPrecio = yield (0, productoServices_1.addPrecio)(req.body);
@@ -47,11 +47,14 @@ const addProductoController = (req, res) => __awaiter(void 0, void 0, void 0, fu
         const { nombre, costo, precio } = req.body;
         // Validación básica
         if (!nombre || !costo || !precio) {
-            res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo, precio' });
             return;
         }
         const newProducto = yield (0, productoServices_1.addProducto)(req.body);
-        res.status(201).json(newProducto);
+        if (newProducto != null)
+            res.status(201).json(newProducto);
+        else
+            res.status(201).json({ message: 'El producto ya existe' });
     }
     catch (error) {
         console.error('Error al agregar producto:', error);
@@ -84,7 +87,7 @@ const updateProductoController = (req, res) => __awaiter(void 0, void 0, void 0,
         const { nombre, costo } = req.body;
         // Validación básica
         if (!nombre || !costo) {
-            res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo' });
             return;
         }
         const updatedTienda = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
@@ -105,8 +108,8 @@ exports.updateProductoController = updateProductoController;
 const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
         const deletedPrecio = yield (0, productoServices_1.deleteProductoPrecio)(Number(id));
+        const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
         if (deletedProducto && deletedPrecio) {
             res.status(204).send(); // No content
         }

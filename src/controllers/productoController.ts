@@ -28,7 +28,7 @@ export const addPrecioController = async (req: Request, res: Response): Promise<
 
         // Validación básica
         if (!productoId || !precio) {
-            res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            res.status(400).json({ message: 'Aegúrese de pasar como información: productoId (identificador del producto), precio' });
             return;
         }
 
@@ -47,12 +47,15 @@ export const addProductoController = async (req: Request, res: Response): Promis
 
         // Validación básica
         if (!nombre || !costo || !precio) {
-            res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo, precio' });
             return;
         }
 
         const newProducto = await addProducto(req.body);
-        res.status(201).json(newProducto);
+        if(newProducto!=null)
+            res.status(201).json(newProducto);
+        else
+           res.status(201).json({ message: 'El producto ya existe'});
     } catch (error) {
         console.error('Error al agregar producto:', error);
         res.status(500).json({ message: 'Error al agregar producto', error });
@@ -83,7 +86,7 @@ export const updateProductoController = async (req: Request, res: Response): Pro
 
         // Validación básica
         if (!nombre || !costo) {
-            res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo' });
             return;
         }
 
