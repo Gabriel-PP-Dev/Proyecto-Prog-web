@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { 
-    
     moveProducto,
     getProductosByTiendaSortedByQuantity,
     addProducto,
@@ -13,6 +12,12 @@ import {
 //obtener productos de tienda (id) ordenados ascendentemente
 export const  getProductosByTiendaSortedByQuantityController = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
+
+    if(!id){
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id de la tienda de la que desea obtener los productos)' });
+        return;
+    }
+
     try {
         const productos = await  getProductosByTiendaSortedByQuantity(Number(id));
         if (productos!=null) {
@@ -29,22 +34,23 @@ export const  getProductosByTiendaSortedByQuantityController = async (req: Reque
 //mover producto a otra tienda
 export const moveProductoController = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { idTiendaProductoPrecio, idTienda} = req.body;
+        const { id } = req.params;
+        const {idTienda} = req.body;
 
         // Validación básica
-        if (!idTiendaProductoPrecio || !idTienda) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: idTiendaProductoPrecio, idTienda' });
+        if (!id || !idTienda) {
+            res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
             return;
         }
 
-        const newChange = await moveProducto(idTiendaProductoPrecio, idTienda);
+        const newChange = await moveProducto(Number(id), idTienda);
         if(newChange!=null)
             res.status(201).json(newChange);
         else
            res.status(201).json({ message: 'La tienda o el producto no existen'});
     } catch (error) {
         console.error('Error al agregar producto:', error);
-        res.status(500).json({ message: 'Error al agregar producto', error });
+        res.status(500).json({ message: 'Error al cambiar producto', error });
     }
 };
 
@@ -110,12 +116,18 @@ export const updateProductoController = async (req: Request, res: Response): Pro
 // Eliminar un producto
 export const deleteProductoController = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
+
+    if(!id){
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id del producto a eliminar)' });
+        return;
+    }
+
     try {
         const deletedProducto = await deleteProducto(Number(id));
-        if (deletedProducto!=null) {
+        if (deletedProducto) {
             res.status(204).json({ message: 'Producto eliminado correctamente' }); 
         } else {
-            res.status(404).json({ message: 'Producto no encontrado' });
+            res.status(404).json({ message: 'Producto no encontrado o está relacionado con otras tablas' });
         }
     } catch (error) {
         console.error('Error al eliminar el producto:', error);
@@ -126,6 +138,12 @@ export const deleteProductoController = async (req: Request, res: Response): Pro
 // Obtener productos cuyo nombre contenga la cadena proporcionada
 export const getProductosByNameController = async (req: Request, res: Response): Promise<void> => {
     const { name } = req.params;
+
+    if(!name){
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: name (nombre del producto a buscar)' });
+        return;
+    }
+
     try {
         const productos = await getProductosByName(name);
         if (productos.length > 0) {

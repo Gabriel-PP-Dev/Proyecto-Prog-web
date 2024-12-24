@@ -16,5 +16,5 @@ router.get('/producto/searchByName/:name', productoController_1.getProductosByNa
 // Obtener productos de una tienda ordenados por cantidad ascendentemente
 router.get('/producto/searchByTienda/:id', productoController_1.getProductosByTiendaSortedByQuantityController);
 //mover producto de una tienda a otra
-router.put('/producto/move', productoController_1.moveProductoController);
+router.put('/producto/move/:id', productoController_1.moveProductoController);
 exports.default = router;

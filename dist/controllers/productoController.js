@@ -14,6 +14,10 @@ const productoServices_1 = require("../services/productoServices");
 //obtener productos de tienda (id) ordenados ascendentemente
 const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    if (!id) {
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id de la tienda de la que desea obtener los productos)' });
+        return;
+    }
     try {
         const productos = yield (0, productoServices_1.getProductosByTiendaSortedByQuantity)(Number(id));
         if (productos != null) {
@@ -32,13 +36,14 @@ exports.getProductosByTiendaSortedByQuantityController = getProductosByTiendaSor
 //mover producto a otra tienda
 const moveProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { idTiendaProductoPrecio, idTienda } = req.body;
+        const { id } = req.params;
+        const { idTienda } = req.body;
         // Validación básica
-        if (!idTiendaProductoPrecio || !idTienda) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: idTiendaProductoPrecio, idTienda' });
+        if (!id || !idTienda) {
+            res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
             return;
         }
-        const newChange = yield (0, productoServices_1.moveProducto)(idTiendaProductoPrecio, idTienda);
+        const newChange = yield (0, productoServices_1.moveProducto)(Number(id), idTienda);
         if (newChange != null)
             res.status(201).json(newChange);
         else
@@ -46,7 +51,7 @@ const moveProductoController = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
     catch (error) {
         console.error('Error al agregar producto:', error);
-        res.status(500).json({ message: 'Error al agregar producto', error });
+        res.status(500).json({ message: 'Error al cambiar producto', error });
     }
 });
 exports.moveProductoController = moveProductoController;
@@ -110,13 +115,17 @@ exports.updateProductoController = updateProductoController;
 // Eliminar un producto
 const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    if (!id) {
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id del producto a eliminar)' });
+        return;
+    }
     try {
         const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
-        if (deletedProducto != null) {
+        if (deletedProducto) {
             res.status(204).json({ message: 'Producto eliminado correctamente' });
         }
         else {
-            res.status(404).json({ message: 'Producto no encontrado' });
+            res.status(404).json({ message: 'Producto no encontrado o está relacionado con otras tablas' });
         }
     }
     catch (error) {
@@ -128,6 +137,10 @@ exports.deleteProductoController = deleteProductoController;
 // Obtener productos cuyo nombre contenga la cadena proporcionada
 const getProductosByNameController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.params;
+    if (!name) {
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: name (nombre del producto a buscar)' });
+        return;
+    }
     try {
         const productos = yield (0, productoServices_1.getProductosByName)(name);
         if (productos.length > 0) {

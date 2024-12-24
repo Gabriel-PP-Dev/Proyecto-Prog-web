@@ -30,6 +30,6 @@ router.get('/producto/searchByName/:name', getProductosByNameController);
 router.get('/producto/searchByTienda/:id', getProductosByTiendaSortedByQuantityController);
 
 //mover producto de una tienda a otra
-router.put('/producto/move', moveProductoController);
+router.put('/producto/move/:id', moveProductoController);
 
 export default router;
