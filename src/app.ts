@@ -2,6 +2,8 @@ import express from 'express';
 import { AppDataSource } from './data-source'; // Importa la configuración de la base de datos
 import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuario
 import tiendaRoutes from "./rutes/tiendaRoutes";
+import productoRoutes from "./rutes/productoRoutes"
+import ventaRoutes from './rutes/ventaRoutes';
 
 const app = express();
 app.use(express.json());
@@ -15,6 +17,10 @@ AppDataSource.initialize()
         app.use('/', usuarioRoutes); // Puedes cambiar '/api' por la ruta base que desees
         // Usa las rutas de tienda
         app.use("/", tiendaRoutes)
+        // Rutas de producto
+        app.use("/", productoRoutes)
+        // Rutas de venta
+        app.use("/", ventaRoutes)
 
         const PORT = process.env.PORT || 4000;
         app.listen(PORT, () => {
