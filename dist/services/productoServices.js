@@ -19,7 +19,11 @@ const TiendaProductoPrecio_1 = require("../entities/TiendaProductoPrecio");
 // Obtener todos los productos
 const getAllProductos = () => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.find();
+    return yield productoRepository.find({
+        relations: {
+            producto_precios: true,
+        },
+    });
 });
 exports.getAllProductos = getAllProductos;
 // Agregar un nuevo producto
@@ -31,7 +35,7 @@ const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function
         const newProducto = productoRepository.create(productoData);
         yield productoRepository.save(newProducto);
         // Crear un nuevo precio asociado al producto
-        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        const newPrecio = precioRepository.create({ precio: Number(productoData.precio), producto: newProducto });
         yield precioRepository.save(newPrecio);
         // Agregar el precio recién creado al producto
         if (!newProducto.producto_precios) {
@@ -40,7 +44,10 @@ const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function
         else {
             newProducto.producto_precios.push(newPrecio);
         }
-        return newProducto.producto_precios; // Devolver el producto recién creado
+        return yield productoRepository.findOne({
+            where: { nombre: productoData.nombre },
+            relations: ['producto_precios']
+        });
     }
     return null;
 });
@@ -48,13 +55,21 @@ exports.addProducto = addProducto;
 // Obtener un producto por ID
 const getProductoById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.findOneBy({ id_producto: id });
+    return yield productoRepository.findOne({
+        where: { id_producto: id },
+        relations: ['producto_precios']
+    });
+    ;
 });
 exports.getProductoById = getProductoById;
 // Obtener un producto por nombre
 const getProductoByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.findOneBy({ nombre: name });
+    return yield productoRepository.findOne({
+        where: { nombre: name },
+        relations: ['producto_precios']
+    });
+    ;
 });
 exports.getProductoByName = getProductoByName;
 // Actualizar un producto

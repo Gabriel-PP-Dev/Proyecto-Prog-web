@@ -25,10 +25,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Producto_Precio.prototype, "precio", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Producto_Precio.prototype, "productoId", void 0);
-__decorate([
     (0, typeorm_1.OneToMany)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.producto_precio),
     __metadata("design:type", Array)
 ], Producto_Precio.prototype, "tiendaProductoPrecios", void 0);

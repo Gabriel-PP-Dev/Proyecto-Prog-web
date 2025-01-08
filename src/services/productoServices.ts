@@ -8,11 +8,15 @@ import { TiendaProductoPrecio } from '../entities/TiendaProductoPrecio';
 // Obtener todos los productos
 export const getAllProductos = async (): Promise<Producto[]> => {
     const productoRepository = AppDataSource.getRepository(Producto);
-    return await productoRepository.find();
+    return await productoRepository.find({
+        relations: {
+          producto_precios: true,
+        },
+    });
 };
 
 // Agregar un nuevo producto
-export const addProducto = async (productoData: Partial<Producto> & { precio: number }): Promise<Producto_Precio[]| null> => {
+export const addProducto = async (productoData: Partial<Producto> & { precio: number }): Promise<Producto| null> => {
     if ((await getProductosByName(String(productoData.nombre))).length == 0) {
         const productoRepository = AppDataSource.getRepository(Producto);
         const precioRepository = AppDataSource.getRepository(Producto_Precio);
@@ -22,7 +26,7 @@ export const addProducto = async (productoData: Partial<Producto> & { precio: nu
         await productoRepository.save(newProducto);
 
         // Crear un nuevo precio asociado al producto
-        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        const newPrecio = precioRepository.create({ precio: Number(productoData.precio), producto: newProducto });
         await precioRepository.save(newPrecio);
 
         // Agregar el precio recién creado al producto
@@ -32,7 +36,10 @@ export const addProducto = async (productoData: Partial<Producto> & { precio: nu
             newProducto.producto_precios.push(newPrecio);
         }
         
-        return newProducto.producto_precios; // Devolver el producto recién creado
+        return await productoRepository.findOne({ 
+            where: { nombre: productoData.nombre },
+            relations: ['producto_precios'] 
+        });
     }
     return null;
 };
@@ -41,14 +48,20 @@ export const addProducto = async (productoData: Partial<Producto> & { precio: nu
 // Obtener un producto por ID
 export const getProductoById = async (id: number): Promise<Producto | null> => {
     const productoRepository = AppDataSource.getRepository(Producto);
-    return await productoRepository.findOneBy({ id_producto: id });
+    return await productoRepository.findOne({ 
+        where: { id_producto: id },
+        relations: ['producto_precios'] 
+    });;
 };
 
 
 // Obtener un producto por nombre
 export const getProductoByName = async (name: string): Promise<Producto | null> => {
     const productoRepository = AppDataSource.getRepository(Producto);
-    return await productoRepository.findOneBy({ nombre: name});
+    return await productoRepository.findOne({ 
+        where: { nombre: name},
+        relations: ['producto_precios'] 
+    });;
 };
 
 
