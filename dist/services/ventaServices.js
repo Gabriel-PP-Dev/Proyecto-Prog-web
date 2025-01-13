@@ -18,8 +18,11 @@ const getAllVentas = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield ventaRepository.find({
         relations: {
             tienda: true,
-            producto_precio: true,
-        },
+            producto_precio: {
+                tienda: true,
+                producto_precio: true
+            }
+        }
     });
 });
 exports.getAllVentas = getAllVentas;
@@ -35,8 +38,11 @@ const getVentaById = (id) => __awaiter(void 0, void 0, void 0, function* () {
         where: { id_venta: id },
         relations: {
             tienda: true,
-            producto_precio: true,
-        },
+            producto_precio: {
+                tienda: true,
+                producto_precio: true
+            }
+        }
     });
 });
 exports.getVentaById = getVentaById;

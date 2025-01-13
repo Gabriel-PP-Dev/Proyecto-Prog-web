@@ -6,30 +6,31 @@ import {
     deleteProducto,
     getAllProductos, 
     getProductosByName,
-    updateProducto
+    updateProducto,
+    getProductoById
 } from '../services/productoServices';
 
 //obtener productos de tienda (id) ordenados ascendentemente
-export const  getProductosByTiendaSortedByQuantityController = async (req: Request, res: Response): Promise<void> => {
+export const getProductosByTiendaSortedByQuantityController = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-
-    if(!id){
-        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id de la tienda de la que desea obtener los productos)' });
-        return;
+  
+    if (!id) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro, id de la tienda de la que desea obtener los productos)' });
+      return;
     }
-
+  
     try {
-        const productos = await  getProductosByTiendaSortedByQuantity(Number(id));
-        if (productos!=null) {
-            res.status(200).json(productos);
-        } else {
-            res.status(404).json({ message: 'Tienda no encontrada' });
-        }
+      const productos = await getProductosByTiendaSortedByQuantity(Number(id));
+      if (productos) {
+        res.status(200).json(productos);
+      } else {
+        res.status(404).json({ message: 'Tienda no encontrada' });
+      }
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).json({ message: 'Error al obtener los productos', error });
+      console.error('Error al obtener los productos:', error);
+      res.status(500).json({ message: 'Error al obtener los productos', error });
     }
-};
+  };
 
 //mover producto a otra tienda
 export const moveProductoController = async (req: Request, res: Response): Promise<void> => {
@@ -54,6 +55,28 @@ export const moveProductoController = async (req: Request, res: Response): Promi
     }
 };
 
+// Obtener un producto por ID
+export const getProductoByIdController = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+
+  // Validación básica
+  if (!id) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
+      return;
+  }
+
+  try {
+      const producto = await getProductoById(Number(id));
+      if (producto) {
+          res.status(200).json(producto);
+      } else {
+          res.status(404).json({ message: 'Producto no encontrado' });
+      }
+  } catch (error) {
+      console.error('Error al obtener el producto:', error);
+      res.status(500).json({ message: 'Error al obtener el producto', error });
+  }
+};
 
 // Obtener todos los productos
 export const getAllProductosController = async (req: Request, res: Response): Promise<void> => {
@@ -69,90 +92,107 @@ export const getAllProductosController = async (req: Request, res: Response): Pr
 
 // Agregar un nuevo producto
 export const addProductoController = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { nombre, costo, precio} = req.body;
+  const { nombre, costo, precio } = req.body;
 
-        // Validación básica
-        if (!nombre || !costo || !precio) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo, precio' });
-            return;
+  if (!nombre || !costo || !precio) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: nombre, costo, precio' });
+    return;
+  }
+
+  if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
+    res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+    return;
+  }
+
+  try {
+    const productoData = { nombre, costo, precio };
+    const newProducto = await addProducto(productoData);
+    if (newProducto) {
+      // Excluir las propiedades que crean la estructura circular
+      const replacer: (key: string, value: any) => any = (key, value) => {
+        if (key === 'producto_precios') {
+          return undefined;
         }
-
-        const newProducto = await addProducto(req.body);
-        if(newProducto!=null)
-            res.status(201).json(newProducto);
-        else
-           res.status(201).json({ message: 'El producto ya existe'});
-    } catch (error) {
-        console.error('Error al agregar producto:', error);
-        res.status(500).json({ message: 'Error al agregar producto', error });
+        return value;
+      };
+      res.status(201).json(JSON.stringify(newProducto, replacer));
+    } else {
+      res.status(404).json({ message: 'El producto ya existe' });
     }
+  } catch (error) {
+    console.error('Error al agregar el producto:', error);
+    res.status(500).json({ message: 'Error al agregar el producto', error });
+  }
 };
 
 // Actualizar un producto
 export const updateProductoController = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    try {
-        const { nombre, costo } = req.body;
-
-        // Validación básica
-        if (!nombre || !costo) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo' });
-            return;
-        }
-
-        const updatedProducto = await updateProducto(Number(id), req.body);
-        if (updatedProducto!=null) {
-            res.status(200).json(updatedProducto);
-        } else {
-            res.status(404).json({ message: 'Producto no encontrado o existente' });
-        }
-    } catch (error) {
-        console.error('Error al actualizar el producto:', error);
-        res.status(500).json({ message: 'Error al actualizar el producto', error });
+    const { nombre, costo, precio } = req.body;
+  
+    if (!id || !nombre || !costo || !precio) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), nombre, costo, precio' });
+      return;
     }
-};
+  
+    if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
+      res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+      return;
+    }
+  
+    try {
+      const updatedProducto = await updateProducto(Number(id), req.body);
+      if (updatedProducto) {
+        res.status(200).json(updatedProducto);
+      } else {
+        res.status(404).json({ message: 'El producto no existe' });
+      }
+    } catch (error) {
+      console.error('Error al actualizar el producto:', error);
+      res.status(500).json({ message: 'Error al actualizar el producto', error });
+    }
+  };
 
 // Eliminar un producto
 export const deleteProductoController = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-
-    if(!id){
-        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id del producto a eliminar)' });
-        return;
+  
+    if (!id) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
+      return;
     }
-
+  
     try {
-        const deletedProducto = await deleteProducto(Number(id));
-        if (deletedProducto) {
-            res.status(204).json({ message: 'Producto eliminado correctamente' }); 
-        } else {
-            res.status(404).json({ message: 'Producto no encontrado o está relacionado con otras tablas' });
-        }
+      const deletedProducto = await deleteProducto(Number(id));
+      if (deletedProducto) {
+        res.status(204).json({ message: 'El producto ha sido eliminado' });
+      } else {
+        res.status(404).json({ message: 'El producto no existe' });
+      }
     } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-        res.status(500).json({ message: 'Error al eliminar el producto', error });
+      console.error('Error al eliminar el producto:', error);
+      res.status(500).json({ message: 'Error al eliminar el producto', error });
     }
-};
+  };
 
 // Obtener productos cuyo nombre contenga la cadena proporcionada
 export const getProductosByNameController = async (req: Request, res: Response): Promise<void> => {
     const { name } = req.params;
-
-    if(!name){
-        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: name (nombre del producto a buscar)' });
-        return;
+  
+    if (!name) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: name (parámetro)' });
+      return;
     }
-
+  
     try {
-        const productos = await getProductosByName(name);
-        if (productos.length > 0) {
-            res.status(200).json(productos);
-        } else {
-            res.status(404).json({ message: 'No se encontraron productos con ese nombre' });
-        }
+      const productos = await getProductosByName(name);
+      if (productos.length > 0) {
+        res.status(200).json(productos);
+      } else {
+        res.status(404).json({ message: 'No se encontraron productos con ese nombre' });
+      }
     } catch (error) {
-        console.error('Error al obtener el producto por nombre:', error);
-        res.status(500).json({ message: 'Error al obtener el producto por nombre', error });
+      console.error('Error al obtener los productos:', error);
+      res.status(500).json({ message: 'Error al obtener los productos', error });
     }
-};
+  };

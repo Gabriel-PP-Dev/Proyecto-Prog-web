@@ -2,6 +2,7 @@ import { AppDataSource } from "../data-source";
 import { Tienda } from "../entities/Tienda";
 import { Usuario } from "../entities/Usuario";
 import { removeAccents } from "../helpers/AuxiliarFunctions";
+import { comparePassword, encryptPassword } from "../helpers/passwordService";
 
 // Obtener todos los usuarios con su tienda asociada
 export const getAllUsers = async (): Promise<Usuario[]> => {
@@ -30,9 +31,15 @@ export const addUser = async (userData: Partial<Usuario>): Promise<Usuario> => {
     throw new Error("Tienda no encontrada");
   }
 
-  const newUser = userRepository.create(userData);
-  newUser.tienda = newTienda;
-  return await userRepository.save(newUser);
+  if (userData.contrasenna) {
+    const hashedPassword = await encryptPassword(userData.contrasenna);
+    const newUser = userRepository.create({ ...userData, contrasenna: hashedPassword });
+    newUser.tienda = newTienda;
+    await userRepository.save(newUser);
+    return newUser;
+  }else{
+    throw new Error("La contraseña es null o undefine")
+  }
 };
 
 // Obtener un usuario por ID con su tienda asociada
@@ -47,10 +54,7 @@ export const getUserById = async (id: number): Promise<Usuario | null> => {
 };
 
 // Actualizar un usuario con su tienda asociada
-export const updateUser = async (
-  id: number,
-  userData: Partial<Usuario>
-): Promise<Usuario | null> => {
+export const updateUser = async (id: number, userData: Partial<Usuario>): Promise<Usuario | null> => {
   const userRepository = AppDataSource.getRepository(Usuario);
   const user = await userRepository.findOne({
     where: { id_usuario: id },
@@ -69,6 +73,10 @@ export const updateUser = async (
       throw new Error("Tienda no encontrada");
     }
     user.tienda = newTienda;
+  }
+  if (userData.contrasenna) {
+    const hashedPassword = await encryptPassword(userData.contrasenna);
+    user.contrasenna = hashedPassword;
   }
   await userRepository.update(id, userData);
   return await userRepository.findOne({
@@ -92,6 +100,12 @@ export const deleteUser = async (id: number): Promise<boolean> => {
   );
 };
 
+export const checkUniqueUsername = async (nombre_usuario: string): Promise<boolean> => {
+  const userRepository = AppDataSource.getRepository(Usuario);
+  const existingUser   = await userRepository.findOneBy({ nombre_usuario });
+  return existingUser  === null;
+};
+
 // Obtener usuarios cuyo nombre contenga la cadena proporcionada
 export const getUserByName = async (name: string): Promise<Usuario[]> => {
   if (!name) {
@@ -112,4 +126,16 @@ export const getUserByName = async (name: string): Promise<Usuario[]> => {
   return users.filter(user => 
       removeAccents(user.nombre.toLowerCase()).includes(normalizedName)
   );
+};
+
+export const authenticateUser  = async (nombre_usuario: string, contrasenna: string): Promise<Usuario | null> => {
+  const userRepository = AppDataSource.getRepository(Usuario);
+  const user = await userRepository.findOneBy({ nombre_usuario });
+  if (user) {
+    const isValidPassword = await comparePassword(contrasenna, user.contrasenna);
+    if (isValidPassword) {
+      return user;
+    }
+  }
+  return null;
 };

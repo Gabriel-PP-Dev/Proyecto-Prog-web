@@ -23,4 +23,5 @@ export class Tienda {
 
   @OneToMany(() => Venta, venta => venta.tienda)
   ventas!: Venta[]; // Relación con la entidad Venta
+  
 }

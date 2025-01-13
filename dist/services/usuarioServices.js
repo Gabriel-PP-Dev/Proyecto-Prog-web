@@ -14,6 +14,7 @@ const data_source_1 = require("../data-source");
 const Tienda_1 = require("../entities/Tienda");
 const Usuario_1 = require("../entities/Usuario");
 const AuxiliarFunctions_1 = require("../helpers/AuxiliarFunctions");
+const passwordService_1 = require("../helpers/passwordService");
 // Obtener todos los usuarios con su tienda asociada
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const userRepository = data_source_1.AppDataSource.getRepository(Usuario_1.Usuario);
@@ -37,9 +38,16 @@ const addUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     if (!newTienda) {
         throw new Error("Tienda no encontrada");
     }
-    const newUser = userRepository.create(userData);
-    newUser.tienda = newTienda;
-    return yield userRepository.save(newUser);
+    if (userData.contrasenna) {
+        const hashedPassword = yield (0, passwordService_1.encryptPassword)(userData.contrasenna);
+        const newUser = userRepository.create(Object.assign(Object.assign({}, userData), { contrasenna: hashedPassword }));
+        newUser.tienda = newTienda;
+        yield userRepository.save(newUser);
+        return newUser;
+    }
+    else {
+        throw new Error("La contraseña es null o undefine");
+    }
 });
 exports.addUser = addUser;
 // Obtener un usuario por ID con su tienda asociada
@@ -73,6 +81,10 @@ const updateUser = (id, userData) => __awaiter(void 0, void 0, void 0, function*
             throw new Error("Tienda no encontrada");
         }
         user.tienda = newTienda;
+    }
+    if (userData.contrasenna) {
+        const hashedPassword = yield (0, passwordService_1.encryptPassword)(userData.contrasenna);
+        user.contrasenna = hashedPassword;
     }
     yield userRepository.update(id, userData);
     return yield userRepository.findOne({

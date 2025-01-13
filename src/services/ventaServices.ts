@@ -8,8 +8,11 @@ export const getAllVentas = async (): Promise<Venta[]> => {
     return await ventaRepository.find({
         relations: {
             tienda: true,
-            producto_precio: true,
-        },
+            producto_precio: {
+                tienda: true,
+                producto_precio: true
+            }
+        }
     });
 };
 
@@ -25,8 +28,11 @@ export const getVentaById = async (id: number): Promise<Venta | null> => {
         where: { id_venta: id },
         relations: {
             tienda: true,
-            producto_precio: true,
-        },
+            producto_precio: {
+                tienda: true,
+                producto_precio: true
+            }
+        }
     });
 };
 

@@ -5,6 +5,8 @@ const productoController_1 = require("../controllers/productoController");
 const router = (0, express_1.Router)();
 // Obtener todos los productos
 router.get('/producto', productoController_1.getAllProductosController);
+// Obtener un producto por ID
+router.get('/producto/:id', productoController_1.getProductoByIdController);
 // Agregar un nuevo producto
 router.post('/producto/createProducto', productoController_1.addProductoController);
 // Actualizar un producto

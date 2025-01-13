@@ -6,13 +6,17 @@ import {
     addProductoController,
     updateProductoController,
     deleteProductoController,
-    getProductosByNameController
+    getProductosByNameController,
+    getProductoByIdController
 } from '../controllers/productoController';
 
 const router = Router();
 
 // Obtener todos los productos
 router.get('/producto', getAllProductosController);
+
+// Obtener un producto por ID
+router.get('/producto/:id', getProductoByIdController);
 
 // Agregar un nuevo producto
 router.post('/producto/createProducto', addProductoController);

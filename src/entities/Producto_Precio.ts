@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { TiendaProductoPrecio } from "./TiendaProductoPrecio"; // Asegúrate de importar la entidad TiendaProductoPrecio
 import { Venta } from "./Venta"; // Asegúrate de importar la entidad Venta
 import { Producto } from "./Producto";
@@ -19,5 +19,8 @@ export class Producto_Precio {
   tiendaProductoPrecios!: TiendaProductoPrecio[]; // Relación con la tabla de unión
 
   @ManyToOne(() => Producto, producto => producto.producto_precios)
-  producto!: Producto; // Relación con la entidad Producto
+
+  @ManyToOne(() => Producto, producto => producto.producto_precios)
+  @JoinColumn({ name: 'productoId', referencedColumnName: 'id_producto' })
+  producto!: Producto;
 }

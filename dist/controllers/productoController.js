@@ -9,18 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductosByNameController = exports.deleteProductoController = exports.updateProductoController = exports.addProductoController = exports.getAllProductosController = exports.moveProductoController = exports.getProductosByTiendaSortedByQuantityController = void 0;
+exports.getProductosByNameController = exports.deleteProductoController = exports.updateProductoController = exports.addProductoController = exports.getAllProductosController = exports.getProductoByIdController = exports.moveProductoController = exports.getProductosByTiendaSortedByQuantityController = void 0;
 const productoServices_1 = require("../services/productoServices");
 //obtener productos de tienda (id) ordenados ascendentemente
 const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     if (!id) {
-        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id de la tienda de la que desea obtener los productos)' });
+        res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro, id de la tienda de la que desea obtener los productos)' });
         return;
     }
     try {
         const productos = yield (0, productoServices_1.getProductosByTiendaSortedByQuantity)(Number(id));
-        if (productos != null) {
+        if (productos) {
             res.status(200).json(productos);
         }
         else {
@@ -55,6 +55,29 @@ const moveProductoController = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.moveProductoController = moveProductoController;
+// Obtener un producto por ID
+const getProductoByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    // Validación básica
+    if (!id) {
+        res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
+        return;
+    }
+    try {
+        const producto = yield (0, productoServices_1.getProductoById)(Number(id));
+        if (producto) {
+            res.status(200).json(producto);
+        }
+        else {
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
+    }
+    catch (error) {
+        console.error('Error al obtener el producto:', error);
+        res.status(500).json({ message: 'Error al obtener el producto', error });
+    }
+});
+exports.getProductoByIdController = getProductoByIdController;
 // Obtener todos los productos
 const getAllProductosController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -69,41 +92,57 @@ const getAllProductosController = (req, res) => __awaiter(void 0, void 0, void 0
 exports.getAllProductosController = getAllProductosController;
 // Agregar un nuevo producto
 const addProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nombre, costo, precio } = req.body;
+    if (!nombre || !costo || !precio) {
+        res.status(400).json({ message: 'Asegúrese de pasar como información: nombre, costo, precio' });
+        return;
+    }
+    if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
+        res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+        return;
+    }
     try {
-        const { nombre, costo, precio } = req.body;
-        // Validación básica
-        if (!nombre || !costo || !precio) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo, precio' });
-            return;
+        const productoData = { nombre, costo, precio };
+        const newProducto = yield (0, productoServices_1.addProducto)(productoData);
+        if (newProducto) {
+            // Excluir las propiedades que crean la estructura circular
+            const replacer = (key, value) => {
+                if (key === 'producto_precios') {
+                    return undefined;
+                }
+                return value;
+            };
+            res.status(201).json(JSON.stringify(newProducto, replacer));
         }
-        const newProducto = yield (0, productoServices_1.addProducto)(req.body);
-        if (newProducto != null)
-            res.status(201).json(newProducto);
-        else
-            res.status(201).json({ message: 'El producto ya existe' });
+        else {
+            res.status(404).json({ message: 'El producto ya existe' });
+        }
     }
     catch (error) {
-        console.error('Error al agregar producto:', error);
-        res.status(500).json({ message: 'Error al agregar producto', error });
+        console.error('Error al agregar el producto:', error);
+        res.status(500).json({ message: 'Error al agregar el producto', error });
     }
 });
 exports.addProductoController = addProductoController;
 // Actualizar un producto
 const updateProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    const { nombre, costo, precio } = req.body;
+    if (!id || !nombre || !costo || !precio) {
+        res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), nombre, costo, precio' });
+        return;
+    }
+    if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
+        res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+        return;
+    }
     try {
-        const { nombre, costo } = req.body;
-        // Validación básica
-        if (!nombre || !costo) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo' });
-            return;
-        }
         const updatedProducto = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
-        if (updatedProducto != null) {
+        if (updatedProducto) {
             res.status(200).json(updatedProducto);
         }
         else {
-            res.status(404).json({ message: 'Producto no encontrado o existente' });
+            res.status(404).json({ message: 'El producto no existe' });
         }
     }
     catch (error) {
@@ -116,16 +155,16 @@ exports.updateProductoController = updateProductoController;
 const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     if (!id) {
-        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id del producto a eliminar)' });
+        res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
         return;
     }
     try {
         const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
         if (deletedProducto) {
-            res.status(204).json({ message: 'Producto eliminado correctamente' });
+            res.status(204).json({ message: 'El producto ha sido eliminado' });
         }
         else {
-            res.status(404).json({ message: 'Producto no encontrado o está relacionado con otras tablas' });
+            res.status(404).json({ message: 'El producto no existe' });
         }
     }
     catch (error) {
@@ -138,7 +177,7 @@ exports.deleteProductoController = deleteProductoController;
 const getProductosByNameController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.params;
     if (!name) {
-        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: name (nombre del producto a buscar)' });
+        res.status(400).json({ message: 'Asegúrese de pasar como información: name (parámetro)' });
         return;
     }
     try {
@@ -151,8 +190,8 @@ const getProductosByNameController = (req, res) => __awaiter(void 0, void 0, voi
         }
     }
     catch (error) {
-        console.error('Error al obtener el producto por nombre:', error);
-        res.status(500).json({ message: 'Error al obtener el producto por nombre', error });
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ message: 'Error al obtener los productos', error });
     }
 });
 exports.getProductosByNameController = getProductosByNameController;

@@ -1,24 +1,32 @@
 import { Router } from 'express';
-import { getAllUsersController, addUserController, getUserByIdController, updateUserController, deleteUserController, getUserByNameController } from '../controllers/usuarioController';
+import { getAllUsersController, addUserController, getUserByIdController, updateUserController, deleteUserController, getUserByNameController, authenticateUserController } from '../controllers/usuarioController';
 
 const router = Router();
 
-// Ruta para obtener todos los usuarios
+// Devuelve todos los usuarios del sistema (no params)
 router.get('/usuario', getAllUsersController);
 
-// Ruta para agregar un nuevo usuario
+// Agrega un nuevo usuario al sistema 
+// (body: {nombre: string, nombre_usuario: string, email: string(deve tener @gmail.com),
+//  contrasenna, rol: string, tienda: {"id_tienda": number} })
 router.post('/usuario/createUsuario', addUserController);
 
-// Ruta para obtener un usuario por ID
+// Devuelve un usuario por su id
 router.get('/usuario/:id', getUserByIdController);
 
-// Ruta para actualizar un usuario
-router.put('/usuario/updateUsuarii/:id', updateUserController);
+// Actualiza los datos del usuario segun su id
+// (body: {nombre: string, nombre_usuario: string, email: string(deve tener @gmail.com),
+//  contrasenna, rol: string, id_tienda: number })
+router.put('/usuario/updateUsuari/:id', updateUserController);
 
-// Ruta para eliminar un usuario
-router.delete('/usuario/deleteUsuario:id', deleteUserController);
+// Elimina un usuario segun el id
+router.delete('/usuario/deleteUsuario/:id', deleteUserController);
 
-// Ruta para buscar un usuario por nombre
+// Busca un usuario por su nombre
 router.get('/usuario/searchByName/:name', getUserByNameController);
+
+// Autentificacion de usuario
+// (body: {nombre_usuario: string, contrasenna: string})
+router.post('/usuario/authenticate', authenticateUserController);
 
 export default router;

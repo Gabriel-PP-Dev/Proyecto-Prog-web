@@ -19,7 +19,11 @@ const TiendaProductoPrecio_1 = require("../entities/TiendaProductoPrecio");
 // Obtener todos los productos
 const getAllProductos = () => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.find();
+    return yield productoRepository.find({
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 });
 exports.getAllProductos = getAllProductos;
 // Agregar un nuevo producto
@@ -31,7 +35,8 @@ const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function
         const newProducto = productoRepository.create(productoData);
         yield productoRepository.save(newProducto);
         // Crear un nuevo precio asociado al producto
-        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        const newPrecio = precioRepository.create({ precio: productoData.precio });
+        newPrecio.producto = newProducto; // Establecer la relación con el producto
         yield precioRepository.save(newPrecio);
         // Agregar el precio recién creado al producto
         if (!newProducto.producto_precios) {
@@ -48,13 +53,23 @@ exports.addProducto = addProducto;
 // Obtener un producto por ID
 const getProductoById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.findOneBy({ id_producto: id });
+    return yield productoRepository.findOne({
+        where: { id_producto: id },
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 });
 exports.getProductoById = getProductoById;
 // Obtener un producto por nombre
 const getProductoByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.findOneBy({ nombre: name });
+    return yield productoRepository.findOne({
+        where: { nombre: name },
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 });
 exports.getProductoByName = getProductoByName;
 // Actualizar un producto
@@ -146,12 +161,16 @@ const deleteProducto = (id) => __awaiter(void 0, void 0, void 0, function* () {
         return false; //el producto tiene un precio en Producto_Precio, por lo que no se puede eliminar
 });
 exports.deleteProducto = deleteProducto;
-// Obtener productos por nombre (array)
+// Obtener productos cuyo nombre contenga la cadena proporcionada
 const getProductosByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
     const normalizedName = (0, AuxiliarFunctions_1.removeAccents)(name.toLowerCase()); // Normalizar el nombre buscado
     // Obtener todos los productos y filtrar en memoria
-    const productos = yield productoRepository.find();
+    const productos = yield productoRepository.find({
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
     // Filtrar productos que contengan el nombre normalizado
     return productos.filter(producto => (0, AuxiliarFunctions_1.removeAccents)(producto.nombre.toLowerCase()).includes(normalizedName));
 });
@@ -162,7 +181,7 @@ const getProductosByTiendaSortedByQuantity = (id) => __awaiter(void 0, void 0, v
     const productos = yield tiendaProductoPrecioRepository.find({
         where: { tienda: { id_tienda: id } }, // Filtrar por id de la tienda
         order: { cantidad_en_tienda: "ASC" }, // Ordenar por cantidad
-        relations: ["tienda", "producto_precio"] // Cargar las relaciones con Tienda y Producto_Precio
+        relations: ["tienda", "producto_precio", "producto_precio.producto"] // Cargar las relaciones con Tienda, Producto_Precio y Producto
     });
     return productos;
 });

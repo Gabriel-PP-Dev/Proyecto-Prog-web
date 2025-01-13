@@ -8,7 +8,11 @@ import { TiendaProductoPrecio } from '../entities/TiendaProductoPrecio';
 // Obtener todos los productos
 export const getAllProductos = async (): Promise<Producto[]> => {
     const productoRepository = AppDataSource.getRepository(Producto);
-    return await productoRepository.find();
+    return await productoRepository.find({
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 };
 
 // Agregar un nuevo producto
@@ -22,7 +26,8 @@ export const addProducto = async (productoData: Partial<Producto> & { precio: nu
         await productoRepository.save(newProducto);
 
         // Crear un nuevo precio asociado al producto
-        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        const newPrecio = precioRepository.create({ precio: productoData.precio });
+        newPrecio.producto = newProducto; // Establecer la relación con el producto
         await precioRepository.save(newPrecio);
 
         // Agregar el precio recién creado al producto
@@ -41,14 +46,24 @@ export const addProducto = async (productoData: Partial<Producto> & { precio: nu
 // Obtener un producto por ID
 export const getProductoById = async (id: number): Promise<Producto | null> => {
     const productoRepository = AppDataSource.getRepository(Producto);
-    return await productoRepository.findOneBy({ id_producto: id });
+    return await productoRepository.findOne({
+        where: { id_producto: id },
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 };
 
 
 // Obtener un producto por nombre
 export const getProductoByName = async (name: string): Promise<Producto | null> => {
     const productoRepository = AppDataSource.getRepository(Producto);
-    return await productoRepository.findOneBy({ nombre: name});
+    return await productoRepository.findOne({
+        where: { nombre: name },
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 };
 
 
@@ -163,13 +178,17 @@ export const deleteProducto = async (id: number): Promise<boolean> => {
 };
 
 
-// Obtener productos por nombre (array)
+// Obtener productos cuyo nombre contenga la cadena proporcionada
 export const getProductosByName = async (name: string): Promise<Producto[]> => {
     const productoRepository = AppDataSource.getRepository(Producto);
     const normalizedName = removeAccents(name.toLowerCase()); // Normalizar el nombre buscado
 
     // Obtener todos los productos y filtrar en memoria
-    const productos = await productoRepository.find();
+    const productos = await productoRepository.find({
+        relations: {
+            producto_precios: true, // Incluye la relación con Producto_Precio
+        }
+    });
 
     // Filtrar productos que contengan el nombre normalizado
     return productos.filter(producto => 
@@ -184,7 +203,7 @@ export const getProductosByTiendaSortedByQuantity = async (id: number): Promise<
     const productos = await tiendaProductoPrecioRepository.find({
         where: { tienda: { id_tienda : id } }, // Filtrar por id de la tienda
         order: { cantidad_en_tienda: "ASC" }, // Ordenar por cantidad
-        relations: ["tienda", "producto_precio"] // Cargar las relaciones con Tienda y Producto_Precio
+        relations: ["tienda", "producto_precio", "producto_precio.producto"] // Cargar las relaciones con Tienda, Producto_Precio y Producto
     });
     return productos;
 };

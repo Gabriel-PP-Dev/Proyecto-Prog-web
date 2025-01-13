@@ -1,9 +1,12 @@
 import express from 'express';
 import { AppDataSource } from './data-source'; // Importa la configuración de la base de datos
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swager';
 import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuario
 import tiendaRoutes from "./rutes/tiendaRoutes";
 import productoRoutes from "./rutes/productoRoutes"
 import ventaRoutes from './rutes/ventaRoutes';
+
 
 const app = express();
 app.use(express.json());
