@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductosByTiendaSortedByQuantity = exports.getProductosByName = exports.deleteProducto = exports.moveProducto = exports.moveTiendaProductoPrecio = exports.updateProducto = exports.getProductoByName = exports.getProductoById = exports.addProducto = exports.getAllProductos = void 0;
+exports.getProductosByTiendaSortedByQuantity = exports.getProductosByName = exports.deleteProducto = exports.moveProducto = exports.moveTiendaProductoPrecio = exports.updateProducto = exports.getProductoByName = exports.getProductoById = exports.addProducto = exports.getTop10ProductosMasVendidos = exports.getAllProductos = void 0;
 const data_source_1 = require("../data-source");
 const Producto_1 = require("../entities/Producto");
 const Tienda_1 = require("../entities/Tienda");
@@ -19,9 +19,28 @@ const TiendaProductoPrecio_1 = require("../entities/TiendaProductoPrecio");
 // Obtener todos los productos
 const getAllProductos = () => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.find();
+    return yield productoRepository.find({
+        relations: {
+            producto_precios: true,
+        },
+    });
 });
 exports.getAllProductos = getAllProductos;
+//obtener 10 prductos más vendidos
+const getTop10ProductosMasVendidos = () => __awaiter(void 0, void 0, void 0, function* () {
+    const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
+    const topProductos = yield productoRepository.createQueryBuilder("producto")
+        .leftJoin("producto.producto_precios", "producto_precio")
+        .leftJoin("producto_precio.tiendaProductoPrecios", "tienda_producto_precio")
+        .leftJoin("tienda_producto_precio.ventas", "venta")
+        .select(["producto.id_producto", "producto.nombre", "SUM(venta.cantidad) as totalVentas"])
+        .groupBy("producto.id_producto")
+        .orderBy("totalVentas", "DESC")
+        .take(10)
+        .getRawMany();
+    return topProductos;
+});
+exports.getTop10ProductosMasVendidos = getTop10ProductosMasVendidos;
 // Agregar un nuevo producto
 const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function* () {
     if ((yield (0, exports.getProductosByName)(String(productoData.nombre))).length == 0) {
@@ -31,7 +50,7 @@ const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function
         const newProducto = productoRepository.create(productoData);
         yield productoRepository.save(newProducto);
         // Crear un nuevo precio asociado al producto
-        const newPrecio = precioRepository.create({ precio: productoData.precio, producto: newProducto });
+        const newPrecio = precioRepository.create({ precio: Number(productoData.precio), producto: newProducto });
         yield precioRepository.save(newPrecio);
         // Agregar el precio recién creado al producto
         if (!newProducto.producto_precios) {
@@ -40,7 +59,10 @@ const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function
         else {
             newProducto.producto_precios.push(newPrecio);
         }
-        return newProducto.producto_precios; // Devolver el producto recién creado
+        return yield productoRepository.findOne({
+            where: { nombre: productoData.nombre },
+            relations: ['producto_precios']
+        });
     }
     return null;
 });
@@ -48,13 +70,21 @@ exports.addProducto = addProducto;
 // Obtener un producto por ID
 const getProductoById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.findOneBy({ id_producto: id });
+    return yield productoRepository.findOne({
+        where: { id_producto: id },
+        relations: ['producto_precios']
+    });
+    ;
 });
 exports.getProductoById = getProductoById;
 // Obtener un producto por nombre
 const getProductoByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    return yield productoRepository.findOneBy({ nombre: name });
+    return yield productoRepository.findOne({
+        where: { nombre: name },
+        relations: ['producto_precios']
+    });
+    ;
 });
 exports.getProductoByName = getProductoByName;
 // Actualizar un producto

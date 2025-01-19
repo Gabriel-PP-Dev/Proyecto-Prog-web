@@ -9,8 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductosByNameController = exports.deleteProductoController = exports.updateProductoController = exports.addProductoController = exports.getAllProductosController = exports.moveProductoController = exports.getProductosByTiendaSortedByQuantityController = void 0;
+exports.getProductosByNameController = exports.getProductoByIdController = exports.deleteProductoController = exports.updateProductoController = exports.addProductoController = exports.getAllProductosController = exports.moveProductoController = exports.getProductosByTiendaSortedByQuantityController = exports.getProductosMasVendidosController = void 0;
 const productoServices_1 = require("../services/productoServices");
+//obtener los 10 productos más vendidos
+const getProductosMasVendidosController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const productos = yield (0, productoServices_1.getTop10ProductosMasVendidos)();
+        if (productos != null)
+            res.status(200).json(productos);
+        else
+            res.status(500).json({ message: 'Aún no se han realizado ventas' });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los productos más vendidos' });
+    }
+});
+exports.getProductosMasVendidosController = getProductosMasVendidosController;
 //obtener productos de tienda (id) ordenados ascendentemente
 const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -43,11 +58,15 @@ const moveProductoController = (req, res) => __awaiter(void 0, void 0, void 0, f
             res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
             return;
         }
-        const newChange = yield (0, productoServices_1.moveProducto)(Number(id), idTienda);
-        if (newChange != null)
-            res.status(201).json(newChange);
+        if (Number.isInteger(idTienda)) {
+            const newChange = yield (0, productoServices_1.moveProducto)(Number(id), idTienda);
+            if (newChange != null)
+                res.status(201).json(newChange);
+            else
+                res.status(201).json({ message: 'La tienda o el producto no existen' });
+        }
         else
-            res.status(201).json({ message: 'La tienda o el producto no existen' });
+            res.status(404).json({ message: 'El identificador debe ser un número entero' });
     }
     catch (error) {
         console.error('Error al agregar producto:', error);
@@ -76,11 +95,15 @@ const addProductoController = (req, res) => __awaiter(void 0, void 0, void 0, fu
             res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo, precio' });
             return;
         }
-        const newProducto = yield (0, productoServices_1.addProducto)(req.body);
-        if (newProducto != null)
-            res.status(201).json(newProducto);
+        if (Number.isInteger(precio) && /^-?\d+\.\d+$/.test(costo)) {
+            const newProducto = yield (0, productoServices_1.addProducto)(req.body);
+            if (newProducto != null)
+                res.status(201).json(newProducto);
+            else
+                res.status(201).json({ message: 'El producto ya existe' });
+        }
         else
-            res.status(201).json({ message: 'El producto ya existe' });
+            res.status(201).json({ message: 'El precio debe ser un entero y el costo debe ser un double' });
     }
     catch (error) {
         console.error('Error al agregar producto:', error);
@@ -94,17 +117,21 @@ const updateProductoController = (req, res) => __awaiter(void 0, void 0, void 0,
     try {
         const { nombre, costo } = req.body;
         // Validación básica
-        if (!nombre || !costo) {
+        if (!nombre || !costo || !id) {
             res.status(400).json({ message: 'Aegúrese de pasar como información: nombre, costo' });
             return;
         }
-        const updatedProducto = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
-        if (updatedProducto != null) {
-            res.status(200).json(updatedProducto);
+        if (/^-?\d+\.\d+$/.test(costo)) {
+            const updatedProducto = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
+            if (updatedProducto != null) {
+                res.status(200).json(updatedProducto);
+            }
+            else {
+                res.status(404).json({ message: 'Producto no encontrado o existente' });
+            }
         }
-        else {
-            res.status(404).json({ message: 'Producto no encontrado o existente' });
-        }
+        else
+            res.status(404).json({ message: 'El costo debe ser un double' });
     }
     catch (error) {
         console.error('Error al actualizar el producto:', error);
@@ -134,6 +161,28 @@ const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.deleteProductoController = deleteProductoController;
+// Obtener un producto por id
+const getProductoByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    if (!id) {
+        res.status(400).json({ message: 'Aegúrese de pasar por parámetros: id (id del producto a obtener)' });
+        return;
+    }
+    try {
+        const productoById = yield (0, productoServices_1.getProductoById)(Number(id));
+        if (productoById) {
+            res.status(200).json(productoById);
+        }
+        else {
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
+    }
+    catch (error) {
+        console.error('Error al obtener el producto:', error);
+        res.status(500).json({ message: 'Error al obtener el producto', error });
+    }
+});
+exports.getProductoByIdController = getProductoByIdController;
 // Obtener productos cuyo nombre contenga la cadena proporcionada
 const getProductosByNameController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.params;
@@ -142,7 +191,7 @@ const getProductosByNameController = (req, res) => __awaiter(void 0, void 0, voi
         return;
     }
     try {
-        const productos = yield (0, productoServices_1.getProductosByName)(name);
+        const productos = yield (0, productoServices_1.getProductosByName)(String(name));
         if (productos.length > 0) {
             res.status(200).json(productos);
         }

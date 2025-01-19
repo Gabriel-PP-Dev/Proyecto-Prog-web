@@ -1,3 +1,4 @@
+
 1- Ejecuta el comando npm install (o yarn install si es que tienes usas yarn)
 2- Abre pgadmin y crea una base de datos con las siguientes propiedades
     - username: "postgres"
