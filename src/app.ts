@@ -6,6 +6,8 @@ import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuar
 import tiendaRoutes from "./rutes/tiendaRoutes";
 import productoRoutes from "./rutes/productoRoutes"
 import ventaRoutes from './rutes/ventaRoutes';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 const app = express();

@@ -5,7 +5,11 @@ import { removeAccents } from "../helpers/AuxiliarFunctions";
 // Obtener todas las tiendas
 export const getAllTiendas = async (): Promise<Tienda[]> => {
     const tiendaRepository = AppDataSource.getRepository(Tienda);
-    return await tiendaRepository.find();
+    return await tiendaRepository.find({
+        relations: {
+            usuarios: true, // Incluye la relación con Usuario
+        }
+    });
 };
 
 // Agregar una nueva tienda
@@ -18,9 +22,13 @@ export const addTienda = async (tiendaData: Partial<Tienda>): Promise<Tienda> =>
 // Obtener una tienda por ID
 export const getTiendaById = async (id: number): Promise<Tienda | null> => {
     const tiendaRepository = AppDataSource.getRepository(Tienda);
-    return await tiendaRepository.findOneBy({ id_tienda: id });
+    return await tiendaRepository.findOne({
+        where: { id_tienda: id },
+        relations: {
+            usuarios: true, // Incluye la relación con Usuario
+        }
+    });
 };
-
 // Actualizar una tienda
 export const updateTienda = async (id: number, tiendaData: Partial<Tienda>): Promise<Tienda | null> => {
     const tiendaRepository = AppDataSource.getRepository(Tienda);
@@ -47,7 +55,11 @@ export const getTiendaByName = async (name: string): Promise<Tienda[]> => {
     const normalizedName = removeAccents(name.toLowerCase()); // Normalizar el nombre buscado
 
     // Obtener todas las tiendas y filtrar en memoria
-    const tiendas = await tiendaRepository.find();
+    const tiendas = await tiendaRepository.find({
+        relations: {
+            usuarios: true, // Incluye la relación con Usuario
+        }
+    });
 
     // Filtrar tiendas que contengan el nombre normalizado
     return tiendas.filter(tienda => 

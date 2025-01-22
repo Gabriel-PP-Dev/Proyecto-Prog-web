@@ -12,8 +12,8 @@ export class TiendaProductoPrecio {
   @ManyToOne(() => Tienda, tienda => tienda.tiendaProductoPrecios)
   tienda!: Tienda;
 
-  @ManyToOne(() => Producto_Precio, producto_precio => producto_precio.tiendaProductoPrecios)
-  producto_precio!: Producto_Precio;
+  @OneToMany(() => Producto_Precio, producto_precio => producto_precio.tiendaProductoPrecio)
+  producto_precios!: Producto_Precio[]; // Relación con la entidad Producto_Precio
 
   @Column()
   cantidad_en_tienda!: string;

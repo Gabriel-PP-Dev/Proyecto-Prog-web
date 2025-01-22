@@ -65,6 +65,12 @@ export const getProductoByIdController = async (req: Request, res: Response): Pr
       return;
   }
 
+  // Verificar que el id sea un numero
+  if (isNaN(Number(id))) {
+    res.status(400).json({ message: "El ID proporcionado no es un número válido" });
+    return;
+  }
+
   try {
       const producto = await getProductoById(Number(id));
       if (producto) {
@@ -89,7 +95,6 @@ export const getAllProductosController = async (req: Request, res: Response): Pr
     }
 };
 
-
 // Agregar un nuevo producto
 export const addProductoController = async (req: Request, res: Response): Promise<void> => {
   const { nombre, costo, precio } = req.body;
@@ -108,14 +113,7 @@ export const addProductoController = async (req: Request, res: Response): Promis
     const productoData = { nombre, costo, precio };
     const newProducto = await addProducto(productoData);
     if (newProducto) {
-      // Excluir las propiedades que crean la estructura circular
-      const replacer: (key: string, value: any) => any = (key, value) => {
-        if (key === 'producto_precios') {
-          return undefined;
-        }
-        return value;
-      };
-      res.status(201).json(JSON.stringify(newProducto, replacer));
+      res.status(201).json(newProducto); // Devolver el nuevo producto sin referencias circulares
     } else {
       res.status(404).json({ message: 'El producto ya existe' });
     }

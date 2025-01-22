@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Producto_Precio } from "./Producto_Precio"; // Asegúrate de importar la entidad Producto_Precio
+import { Producto_Precio } from "./Producto_Precio";
 
 @Entity()
 export class Producto {
@@ -10,9 +10,9 @@ export class Producto {
   @Column()
   nombre!: string;
 
-  @Column()
-  costo!: string;
+  @Column('decimal', { precision: 10, scale: 2 })
+  costo!: number;
 
-  @OneToMany(() => Producto_Precio, producto_precio => producto_precio.producto)
-  producto_precios!: Producto_Precio[]; // Relación con la entidad Producto_Precio
+  @OneToMany(() => Producto_Precio, producto_precio => producto_precio.producto, { cascade: true })
+  producto_precios!: Producto_Precio[];
 }
