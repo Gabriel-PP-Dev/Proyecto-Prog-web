@@ -9,8 +9,7 @@ export const getAllVentas = async (): Promise<Venta[]> => {
         relations: {
             tienda: true,
             producto_precio: {
-                tienda: true,
-                producto_precio: true
+                tienda: true
             }
         }
     });

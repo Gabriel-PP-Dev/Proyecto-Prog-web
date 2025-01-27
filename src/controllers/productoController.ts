@@ -10,49 +10,49 @@ import {
     getProductoById
 } from '../services/productoServices';
 
-//obtener productos de tienda (id) ordenados ascendentemente
+// Obtener productos de Tienda (id) ordenados por cantidad 
 export const getProductosByTiendaSortedByQuantityController = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+
+  if (!id) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro, id de la tienda de la que desea obtener los productos)' });
+    return;
+  }
+
+  try {
+    const productos = await getProductosByTiendaSortedByQuantity(Number(id));
+    if (productos) {
+      res.status(200).json(productos);
+    } else {
+      res.status(404).json({ message: 'Tienda no encontrada' });
+    }
+  } catch (error) {
+    console.error('Error al obtener los productos:', error);
+    res.status(500).json({ message: 'Error al obtener los productos', error });
+  }
+};
+
+// Mover producto a otra tienda
+export const moveProductoController = async (req: Request, res: Response): Promise<void> => {
+  try {
     const { id } = req.params;
-  
-    if (!id) {
-      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro, id de la tienda de la que desea obtener los productos)' });
+    const { idTienda } = req.body;
+
+    // Validación básica
+    if (!id || !idTienda) {
+      res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
       return;
     }
-  
-    try {
-      const productos = await getProductosByTiendaSortedByQuantity(Number(id));
-      if (productos) {
-        res.status(200).json(productos);
-      } else {
-        res.status(404).json({ message: 'Tienda no encontrada' });
-      }
-    } catch (error) {
-      console.error('Error al obtener los productos:', error);
-      res.status(500).json({ message: 'Error al obtener los productos', error });
-    }
-  };
 
-//mover producto a otra tienda
-export const moveProductoController = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { id } = req.params;
-        const {idTienda} = req.body;
-
-        // Validación básica
-        if (!id || !idTienda) {
-            res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
-            return;
-        }
-
-        const newChange = await moveProducto(Number(id), idTienda);
-        if(newChange!=null)
-            res.status(201).json(newChange);
-        else
-           res.status(201).json({ message: 'La tienda o el producto no existen'});
-    } catch (error) {
-        console.error('Error al agregar producto:', error);
-        res.status(500).json({ message: 'Error al cambiar producto', error });
-    }
+    const newChange = await moveProducto(Number(id), idTienda);
+    if(newChange!=null)
+      res.status(201).json(newChange);
+    else
+      res.status(201).json({ message: 'La tienda o el producto no existen'});
+  } catch (error) {
+    console.error('Error al agregar producto:', error);
+    res.status(500).json({ message: 'Error al cambiar producto', error });
+  }
 };
 
 // Obtener un producto por ID
@@ -97,23 +97,23 @@ export const getAllProductosController = async (req: Request, res: Response): Pr
 
 // Agregar un nuevo producto
 export const addProductoController = async (req: Request, res: Response): Promise<void> => {
-  const { nombre, costo, precio } = req.body;
-
-  if (!nombre || !costo || !precio) {
-    res.status(400).json({ message: 'Asegúrese de pasar como información: nombre, costo, precio' });
-    return;
-  }
-
-  if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
-    res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
-    return;
-  }
-
   try {
-    const productoData = { nombre, costo, precio };
+    const { nombre, costo } = req.body;
+
+    if (!nombre || !costo) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: nombre, costo' });
+      return;
+    }
+
+    if (typeof nombre !== 'string' || typeof costo !== 'number') {
+      res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+      return;
+    }
+
+    const productoData = { nombre, costo };
     const newProducto = await addProducto(productoData);
     if (newProducto) {
-      res.status(201).json(newProducto); // Devolver el nuevo producto sin referencias circulares
+      res.status(201).json(newProducto);
     } else {
       res.status(404).json({ message: 'El producto ya existe' });
     }
@@ -125,72 +125,72 @@ export const addProductoController = async (req: Request, res: Response): Promis
 
 // Actualizar un producto
 export const updateProductoController = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    const { nombre, costo, precio } = req.body;
-  
-    if (!id || !nombre || !costo || !precio) {
-      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), nombre, costo, precio' });
-      return;
+  const { id } = req.params;
+  const { nombre, costo } = req.body;
+
+  if (!id || !nombre || !costo) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), nombre, costo' });
+    return;
+  }
+
+  if (typeof nombre !== 'string' || typeof costo !== 'number') {
+    res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+    return;
+  }
+
+  try {
+    const updatedProducto = await updateProducto(Number(id), req.body);
+    if (updatedProducto) {
+      res.status(200).json(updatedProducto);
+    } else {
+      res.status(404).json({ message: 'El producto no existe' });
     }
-  
-    if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
-      res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
-      return;
-    }
-  
-    try {
-      const updatedProducto = await updateProducto(Number(id), req.body);
-      if (updatedProducto) {
-        res.status(200).json(updatedProducto);
-      } else {
-        res.status(404).json({ message: 'El producto no existe' });
-      }
-    } catch (error) {
-      console.error('Error al actualizar el producto:', error);
-      res.status(500).json({ message: 'Error al actualizar el producto', error });
-    }
-  };
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error);
+    res.status(500).json({ message: 'Error al actualizar el producto', error });
+  }
+};
 
 // Eliminar un producto
 export const deleteProductoController = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-  
-    if (!id) {
-      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
-      return;
+  const { id } = req.params;
+
+  if (!id) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
+    return;
+  }
+
+  try {
+    const deletedProducto = await deleteProducto(Number(id));
+    if (deletedProducto) {
+      res.status(204).json({ message: 'El producto ha sido eliminado' });
+    } else {
+      res.status(404).json({ message: 'El producto no existe' });
     }
-  
-    try {
-      const deletedProducto = await deleteProducto(Number(id));
-      if (deletedProducto) {
-        res.status(204).json({ message: 'El producto ha sido eliminado' });
-      } else {
-        res.status(404).json({ message: 'El producto no existe' });
-      }
-    } catch (error) {
-      console.error('Error al eliminar el producto:', error);
-      res.status(500).json({ message: 'Error al eliminar el producto', error });
-    }
-  };
+  } catch (error) {
+    console.error('Error al eliminar el producto:', error);
+    res.status(500).json({ message: 'Error al eliminar el producto', error });
+  }
+};
 
 // Obtener productos cuyo nombre contenga la cadena proporcionada
 export const getProductosByNameController = async (req: Request, res: Response): Promise<void> => {
-    const { name } = req.params;
-  
-    if (!name) {
-      res.status(400).json({ message: 'Asegúrese de pasar como información: name (parámetro)' });
-      return;
+  const { name } = req.params;
+
+  if (!name) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: name (parámetro)' });
+    return;
+  }
+
+  try {
+    const productos = await getProductosByName(name);
+    if (productos.length > 0) {
+      res.status(200).json(productos);
+    } else {
+      res.status(404).json({ message: 'No se encontraron productos con ese nombre' });
     }
-  
-    try {
-      const productos = await getProductosByName(name);
-      if (productos.length > 0) {
-        res.status(200).json(productos);
-      } else {
-        res.status(404).json({ message: 'No se encontraron productos con ese nombre' });
-      }
-    } catch (error) {
-      console.error('Error al obtener los productos:', error);
-      res.status(500).json({ message: 'Error al obtener los productos', error });
-    }
-  };
+  } catch (error) {
+    console.error('Error al obtener los productos:', error);
+    res.status(500).json({ message: 'Error al obtener los productos', error });
+  }
+};

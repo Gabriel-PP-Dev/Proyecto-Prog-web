@@ -1,17 +1,28 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { AppDataSource } from './data-source'; // Importa la configuración de la base de datos
-import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './swager';
 import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuario
 import tiendaRoutes from "./rutes/tiendaRoutes";
 import productoRoutes from "./rutes/productoRoutes"
 import ventaRoutes from './rutes/ventaRoutes';
+import producto_precio from "./rutes/producto_PrecioRoutes";
+import tiendaProductoPrecio from "./rutes/tiendaProductoPrecioRoutes";
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 const app = express();
 app.use(express.json());
+
+// Middleware de registro
+const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const originalSend = res.send;
+    res.send = (data: any) => {
+      console.log(`[${req.method}] ${req.url} - : ${res.statusCode}`);
+      return originalSend.call(res, data);
+    };
+    next();
+  };
+
+app.use(loggerMiddleware);
 
 // Inicializa la conexión a la base de datos
 AppDataSource.initialize()
@@ -26,6 +37,10 @@ AppDataSource.initialize()
         app.use("/", productoRoutes)
         // Rutas de venta
         app.use("/", ventaRoutes)
+        // Rutas de producto_precio
+        app.use("/", producto_precio)
+        // Rutas de tiendaProductoPrecio
+        app.use("/", tiendaProductoPrecio)
 
         const PORT = process.env.PORT || 4000;
         app.listen(PORT, () => {

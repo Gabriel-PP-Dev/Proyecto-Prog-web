@@ -15,26 +15,107 @@ const router = Router();
 
 // Obtener todos los productos
 router.get('/producto', authenticate(['Administrador', 'Trabajador']), getAllProductosController);
+/**
+ * Obtener todos los productos
+ * 
+ * No recibe datos en el body
+ * 
+ * Retorna:
+ * - Un arreglo de productos con sus IDs y otros datos
+ */
 
 // Obtener un producto por ID
 router.get('/producto/:id', authenticate(['Administrador', 'Trabajador']), getProductoByIdController);
+/**
+ * Obtener un producto por ID
+ * 
+ * Recibe en el parámetro :id:
+ * - id (number): ID del producto
+ * 
+ * Retorna:
+ * - El producto con su ID y otros datos
+ */
 
 // Agregar un nuevo producto
 router.post('/producto/createProducto', authenticate(['Administrador', 'Trabajador']), addProductoController);
+/**
+ * Agregar un nuevo producto
+ * 
+ * Recibe en el body:
+ * - nombre (string): Nombre del producto
+ * - costo (number): Costo del producto
+ * 
+ * Retorna:
+ * - El producto creado con su ID y otros datos
+ */
 
 // Actualizar un producto
 router.put('/producto/updateProducto/:id', authenticate(['Administrador', 'Trabajador']), updateProductoController);
+/**
+ * Actualizar un producto
+ * 
+ * Recibe en el parámetro :id:
+ * - id (number): ID del producto
+ * 
+ * Recibe en el body:
+ * - nombre (string): Nuevo nombre del producto (opcional)
+ * - costo (number): Nuevo costo del producto (opcional)
+ * 
+ * Retorna:
+ * - El producto actualizado con su ID y otros datos
+ */
 
 // Eliminar un producto
 router.delete('/producto/deleteProducto/:id', authenticate(['Administrador', 'Trabajador']), deleteProductoController);
+/**
+ * Eliminar un producto
+ * 
+ * Recibe en el parámetro :id:
+ * - id (number): ID del producto
+ * 
+ * No recibe datos en el body
+ * 
+ * Retorna:
+ * - Un mensaje de confirmación de eliminación
+ */
 
 // Buscar un producto por nombre
 router.get('/producto/searchByName/:name', authenticate(['Administrador', 'Trabajador']), getProductosByNameController);
+/**
+ * Buscar un producto por nombre
+ * 
+ * Recibe en el parámetro :name:
+ * - name (string): Nombre del producto a buscar
+ * 
+ * Retorna:
+ * - Un arreglo de productos que coinciden con el nombre buscado
+ */
 
-// Obtener productos de una tienda ordenados por cantidad ascendentemente
+// Obtener productos de una tienda ordenados por cantidad
 router.get('/producto/searchByTienda/:id', authenticate(['Administrador', 'Trabajador']), getProductosByTiendaSortedByQuantityController);
+/**
+ * Obtener productos de una tienda ordenados por cantidad
+ * 
+ * Recibe en el parámetro :id:
+ * - id (number): ID de la tienda
+ * 
+ * Retorna:
+ * - Un arreglo de productos de la tienda ordenados por cantidad
+ */
 
-//mover producto de una tienda a otra
+// Mover un producto a otra tienda
 router.put('/producto/move/:id', authenticate(['Administrador', 'Trabajador']), moveProductoController);
+/**
+ * Mover un producto a otra tienda
+ * 
+ * Recibe en el parámetro :id:
+ * - id (number): ID del producto
+ * 
+ * Recibe en el body:
+ * - idTienda (number): ID de la tienda a la que se moverá el producto
+ * 
+ * Retorna:
+ * - El producto movido con su nuevo ID de tienda
+ */
 
 export default router;
