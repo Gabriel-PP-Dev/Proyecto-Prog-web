@@ -9,6 +9,7 @@ import {
     updateProducto,
     getProductoById
 } from '../services/productoServices';
+import { getTiendaById } from '../services/tiendaServices';
 
 // Obtener productos de Tienda (id) ordenados por cantidad 
 export const getProductosByTiendaSortedByQuantityController = async (req: Request, res: Response): Promise<void> => {
@@ -20,7 +21,7 @@ export const getProductosByTiendaSortedByQuantityController = async (req: Reques
   }
 
   try {
-    const productos = await getProductosByTiendaSortedByQuantity(Number(id));
+    const productos = await getProductosByTiendaSortedByQuantity(id);
     if (productos) {
       res.status(200).json(productos);
     } else {
@@ -36,22 +37,47 @@ export const getProductosByTiendaSortedByQuantityController = async (req: Reques
 export const moveProductoController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { idTienda } = req.body;
+    const { id_tienda_origen, id_tienda_destino, cantidad } = req.body;
 
     // Validación básica
-    if (!id || !idTienda) {
-      res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
+    if (!id || !id_tienda_origen || !id_tienda_destino || !cantidad) {
+      res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), id_tienda_origen, id_tienda_destino y cantidad (body)' });
       return;
     }
 
-    const newChange = await moveProducto(Number(id), idTienda);
-    if(newChange!=null)
-      res.status(201).json(newChange);
-    else
-      res.status(201).json({ message: 'La tienda o el producto no existen'});
+    if (typeof cantidad !== 'number' || cantidad <= 0) {
+      res.status(400).json({ message: 'La cantidad debe ser un número entero positivo' });
+      return;
+    }
+
+    const producto = await getProductoById(id);
+    if (!producto) {
+      res.status(404).json({ message: 'Producto no encontrado' });
+      return;
+    }
+
+    const tiendaOrigen = await getTiendaById(id_tienda_origen);
+    if (!tiendaOrigen) {
+      res.status(404).json({ message: 'Tienda de origen no encontrada' });
+      return;
+    }
+
+    const tiendaDestino = await getTiendaById(id_tienda_destino);
+    if (!tiendaDestino) {
+      res.status(404).json({ message: 'Tienda de destino no encontrada' });
+      return;
+    }
+
+    // Mover el producto a la tienda de destino
+    const resultado = await moveProducto(id, id_tienda_destino, cantidad);
+    if (resultado) {
+      res.status(200).json({ message: 'Producto movido con éxito' });
+    } else {
+      res.status(500).json({ message: 'Error al mover el producto' });
+    }
   } catch (error) {
-    console.error('Error al agregar producto:', error);
-    res.status(500).json({ message: 'Error al cambiar producto', error });
+    console.error('Error al mover el producto:', error);
+    res.status(500).json({ message: 'Error al mover el producto', error });
   }
 };
 
@@ -65,14 +91,8 @@ export const getProductoByIdController = async (req: Request, res: Response): Pr
       return;
   }
 
-  // Verificar que el id sea un numero
-  if (isNaN(Number(id))) {
-    res.status(400).json({ message: "El ID proporcionado no es un número válido" });
-    return;
-  }
-
   try {
-      const producto = await getProductoById(Number(id));
+      const producto = await getProductoById(id);
       if (producto) {
           res.status(200).json(producto);
       } else {
@@ -128,18 +148,26 @@ export const updateProductoController = async (req: Request, res: Response): Pro
   const { id } = req.params;
   const { nombre, costo } = req.body;
 
-  if (!id || !nombre || !costo) {
-    res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), nombre, costo' });
+  // Crear un objeto con solo los campos proporcionados
+  const fieldsToUpdate: any = {};
+
+  if (!id) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
     return;
   }
-
-  if (typeof nombre !== 'string' || typeof costo !== 'number') {
+  if (!nombre && !costo) {
+    res.status(400).json({ message: 'Asegúrese de pasar como información: nombre y costo por el body' });
+    return;
+  }else if (typeof nombre !== 'string' || typeof costo !== 'number') {
     res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
     return;
+  }else{
+    if (nombre) fieldsToUpdate.nombre = nombre;
+    if (costo) fieldsToUpdate.costo = costo;
   }
 
   try {
-    const updatedProducto = await updateProducto(Number(id), req.body);
+    const updatedProducto = await updateProducto(id, fieldsToUpdate);
     if (updatedProducto) {
       res.status(200).json(updatedProducto);
     } else {
@@ -161,7 +189,7 @@ export const deleteProductoController = async (req: Request, res: Response): Pro
   }
 
   try {
-    const deletedProducto = await deleteProducto(Number(id));
+    const deletedProducto = await deleteProducto(id);
     if (deletedProducto) {
       res.status(204).json({ message: 'El producto ha sido eliminado' });
     } else {

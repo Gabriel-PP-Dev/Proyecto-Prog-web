@@ -43,7 +43,7 @@ export const addUser = async (userData: Partial<Usuario>): Promise<Usuario> => {
 };
 
 // Obtener un usuario por ID con su tienda asociada
-export const getUserById = async (id: number): Promise<Usuario | null> => {
+export const getUserById = async (id: string): Promise<Usuario | null> => {
   const userRepository = AppDataSource.getRepository(Usuario);
   return await userRepository.findOne({
     where: { id_usuario: id },
@@ -54,7 +54,7 @@ export const getUserById = async (id: number): Promise<Usuario | null> => {
 };
 
 // Actualizar un usuario con su tienda asociada
-export const updateUser = async (id: number, userData: Partial<Usuario>): Promise<Usuario | null> => {
+export const updateUser = async (id: string, userData: Partial<Usuario>): Promise<Usuario | null> => {
   const userRepository = AppDataSource.getRepository(Usuario);
   const user = await userRepository.findOne({
     where: { id_usuario: id },
@@ -88,7 +88,7 @@ export const updateUser = async (id: number, userData: Partial<Usuario>): Promis
 };
 
 // Eliminar un usuario
-export const deleteUser = async (id: number): Promise<boolean> => {
+export const deleteUser = async (id: string): Promise<boolean> => {
   const userRepository = AppDataSource.getRepository(Usuario);
   const result = await userRepository.delete(id);
 

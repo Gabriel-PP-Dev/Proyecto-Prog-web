@@ -85,14 +85,8 @@ export const getUserByIdController = async (
 ): Promise<void> => {
   const { id } = req.params;
 
-  // Verificar que el id sea un numero
-  if (isNaN(Number(id))) {
-    res.status(400).json({ message: "El ID proporcionado no es un número válido" });
-    return;
-  }
-
   try {
-    const user = await getUserById(Number(id));
+    const user = await getUserById(id);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -112,13 +106,6 @@ export const updateUserController = async (
   const { id } = req.params;
   try {
     const { nombre, nombre_usuario, contrasenna, rol, tienda, email } = req.body;
-
-    if (!id || isNaN(Number(id))) {
-      res.status(400).json({
-        message: "id de usuario no proporcionado o no es un número válido",
-      });
-      return;
-    }
 
     // Validar que se proporcione al menos un campo para actualizar
     if (
@@ -156,7 +143,7 @@ export const updateUserController = async (
     if (tienda) fieldsToUpdate.tienda = tienda;
     if (email) fieldsToUpdate.email = email;
 
-    const updatedUser = await updateUser(Number(id), fieldsToUpdate);
+    const updatedUser = await updateUser(id, fieldsToUpdate);
     if (updatedUser) {
       res.status(200).json(updatedUser);
     } else {
@@ -175,13 +162,7 @@ export const deleteUserController = async (
 ): Promise<void> => {
   const { id } = req.params;
   try {
-    if (!id || isNaN(Number(id))) {
-      res.status(400).json({
-        message: "id de usuario no proporcionado o no es un número válido",
-      });
-      return;
-    }
-    const deleted = await deleteUser(Number(id));
+    const deleted = await deleteUser(id);
     if (deleted) {
       res.status(204).send(); // No content
     } else {

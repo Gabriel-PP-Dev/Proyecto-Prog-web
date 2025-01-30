@@ -56,15 +56,8 @@ export const getTiendaByIdController = async (
 ): Promise<void> => {
   const { id } = req.params;
   try {
-    // Verificar que el id sea un numero
-    if (isNaN(Number(id))) {
-      res
-        .status(400)
-        .json({ message: "El ID proporcionado no es un número válido" });
-      return;
-    }
 
-    const tienda = await getTiendaById(Number(id));
+    const tienda = await getTiendaById(id);
     if (tienda) {
       res.status(200).json(tienda);
     } else {
@@ -83,11 +76,6 @@ export const updateTiendaController = async (
   ): Promise<void> => {
     const { id } = req.params;
     try {
-      // Verificar que el id sea un numero
-      if (isNaN(Number(id))) {
-        res.status(400).json({ message: "El ID proporcionado no es un número válido" });
-        return;
-      }
   
       const { nombre, direccion } = req.body;
   
@@ -102,7 +90,7 @@ export const updateTiendaController = async (
       if (nombre) fieldsToUpdate.nombre = nombre;
       if (direccion) fieldsToUpdate.direccion = direccion;
   
-      const updatedTienda = await updateTienda(Number(id), fieldsToUpdate);
+      const updatedTienda = await updateTienda(id, fieldsToUpdate);
       if (updatedTienda) {
         res.status(200).json(updatedTienda);
       } else {
@@ -122,13 +110,7 @@ export const deleteTiendaController = async (
   const { id } = req.params;
   try {
 
-    // Verificar que el id sea un numero
-    if (isNaN(Number(id))) {
-        res.status(400).json({ message: "El ID proporcionado no es un número válido" });
-        return;
-    }
-
-    const deleted = await deleteTienda(Number(id));
+    const deleted = await deleteTienda(id);
     if (deleted) {
       res.status(204).send(); // No content
     } else {

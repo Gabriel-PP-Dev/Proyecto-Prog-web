@@ -20,7 +20,7 @@ export const addTienda = async (tiendaData: Partial<Tienda>): Promise<Tienda> =>
 };
 
 // Obtener una tienda por ID
-export const getTiendaById = async (id: number): Promise<Tienda | null> => {
+export const getTiendaById = async (id: string): Promise<Tienda | null> => {
     const tiendaRepository = AppDataSource.getRepository(Tienda);
     return await tiendaRepository.findOne({
         where: { id_tienda: id },
@@ -30,14 +30,14 @@ export const getTiendaById = async (id: number): Promise<Tienda | null> => {
     });
 };
 // Actualizar una tienda
-export const updateTienda = async (id: number, tiendaData: Partial<Tienda>): Promise<Tienda | null> => {
+export const updateTienda = async (id: string, tiendaData: Partial<Tienda>): Promise<Tienda | null> => {
     const tiendaRepository = AppDataSource.getRepository(Tienda);
     await tiendaRepository.update(id, tiendaData);
     return await tiendaRepository.findOneBy({ id_tienda: id });
 };
 
 // Eliminar una tienda
-export const deleteTienda = async (id: number): Promise<boolean> => {
+export const deleteTienda = async (id: string): Promise<boolean> => {
     const tiendaRepository = AppDataSource.getRepository(Tienda);
     const result = await tiendaRepository.delete(id);
     

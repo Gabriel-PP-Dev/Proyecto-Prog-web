@@ -1,44 +1,55 @@
 import { Request, Response } from "express";
-import { addProducto_Precio, deleteProducto_Precio, getAllProducto_Precio, getProducto_PrecioById, updateProducto_Precio } from "../services/producto_PrecioServices";
+import { addProducto_Precio, deleteProducto_Precio, getAllProducto_Precio, getProducto_PrecioById, getProducto_PrecioByProductId, updateProducto_Precio } from "../services/producto_PrecioServices";
 
-// Obtener todas los Producto_Precio
-export const getAllProducto_PrecioController = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+// Obtener todas los producto_precio
+export const getAllProducto_PrecioController = async (req: Request, res: Response): Promise<void> => {
   try {
     const producto_Precio = await getAllProducto_Precio();
-    res.status(200).json(producto_Precio);
+    res.status(200).json(producto_Precio.map((precio) => ({ ...precio, precio: Number(precio.precio) })));
   } catch (error) {
-    console.error("Error al obtener Producto_Precio:", error);
-    res.status(500).json({ message: "Error al obtener Producto_Precio", error });
+    console.error('Error al obtener productoPrecio:', error);
+    res.status(500).json({ message: 'Error al obtener productoPrecio', error });
   }
 };
 
-// Agregar una nuevo Producto_Precio
-export const addProducto_PrecioController = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+// Agregar un nuevo producto_precio
+export const addProducto_PrecioController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { precio, id_producto, id_tiendaProductoPrecio } = req.body;
+    const { precio, producto } = req.body;
 
-    // Validación básica
-    if (!precio || !id_producto || !id_tiendaProductoPrecio) {
-      res
-        .status(400)
-        .json({
-          message:
-            "El precio, id_producto, id_tiendaProductoPrecio son obligatorios para crear un Producto_precio",
-        });
+    if (!producto || !precio) {
+      res.status(400).json({ message: 'Deve proporcionar un producto:{id_producto: number} y un precio: decimal' });
+      return;
+    }
+    if (typeof precio !== 'number') {
+      res.status(400).json({ message: 'El precio debe ser un número decimal' });
       return;
     }
 
     const newProducto_Precio = await addProducto_Precio(req.body);
     res.status(201).json(newProducto_Precio);
   } catch (error) {
-    console.error("Error al agregar tienda:", error);
-    res.status(500).json({ message: "Error al agregar tienda", error });
+    console.error('Error al agregar productoPrecio:', error);
+    res.status(500).json({ message: 'Error al agregar productoPrecio', error });
+  }
+};
+
+// Actualizar un producto_precio
+export const updateProducto_PrecioController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { precio, producto } = req.body;
+
+    // Crear un objeto con solo los campos proporcionados
+    const fieldsToUpdate: any = {};
+    if (precio) fieldsToUpdate.precio = precio;
+    if (producto) fieldsToUpdate.producto = producto;
+
+    const updatedProducto_Precio = await updateProducto_Precio(id, fieldsToUpdate);
+    res.status(200).json(updatedProducto_Precio);
+  } catch (error) {
+    console.error('Error al actualizar productoPrecio:', error);
+    res.status(500).json({ message: 'Error al actualizar productoPrecio', error });
   }
 };
 
@@ -49,17 +60,13 @@ export const getProducto_PrecioByIdController = async (
 ): Promise<void> => {
   const { id } = req.params;
   try {
-    // Verificar que el id sea un numero
-    if (isNaN(Number(id))) {
-      res
-        .status(400)
-        .json({ message: "El ID proporcionado no es un número válido" });
+    if (!id) {
+      res.status(400).json({ message: "Deve proporcionar un id" });
       return;
     }
-
-    const producto_Precio = await getProducto_PrecioById(Number(id));
+    const producto_Precio = await getProducto_PrecioById(id);
     if (producto_Precio) {
-      res.status(200).json(producto_Precio);
+      res.status(200).json({ ...producto_Precio, precio: Number(producto_Precio.precio) });
     } else {
       res.status(404).json({ message: "Producto_Precio no encontrado" });
     }
@@ -69,44 +76,25 @@ export const getProducto_PrecioByIdController = async (
   }
 };
 
-// Actualizar un Producto_Precio
-export const updateProducto_PrecioController = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-    const { id } = req.params;
-    const { precio, id_producto, id_tiendaProductoPrecio } = req.body;
+// Obtener todos los producto_precio por ID de producto
+export const getProducto_PrecioByProductIdController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  try {
 
-    try {
-      // Verificar que el id sea un numero
-      if (isNaN(Number(id))) {
-        res.status(400).json({ message: "El ID proporcionado no es un número válido" });
-        return;
-      }
-  
-      // Validar que al menos un campo sea proporcionado
-      if (!precio && !id_producto && !id_tiendaProductoPrecio) {
-        res.status(400).json({ message: "Se debe proporcionar al menos un campo para actualizar." });
-        return;
-      }
-  
-      // Crear un objeto con solo los campos proporcionados
-      const fieldsToUpdate: any = {};
-      if (precio) fieldsToUpdate.precio = precio;
-      if (id_producto) fieldsToUpdate.id_producto = id_producto;
-      if (id_tiendaProductoPrecio) fieldsToUpdate.id_tiendaProductoPrecio = id_tiendaProductoPrecio;
-  
-      const updatedProducto_Precio = await updateProducto_Precio(Number(id), fieldsToUpdate);
-      if (updatedProducto_Precio) {
-        res.status(200).json(updatedProducto_Precio);
-      } else {
-        res.status(404).json({ message: "Producto_Precio no encontrado" });
-      }
-    } catch (error) {
-      console.error("Error al actualizar el producto_precio:", error);
-      res.status(500).json({ message: "Error al actualizar el producto_precio", error });
+    const producto_Precio = await getProducto_PrecioByProductId(id);
+    if (producto_Precio) {
+      res.status(200).json(producto_Precio.map((precio) => ({ ...precio, precio: Number(precio.precio) })));
+    } else {
+      res.status(404).json({ message: "No se encontraron producto_precio para el ID de producto proporcionado" });
     }
-  };
+  } catch (error) {
+    console.error("Error al obtener los producto_precio:", error);
+    res.status(500).json({ message: "Error al obtener los producto_precio", error });
+  }
+};
 
 // Eliminar un Producto_Precio
 export const deleteProductoPrecioController = async (
@@ -116,13 +104,7 @@ export const deleteProductoPrecioController = async (
   const { id } = req.params;
   try {
 
-    // Verificar que el id sea un numero
-    if (isNaN(Number(id))) {
-        res.status(400).json({ message: "El ID proporcionado no es un número válido" });
-        return;
-    }
-
-    const deleted = await deleteProducto_Precio(Number(id));
+    const deleted = await deleteProducto_Precio(id);
     if (deleted) {
       res.status(204).send(); // No content
     } else {

@@ -27,7 +27,7 @@ export const addProducto = async (productoData: Partial<Producto>): Promise<Prod
 
 
 // Obtener un producto por ID
-export const getProductoById = async (id: number): Promise<Producto | null> => {
+export const getProductoById = async (id: string): Promise<Producto | null> => {
     const productoRepository = AppDataSource.getRepository(Producto);
     return await productoRepository.findOne({
         where: { id_producto: id },
@@ -51,14 +51,14 @@ export const getProductoByName = async (name: string): Promise<Producto | null> 
 
 
 // Actualizar un producto
-export const updateProducto = async (id: number, productoData: Partial<Producto>): Promise<Producto | null> => {
+export const updateProducto = async (id: string, productoData: Partial<Producto>): Promise<Producto | null> => {
     const productoRepository = AppDataSource.getRepository(Producto);
     await productoRepository.update(id, productoData);
     return await productoRepository.findOneBy({ id_producto: id });
   };
 
 //editar tienda en tiendaProductoPrecio
-export const moveTiendaProductoPrecio = async (idTiendaProductoPrecio: number, idTienda:number): Promise<TiendaProductoPrecio | null> => {
+export const moveTiendaProductoPrecio = async (idTiendaProductoPrecio: string, idTienda:string): Promise<TiendaProductoPrecio | null> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     const tiendaRepository = AppDataSource.getRepository(Tienda);
 
@@ -86,46 +86,54 @@ export const moveTiendaProductoPrecio = async (idTiendaProductoPrecio: number, i
 };
 
 // Mover producto a otra tienda
-export const moveProducto = async (idProducto: number, idNuevaTienda: number): Promise<TiendaProductoPrecio[] | null> => {
+export const moveProducto = async (id_producto: string, id_tienda_destino: string, cantidad: number): Promise<boolean> => {
   const productoRepository = AppDataSource.getRepository(Producto);
+  const productoPrecioRepository = AppDataSource.getRepository(Producto_Precio);
   const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
 
-  // Buscar el producto por su ID y obtener todos los Producto_Precio asociados
+  // Buscar el producto por su ID
   const producto = await productoRepository.findOne({ 
-    where: { id_producto: idProducto },
+    where: { id_producto }, 
     relations: ['producto_precios'] 
   });
 
   if (!producto) {
-    return null; // Devolver null si no se encuentra el producto
+    return false; // Devolver false si no se encuentra el producto
   }
 
-  const productosPrecio = producto.producto_precios;
+  // Obtener los Producto_Precio asociados al producto
+  const productoPrecios = await productoPrecioRepository.find({
+    where: { producto: { id_producto } },
+    relations: ['tiendaProductoPrecio']
+  });
 
-  const tiendaProductoPrecioActualizados: TiendaProductoPrecio[] = [];
+  for (const productoPrecio of productoPrecios) {
+    // Obtener el TiendaProductoPrecio asociado al Producto_Precio
+    const tiendaProductoPrecio = productoPrecio.tiendaProductoPrecio;
 
-  for (const productoPrecio of productosPrecio) {
-    // Obtener todos los registros de TiendaProductoPrecio asociados al Producto_Precio
-    const tiendaProductoPrecios = await tiendaProductoPrecioRepository.find({ 
-      where: { producto_precio: { id_producto_precio: productoPrecio.id_producto_precio } } 
-    });
-
-    for (const tiendaProductoPrecio of tiendaProductoPrecios) {
-      // Utilizar el servicio existente para cambiar la tienda en TiendaProductoPrecio
-      const tiendaProductoActualizado = await moveTiendaProductoPrecio(tiendaProductoPrecio.id_tiendaProductoPrecio, idNuevaTienda);
-      
-      if (tiendaProductoActualizado) {
-        tiendaProductoPrecioActualizados.push(tiendaProductoActualizado);
+    if (tiendaProductoPrecio) {
+      // Verificar si el TiendaProductoPrecio es de la tienda de origen
+      if (tiendaProductoPrecio.tienda.id_tienda === id_tienda_destino) {
+        // Actualizar la cantidad en la tienda de destino
+        tiendaProductoPrecio.cantidad_en_tienda += cantidad;
+        await tiendaProductoPrecioRepository.save(tiendaProductoPrecio);
+      } else {
+        // Verificar si el TiendaProductoPrecio es de la tienda de origen y tiene suficiente cantidad
+        if (tiendaProductoPrecio.tienda.id_tienda !== id_tienda_destino && tiendaProductoPrecio.cantidad_en_tienda >= cantidad) {
+          // Actualizar la cantidad en la tienda de origen
+          tiendaProductoPrecio.cantidad_en_tienda -= cantidad;
+          await tiendaProductoPrecioRepository.save(tiendaProductoPrecio);
+        }
       }
     }
   }
 
-  return tiendaProductoPrecioActualizados;
+  return true;
 };
 
 
 // Eliminar un producto
-export const deleteProducto = async (id: number): Promise<boolean> => {
+export const deleteProducto = async (id: string): Promise<boolean> => {
     const productoRepository = AppDataSource.getRepository(Producto);
     const productoPrecioRepository = AppDataSource.getRepository(Producto_Precio);
   
@@ -169,7 +177,7 @@ export const getProductosByName = async (name: string): Promise<Producto[]> => {
 
 
 // Obtener productos de Tienda (id) ordenados por cantidad 
-export const getProductosByTiendaSortedByQuantity = async (id: number): Promise<TiendaProductoPrecio[]> => {
+export const getProductosByTiendaSortedByQuantity = async (id: string): Promise<TiendaProductoPrecio[]> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     const productos = await tiendaProductoPrecioRepository.find({
       where: { tienda: { id_tienda : id } }, // Filtrar por id de la tienda

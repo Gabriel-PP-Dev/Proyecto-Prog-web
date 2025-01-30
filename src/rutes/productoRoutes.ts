@@ -30,7 +30,7 @@ router.get('/producto/:id', authenticate(['Administrador', 'Trabajador']), getPr
  * Obtener un producto por ID
  * 
  * Recibe en el parámetro :id:
- * - id (number): ID del producto
+ * - id (string): ID del producto
  * 
  * Retorna:
  * - El producto con su ID y otros datos
@@ -55,7 +55,7 @@ router.put('/producto/updateProducto/:id', authenticate(['Administrador', 'Traba
  * Actualizar un producto
  * 
  * Recibe en el parámetro :id:
- * - id (number): ID del producto
+ * - id (string): ID del producto
  * 
  * Recibe en el body:
  * - nombre (string): Nuevo nombre del producto (opcional)
@@ -71,7 +71,7 @@ router.delete('/producto/deleteProducto/:id', authenticate(['Administrador', 'Tr
  * Eliminar un producto
  * 
  * Recibe en el parámetro :id:
- * - id (number): ID del producto
+ * - id (string): ID del producto
  * 
  * No recibe datos en el body
  * 
@@ -97,7 +97,7 @@ router.get('/producto/searchByTienda/:id', authenticate(['Administrador', 'Traba
  * Obtener productos de una tienda ordenados por cantidad
  * 
  * Recibe en el parámetro :id:
- * - id (number): ID de la tienda
+ * - id (string): ID de la tienda
  * 
  * Retorna:
  * - Un arreglo de productos de la tienda ordenados por cantidad
@@ -109,13 +109,15 @@ router.put('/producto/move/:id', authenticate(['Administrador', 'Trabajador']), 
  * Mover un producto a otra tienda
  * 
  * Recibe en el parámetro :id:
- * - id (number): ID del producto
+ * - id (string): ID del producto
  * 
  * Recibe en el body:
- * - idTienda (number): ID de la tienda a la que se moverá el producto
+ * - id_tienda_origen (string): ID de la tienda de origen del producto
+ * - id_tienda_destino (string): ID de la tienda a la que se moverá el producto
+ * - cantidad (number): Cantidad del producto que se moverá
  * 
  * Retorna:
- * - El producto movido con su nuevo ID de tienda
+ * - Un mensaje de confirmación de movimiento
  */
 
 export default router;

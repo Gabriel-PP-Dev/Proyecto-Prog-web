@@ -9,7 +9,7 @@ router.get('/usuario', authenticate(['Administrador', 'Trabajador']), getAllUser
 
 // Agrega un nuevo usuario al sistema 
 // (body: {nombre: string, nombre_usuario: string, email: string(deve tener @gmail.com),
-//  contrasenna, rol: string, tienda: {"id_tienda": number} })
+//  contrasenna, rol: string, tienda: {"id_tienda": string} })
 router.post('/usuario/createUsuario', addUserController);
 
 // Devuelve un usuario por su id
@@ -17,7 +17,7 @@ router.get('/usuario/:id', authenticate(['Administrador', 'Trabajador']), getUse
 
 // Actualiza los datos del usuario segun su id
 // (body: {nombre: string, nombre_usuario: string, email: string(deve tener @gmail.com),
-//  contrasenna, rol: string, id_tienda: number })
+//  contrasenna, rol: string, id_tienda: string })
 router.put('/usuario/updateUsuari/:id', authenticate(['Administrador', 'Trabajador']), updateUserController);
 
 // Elimina un usuario segun el id

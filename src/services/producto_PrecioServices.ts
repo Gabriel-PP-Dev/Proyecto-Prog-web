@@ -18,10 +18,10 @@ export const addProducto_Precio = async (producto_PrecioData: Partial<Producto_P
     const producto_PrecioRepository = AppDataSource.getRepository(Producto_Precio);
     const newProducto_Precio = producto_PrecioRepository.create(producto_PrecioData);
     return await producto_PrecioRepository.save(newProducto_Precio);
-};
+  };
 
 // Obtener una tienda por ID
-export const getProducto_PrecioById = async (id: number): Promise<Producto_Precio | null> => {
+export const getProducto_PrecioById = async (id: string): Promise<Producto_Precio | null> => {
     const producto_PrecioRepository = AppDataSource.getRepository(Producto_Precio);
     return await producto_PrecioRepository.findOne({
         where: { id_producto_precio: id },
@@ -32,20 +32,29 @@ export const getProducto_PrecioById = async (id: number): Promise<Producto_Preci
     });
 };
 // Actualizar una tienda
-export const updateProducto_Precio = async (id: number, tiendaData: Partial<Producto_Precio>): Promise<Producto_Precio | null> => {
+export const updateProducto_Precio = async (id: string, tiendaData: Partial<Producto_Precio>): Promise<Producto_Precio | null> => {
     const tiendaRepository = AppDataSource.getRepository(Producto_Precio);
     await tiendaRepository.update(id, tiendaData);
     return await tiendaRepository.findOneBy({ id_producto_precio: id });
 };
 
 // Eliminar una tienda
-export const deleteProducto_Precio = async (id: number): Promise<boolean> => {
+export const deleteProducto_Precio = async (id: string): Promise<boolean> => {
     const tiendaRepository = AppDataSource.getRepository(Producto_Precio);
     const result = await tiendaRepository.delete(id);
     
     // Verifica que result.affected no sea null o undefined
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
 };
+
+// Obtener todos los producto_precio por ID de producto
+export const getProducto_PrecioByProductId = async (id_producto: string): Promise<Producto_Precio[]> => {
+    const producto_PrecioRepository = AppDataSource.getRepository(Producto_Precio);
+    return await producto_PrecioRepository.find({
+      where: { producto: { id_producto } },
+      relations: ["producto"],
+    });
+  };
 
 // Obtener tiendas cuyo nombre contenga la cadena proporcionada
 //export const getTiendaByName = async (name: string): Promise<Producto_Precio[]> => {

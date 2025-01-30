@@ -5,7 +5,7 @@ import { TiendaProductoPrecio } from '../entities/TiendaProductoPrecio';
 export const getAllTiendaProductoPrecio = async (): Promise<TiendaProductoPrecio[]> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     return await tiendaProductoPrecioRepository.find({
-        relations: ['tienda', 'producto_precio', 'ventas']
+        relations:['tienda', 'producto_precios.producto', 'ventas']
     });
 };
 
@@ -13,28 +13,44 @@ export const getAllTiendaProductoPrecio = async (): Promise<TiendaProductoPrecio
 export const addTiendaProductoPrecio = async (tiendaProductoPrecioData: Partial<TiendaProductoPrecio>): Promise<TiendaProductoPrecio> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     const newTiendaProductoPrecio = tiendaProductoPrecioRepository.create(tiendaProductoPrecioData);
-    return await tiendaProductoPrecioRepository.save(newTiendaProductoPrecio);
+    await tiendaProductoPrecioRepository.save(newTiendaProductoPrecio);
+    return newTiendaProductoPrecio;
 };
 
 // Obtener un registro de TiendaProductoPrecio por ID
-export const getTiendaProductoPrecioById = async (id: number): Promise<TiendaProductoPrecio | null> => {
+export const getTiendaProductoPrecioById = async (id: string): Promise<TiendaProductoPrecio | null> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     return await tiendaProductoPrecioRepository.findOne({
         where: { id_tiendaProductoPrecio: id },
-        relations: ['tienda', 'producto_precio', 'ventas']
+        relations:['tienda', 'producto_precios.producto', 'ventas']
     });
 };
 
 // Actualizar un registro de TiendaProductoPrecio
-export const updateTiendaProductoPrecio = async (id: number, tiendaProductoPrecioData: Partial<TiendaProductoPrecio>): Promise<TiendaProductoPrecio | null> => {
+export const updateTiendaProductoPrecio = async (id: string, tiendaProductoPrecioData: Partial<TiendaProductoPrecio>): Promise<TiendaProductoPrecio | null> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     await tiendaProductoPrecioRepository.update(id, tiendaProductoPrecioData);
     return await tiendaProductoPrecioRepository.findOneBy({ id_tiendaProductoPrecio: id });
 };
 
 // Eliminar un registro de TiendaProductoPrecio
-export const deleteTiendaProductoPrecio = async (id: number): Promise<boolean> => {
+export const deleteTiendaProductoPrecio = async (id: string): Promise<boolean> => {
     const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
     const result = await tiendaProductoPrecioRepository.delete(id);
     return result.affected !== null && result.affected !== undefined && result.affected > 0;
+};
+
+// Obtener todos los registros de TiendaProductoPrecio por ID de producto
+export const getTiendaProductoPrecioByProductId = async (id_producto: string): Promise<TiendaProductoPrecio[]> => {
+    const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
+    return await tiendaProductoPrecioRepository.find({
+        relations: ['tienda', 'producto_precios', 'producto_precios.producto', 'ventas'],
+        where: {
+            producto_precios: {
+                producto: {
+                    id_producto
+                }
+            }
+        }
+    });
 };

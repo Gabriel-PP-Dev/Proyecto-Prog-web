@@ -30,7 +30,7 @@ router.put('/tienda/updateTienda/:id',authenticate(['Administrador', 'Trabajador
  * Actualizar una tienda
  * 
  * Recive por parametrso:
- * id (number): Id de la tienda que se desea modifiar
+ * id (string): Id de la tienda que se desea modifiar
  * 
  * Recibe en el body:
  * - nombre (string): Nuevo nombre de la tienda (opcional)
@@ -46,7 +46,7 @@ router.delete('/tienda/deleteTienda/:id',authenticate(['Administrador', 'Trabaja
  * Eliminar una tienda
  * 
  * Recive por parametrso:
- * id (number): Id de la tienda que se desea eliminar
+ * id (string): Id de la tienda que se desea eliminar
  * 
  * No recibe datos en el body
  * 
@@ -60,7 +60,7 @@ router.get('/tienda/:id',authenticate(['Administrador', 'Trabajador']), getTiend
  * Obtener una tienda por ID
  * 
  * Recive por parametrso:
- * id (number): Id de la tienda que se desea consultar
+ * id (string): Id de la tienda que se desea consultar
  * 
  * No recibe datos en el body
  * 
