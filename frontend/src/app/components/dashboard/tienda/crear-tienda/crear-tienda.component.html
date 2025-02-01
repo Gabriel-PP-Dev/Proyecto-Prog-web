@@ -1,0 +1,55 @@
+<div class="form-container">
+    <mat-card class="form-card">
+        <h3 class="form-title">Formulario de Tienda</h3>
+        <form [formGroup]="form_tienda" (ngSubmit)="agregarTienda()">
+            <div class="form-field">
+                <mat-form-field class="ancho">
+                    <mat-label>Usuario</mat-label>
+                    <input matInput autocomplete="off" formControlName="usuario">
+                </mat-form-field>
+            </div>
+
+            <div class="form-field">
+                <mat-form-field class="ancho">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput autocomplete="off" formControlName="nombre">
+                </mat-form-field> 
+            </div>
+
+            <div class="form-field">
+                <mat-form-field class="ancho">
+                    <mat-label>Apellidos</mat-label>
+                    <input matInput autocomplete="off" formControlName="apellidos">
+                </mat-form-field> 
+            </div>
+
+            <div class="form-field">
+                <mat-form-field class="ancho">
+                    <mat-label>Rol</mat-label>
+                    <mat-select formControlName="rol">
+                        <mat-option *ngFor="let role of roles" [value]="role.value">
+                            {{role.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="form-field">
+                <mat-form-field class="ancho">
+                    <mat-label>Estado</mat-label>
+                    <mat-select formControlName="estado">
+                        <mat-option *ngFor="let estado of estados" [value]="estado.value">
+                            {{estado.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="form-buttons">
+                <button mat-raised-button style="margin-right: 20px;" routerLink="/dashboard/tiendas">Volver</button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="form_tienda.invalid">Aceptar</button> 
+            </div>
+        </form>
+    </mat-card>
+</div>
+
