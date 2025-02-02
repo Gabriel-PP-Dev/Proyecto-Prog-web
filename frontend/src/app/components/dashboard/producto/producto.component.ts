@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Producto } from 'src/app/interface/producto';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductoService } from 'src/app/sevices/producto.service';
 
 @Component({
   selector: 'app-producto',
@@ -10,26 +11,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./producto.component.css']
 })
 export class ProductoComponent implements OnInit {
-  displayedColumns: string[] = ['nombre', 'costo', 'acciones']; // Agregamos 'acciones'
+  displayedColumns: string[] = ['nombre', 'costo', 'acciones'];
   dataSource = new MatTableDataSource<Producto>([]);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute, private productoService: ProductoService) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
-    this.loadData();
+    this.cargarProductos();
   }
 
-  loadData() {
-    const productos: Producto[] = [
-      { nombre: 'Producto 1', costo: '100',id:'kfkfkfkoooooooooo'},
-      { nombre: 'Producto 2', costo: '200',id:'kfkfkfkfaaaaaaaaa'},
-      { nombre: 'Producto 3', costo: '300', id:'kfkfkfkeeeeeeeee'},
-    ];
-
-    this.dataSource.data = productos;
-    this.dataSource.paginator = this.paginator;
+  cargarProductos() {
+    this.productoService.getProductos().subscribe((productos: Producto[]) => {
+      this.dataSource.data = productos;
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   applyFilter(event: Event) {
@@ -37,12 +34,14 @@ export class ProductoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  editarProducto(producto:Producto) {
-    this.router.navigate(['/dashboard/productos/crear-producto'], { state: { productoId: producto.id }});
+  editarProducto(producto: Producto) {
+    this.router.navigate(['/dashboard/producto/crear-producto'], { state: { productoId: producto.id }});
   }
 
-  eliminarProducto(producto:Producto) {
-    
+  eliminarProducto(producto: Producto) {
+    this.productoService.deleteProducto(producto.id as string).subscribe(() => {
+      this.cargarProductos();
+    });
   }
 
   venderProducto(producto: Producto) {

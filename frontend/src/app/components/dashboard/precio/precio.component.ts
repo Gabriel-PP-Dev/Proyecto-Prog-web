@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Precio } from 'src/app/interface/precio';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PrecioService } from 'src/app/sevices/precio.service';
 
 @Component({
   selector: 'app-precio',
@@ -12,27 +13,21 @@ import { Router } from '@angular/router';
 
 export class PrecioComponent implements OnInit{
   displayedColumns: string[] = ['producto', 'cantidad', 'precio', 'tienda', 'acciones'];
-  dataSource = new MatTableDataSource<Precio>([]); // Inicializa con un array vacío
+  dataSource = new MatTableDataSource<Precio>([]);
+
+  constructor(private router: Router, private route: ActivatedRoute, private precioService: PrecioService) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router:Router){}
-
   ngOnInit(): void {
-    this.loadData();
+    this.cargarPrecios();
   }
 
-  loadData() {
-    const ventas: Precio[] = [
-        {cantidad: 5, producto: 'Julio', precio:56, tienda:'tiendaName', id:'skjdkjd'},  
-        {cantidad: 5, producto: 'Julio', precio:56, tienda:'tiendaName', id:'skjdkjd'},  
-        {cantidad: 5, producto: 'Julio', precio:56, tienda:'tiendaName', id:'skjdkjd'},  
-        {cantidad: 5, producto: 'Julio', precio:56, tienda:'tiendaName', id:'skjdkjd'},  
-        {cantidad: 5, producto: 'Julio', precio:56, tienda:'tiendaName', id:'skjdkjd'},  
-    ];
-    
-    this.dataSource.data = ventas;
-    this.dataSource.paginator = this.paginator;
+  cargarPrecios() {
+    this.precioService.getPrecios().subscribe((precios: Precio[]) => {
+      this.dataSource.data = precios;
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   applyFilter(event: Event) {
@@ -40,11 +35,13 @@ export class PrecioComponent implements OnInit{
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  editarVenta(precio:Precio) {
-    this.router.navigate(['/dashboard/precios/crear-precio'], { state: { precioId: precio.id }});
+  editarPrecio(precio: Precio) {
+    this.router.navigate(['/dashboard/precio/crear-precio'], { state: { precioId: precio.id }});
   }
 
-  eliminarVenta(precio:Precio) {
-  
+  eliminarPrecio(precio: Precio) {
+    this.precioService.deletePrecio(precio.id as string).subscribe(() => {
+      this.cargarPrecios();
+    });
   }
 }
