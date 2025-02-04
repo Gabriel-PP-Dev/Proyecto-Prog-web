@@ -16,10 +16,10 @@ export class VentaService {
   }
 
   deleteVenta(id: string) {
-    return this.http.delete(`${this.apiUrl}/venta/DeleteVenta/${id}`);
+    return this.http.delete(`${this.apiUrl}/DeleteVenta/${id}`);
   }
   
   updateVenta(id: string, venta: Venta) {
-    return this.http.put(`${this.apiUrl}/venta/UpdateVenta/${id}`, venta);
+    return this.http.put(`${this.apiUrl}/UpdateVenta/${id}`, venta);
   }
 }

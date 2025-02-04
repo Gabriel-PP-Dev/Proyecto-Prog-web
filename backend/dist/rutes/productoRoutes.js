@@ -1,14 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const productoController_1 = require("../controllers/productoController");
-const authenticate_1 = __importDefault(require("../helpers/authenticate"));
 const router = (0, express_1.Router)();
 // Obtener todos los productos
-router.get('/producto', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.getAllProductosController);
+router.get('/producto', productoController_1.getAllProductosController);
 /**
  * Obtener todos los productos
  *
@@ -18,7 +14,7 @@ router.get('/producto', (0, authenticate_1.default)(['Administrador', 'Trabajado
  * - Un arreglo de productos con sus IDs y otros datos
  */
 // Obtener un producto por ID
-router.get('/producto/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.getProductoByIdController);
+router.get('/producto/:id', productoController_1.getProductoByIdController);
 /**
  * Obtener un producto por ID
  *
@@ -29,7 +25,7 @@ router.get('/producto/:id', (0, authenticate_1.default)(['Administrador', 'Traba
  * - El producto con su ID y otros datos
  */
 // Agregar un nuevo producto
-router.post('/producto/createProducto', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.addProductoController);
+router.post('/producto/createProducto', productoController_1.addProductoController);
 /**
  * Agregar un nuevo producto
  *
@@ -41,7 +37,7 @@ router.post('/producto/createProducto', (0, authenticate_1.default)(['Administra
  * - El producto creado con su ID y otros datos
  */
 // Actualizar un producto
-router.put('/producto/updateProducto/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.updateProductoController);
+router.put('/producto/updateProducto/:id', productoController_1.updateProductoController);
 /**
  * Actualizar un producto
  *
@@ -56,7 +52,7 @@ router.put('/producto/updateProducto/:id', (0, authenticate_1.default)(['Adminis
  * - El producto actualizado con su ID y otros datos
  */
 // Eliminar un producto
-router.delete('/producto/deleteProducto/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.deleteProductoController);
+router.delete('/producto/deleteProducto/:id', productoController_1.deleteProductoController);
 /**
  * Eliminar un producto
  *
@@ -69,7 +65,7 @@ router.delete('/producto/deleteProducto/:id', (0, authenticate_1.default)(['Admi
  * - Un mensaje de confirmación de eliminación
  */
 // Buscar un producto por nombre
-router.get('/producto/searchByName/:name', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.getProductosByNameController);
+router.get('/producto/searchByName/:name', productoController_1.getProductosByNameController);
 /**
  * Buscar un producto por nombre
  *
@@ -80,7 +76,7 @@ router.get('/producto/searchByName/:name', (0, authenticate_1.default)(['Adminis
  * - Un arreglo de productos que coinciden con el nombre buscado
  */
 // Obtener productos de una tienda ordenados por cantidad
-router.get('/producto/searchByTienda/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.getProductosByTiendaSortedByQuantityController);
+router.get('/producto/searchByTienda/:id', productoController_1.getProductosByTiendaSortedByQuantityController);
 /**
  * Obtener productos de una tienda ordenados por cantidad
  *
@@ -91,7 +87,7 @@ router.get('/producto/searchByTienda/:id', (0, authenticate_1.default)(['Adminis
  * - Un arreglo de productos de la tienda ordenados por cantidad
  */
 // Mover un producto a otra tienda
-router.put('/producto/move/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), productoController_1.moveProductoController);
+router.put('/producto/move/:id', productoController_1.moveProductoController);
 /**
  * Mover un producto a otra tienda
  *

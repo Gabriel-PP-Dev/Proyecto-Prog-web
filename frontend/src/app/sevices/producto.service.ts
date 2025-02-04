@@ -16,10 +16,10 @@ export class ProductoService {
     }
   
     deleteProducto(id: string) {
-      return this.http.delete(`${this.apiUrl}/producto/deleteProducto/${id}`);
+      return this.http.delete(`${this.apiUrl}/deleteProducto/${id}`);
     }
   
       updateProducto(id: string, producto: Producto) {
-        return this.http.put(`${this.apiUrl}/producto/updateProducto/${id}`, producto);
+        return this.http.put(`${this.apiUrl}/updateProducto/${id}`, producto);
       }
 }

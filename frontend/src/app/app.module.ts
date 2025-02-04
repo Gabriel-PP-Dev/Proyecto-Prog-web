@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { SharedModule } from './components/shared/shared.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button'; 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 
 
@@ -19,7 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
     AppRoutingModule,
     SharedModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

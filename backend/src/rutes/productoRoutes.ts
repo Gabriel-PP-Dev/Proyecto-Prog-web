@@ -14,7 +14,7 @@ import authenticate from '../helpers/authenticate';
 const router = Router();
 
 // Obtener todos los productos
-router.get('/producto', authenticate(['Administrador', 'Trabajador']), getAllProductosController);
+router.get('/producto', getAllProductosController);
 /**
  * Obtener todos los productos
  * 
@@ -25,7 +25,7 @@ router.get('/producto', authenticate(['Administrador', 'Trabajador']), getAllPro
  */
 
 // Obtener un producto por ID
-router.get('/producto/:id', authenticate(['Administrador', 'Trabajador']), getProductoByIdController);
+router.get('/producto/:id', getProductoByIdController);
 /**
  * Obtener un producto por ID
  * 
@@ -37,7 +37,7 @@ router.get('/producto/:id', authenticate(['Administrador', 'Trabajador']), getPr
  */
 
 // Agregar un nuevo producto
-router.post('/producto/createProducto', authenticate(['Administrador', 'Trabajador']), addProductoController);
+router.post('/producto/createProducto', addProductoController);
 /**
  * Agregar un nuevo producto
  * 
@@ -50,7 +50,7 @@ router.post('/producto/createProducto', authenticate(['Administrador', 'Trabajad
  */
 
 // Actualizar un producto
-router.put('/producto/updateProducto/:id', authenticate(['Administrador', 'Trabajador']), updateProductoController);
+router.put('/producto/updateProducto/:id', updateProductoController);
 /**
  * Actualizar un producto
  * 
@@ -66,7 +66,7 @@ router.put('/producto/updateProducto/:id', authenticate(['Administrador', 'Traba
  */
 
 // Eliminar un producto
-router.delete('/producto/deleteProducto/:id', authenticate(['Administrador', 'Trabajador']), deleteProductoController);
+router.delete('/producto/deleteProducto/:id', deleteProductoController);
 /**
  * Eliminar un producto
  * 
@@ -80,7 +80,7 @@ router.delete('/producto/deleteProducto/:id', authenticate(['Administrador', 'Tr
  */
 
 // Buscar un producto por nombre
-router.get('/producto/searchByName/:name', authenticate(['Administrador', 'Trabajador']), getProductosByNameController);
+router.get('/producto/searchByName/:name', getProductosByNameController);
 /**
  * Buscar un producto por nombre
  * 
@@ -92,7 +92,7 @@ router.get('/producto/searchByName/:name', authenticate(['Administrador', 'Traba
  */
 
 // Obtener productos de una tienda ordenados por cantidad
-router.get('/producto/searchByTienda/:id', authenticate(['Administrador', 'Trabajador']), getProductosByTiendaSortedByQuantityController);
+router.get('/producto/searchByTienda/:id', getProductosByTiendaSortedByQuantityController);
 /**
  * Obtener productos de una tienda ordenados por cantidad
  * 
@@ -104,7 +104,7 @@ router.get('/producto/searchByTienda/:id', authenticate(['Administrador', 'Traba
  */
 
 // Mover un producto a otra tienda
-router.put('/producto/move/:id', authenticate(['Administrador', 'Trabajador']), moveProductoController);
+router.put('/producto/move/:id', moveProductoController);
 /**
  * Mover un producto a otra tienda
  * 

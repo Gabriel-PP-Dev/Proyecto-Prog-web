@@ -1,7 +1,9 @@
-export interface Precio{
-    producto: string;
+import { Producto } from "./producto";
+import { TiendaProductoPrecio } from "./tiendaproductoprecio";
+
+export interface Producto_Precio{
+    id_producto_precio: string;
     precio: number;
-    tienda: String;
-    cantidad: number;
-    id:String
+    producto: Producto;
+    tiendaProductoPrecio?: TiendaProductoPrecio;
 }

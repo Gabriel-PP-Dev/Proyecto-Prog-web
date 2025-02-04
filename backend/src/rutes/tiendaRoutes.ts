@@ -25,7 +25,7 @@ router.post('/tienda/createTienda', addTiendaController);
  */
 
 // Actualizar una tienda
-router.put('/tienda/updateTienda/:id',authenticate(['Administrador', 'Trabajador']), updateTiendaController);
+router.put('/tienda/updateTienda/:id', updateTiendaController);
 /**
  * Actualizar una tienda
  * 
@@ -41,7 +41,7 @@ router.put('/tienda/updateTienda/:id',authenticate(['Administrador', 'Trabajador
  */
 
 // Eliminar una tienda
-router.delete('/tienda/deleteTienda/:id',authenticate(['Administrador', 'Trabajador']), deleteTiendaController);
+router.delete('/tienda/deleteTienda/:id', deleteTiendaController);
 /**
  * Eliminar una tienda
  * 
@@ -55,7 +55,7 @@ router.delete('/tienda/deleteTienda/:id',authenticate(['Administrador', 'Trabaja
  */
 
 // Obtener una tienda por ID
-router.get('/tienda/:id',authenticate(['Administrador', 'Trabajador']), getTiendaByIdController);
+router.get('/tienda/:id', getTiendaByIdController);
 /**
  * Obtener una tienda por ID
  * 
@@ -69,7 +69,7 @@ router.get('/tienda/:id',authenticate(['Administrador', 'Trabajador']), getTiend
  */
 
 // Obtener todas las tiendas
-router.get('/tienda',authenticate(['Administrador', 'Trabajador']), getAllTiendasController);
+router.get('/tienda', getAllTiendasController);
 /**
  * Obtener todas las tiendas
  * 
@@ -80,7 +80,7 @@ router.get('/tienda',authenticate(['Administrador', 'Trabajador']), getAllTienda
  */
 
 // Buscar tiendas por nombre
-router.get('/tienda/searchByName/:name',authenticate(['Administrador', 'Trabajador']), getTiendaByNameController);
+router.get('/tienda/searchByName/:name', getTiendaByNameController);
 /**
  * Buscar tiendas por nombre
  * 

@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Precio } from 'src/app/interface/precio';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PrecioService } from 'src/app/sevices/precio.service';
+import { Producto_Precio } from 'src/app/interface/precio';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-precio',
@@ -13,21 +12,23 @@ import { PrecioService } from 'src/app/sevices/precio.service';
 
 export class PrecioComponent implements OnInit{
   displayedColumns: string[] = ['producto', 'cantidad', 'precio', 'tienda', 'acciones'];
-  dataSource = new MatTableDataSource<Precio>([]);
-
-  constructor(private router: Router, private route: ActivatedRoute, private precioService: PrecioService) {}
+  dataSource = new MatTableDataSource<Producto_Precio>([]); // Inicializa con un array vacío
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  constructor(private router:Router){}
+
   ngOnInit(): void {
-    this.cargarPrecios();
+    this.loadData();
   }
 
-  cargarPrecios() {
-    this.precioService.getPrecios().subscribe((precios: Precio[]) => {
-      this.dataSource.data = precios;
-      this.dataSource.paginator = this.paginator;
-    });
+  loadData() {
+    const ventas: Producto_Precio[] = [
+
+    ];
+    
+    this.dataSource.data = ventas;
+    this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {
@@ -35,13 +36,11 @@ export class PrecioComponent implements OnInit{
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  editarPrecio(precio: Precio) {
-    this.router.navigate(['/dashboard/precio/crear-precio'], { state: { precioId: precio.id }});
+  editarVenta(precio:Producto_Precio) {
+    this.router.navigate(['/dashboard/precios/crear-precio'], { state: { precioId: precio.id_producto_precio}});
   }
 
-  eliminarPrecio(precio: Precio) {
-    this.precioService.deletePrecio(precio.id as string).subscribe(() => {
-      this.cargarPrecios();
-    });
+  eliminarVenta(precio:Producto_Precio) {
+  
   }
 }

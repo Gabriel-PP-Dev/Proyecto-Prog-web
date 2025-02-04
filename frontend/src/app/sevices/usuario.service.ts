@@ -16,10 +16,10 @@ private apiUrl = 'http://localhost:4000/usuario';
   }
 
   deleteUsuario(id: string) {
-    return this.http.delete(`${this.apiUrl}/usuario/deleteUsuario/${id}`);
+    return this.http.delete(`${this.apiUrl}/deleteUsuario/${id}`);
   }
   
   updateUsuario(id: string, ususario: Usuario) {
-    return this.http.put(`${this.apiUrl}/usuario/updateUsuario/${id}`, ususario);
+    return this.http.put(`${this.apiUrl}/updateUsuario/${id}`, ususario);
   }
 }

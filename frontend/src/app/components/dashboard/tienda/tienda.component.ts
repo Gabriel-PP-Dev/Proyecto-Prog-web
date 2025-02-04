@@ -2,8 +2,7 @@
   import { MatTableDataSource } from '@angular/material/table';
   import { MatPaginator } from '@angular/material/paginator';
   import { Tienda } from 'src/app/interface/tienda'; // Cambia la interfaz a Tienda
-  import { ActivatedRoute, Router } from '@angular/router';
-import { TiendaService } from 'src/app/sevices/tienda.service';
+  import { Router } from '@angular/router';
 
   @Component({
     selector: 'app-tienda',
@@ -13,35 +12,37 @@ import { TiendaService } from 'src/app/sevices/tienda.service';
   
   export class TiendaComponent{
     displayedColumns: string[] = ['nombre', 'direccion', 'acciones'];
-    dataSource = new MatTableDataSource<Tienda>([]);
-    constructor(private router : Router, private route: ActivatedRoute, private tiendaService: TiendaService){}
+    dataSource = new MatTableDataSource<Tienda>([]); // Inicializa con un array vacío
+    constructor(private router : Router){}
   
     @ViewChild(MatPaginator) paginator!: MatPaginator;
   
     ngOnInit(): void {
-      this.cargarTiendas();
+      this.loadData();
     }
   
-cargarTiendas() {
-    this.tiendaService.getTiendas().subscribe((tiendas: Tienda[]) => {
+    loadData() {
+      const tiendas: Tienda[] = [
+          {nombre: 'jcmartinez', direccion: 'Julio', id:'kdjdjd'},  
+          {nombre: 'jcmartinez', direccion: 'Julio', id:'kdjdjd'},  
+          {nombre: 'jcmartinez', direccion: 'Julio', id:'kdjdjd'},  
+      ];
+      
       this.dataSource.data = tiendas;
       this.dataSource.paginator = this.paginator;
-    });
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  editarTienda(tienda: Tienda) {
-    this.router.navigate(['/dashboard/tienda/crear-tienda'], { state: { tiendaId: tienda.id }});
-  }
-
-  eliminarVenta(tienda: Tienda) {
-    this.tiendaService.deleteTienda(tienda.id as string).subscribe(() => {
-      this.cargarTiendas();
-    });
-  }
+    }
+  
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+  
+    editarTienda(tienda: Tienda) {
+      this.router.navigate(['/dashboard/tiendas/crear-tienda'], { state: { tiendaId: tienda.id }});
+    }
+  
+    eliminarTienda(tienda: Tienda) {
+     
+    }
   }
     

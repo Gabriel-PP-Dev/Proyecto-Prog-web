@@ -40,12 +40,12 @@ export class CrearProductoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  agregarProducto() {   
-    const producto: Producto = {
+ agregarProducto() {   
+    /*const producto: Producto = {
       nombre: this.form_producto.value.nombre,
       costo: this.form_producto.value.costo,
       id: this.form_producto.value.id
-    };
+    };*/
   }
 }
 

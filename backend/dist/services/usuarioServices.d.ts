@@ -6,4 +6,3 @@ export declare const updateUser: (id: string, userData: Partial<Usuario>) => Pro
 export declare const deleteUser: (id: string) => Promise<boolean>;
 export declare const checkUniqueUsername: (nombre_usuario: string) => Promise<boolean>;
 export declare const getUserByName: (name: string) => Promise<Usuario[]>;
-export declare const authenticateUser: (nombre_usuario: string, contrasenna: string) => Promise<Usuario | null>;

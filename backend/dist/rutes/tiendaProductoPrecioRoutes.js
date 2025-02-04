@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const tiendaProductoPrecioController_1 = require("../controllers/tiendaProductoPrecioController");
-const authenticate_1 = __importDefault(require("../helpers/authenticate"));
 const router = (0, express_1.Router)();
 /**
  * Obtener todos los registros de TiendaProductoPrecio
@@ -15,7 +11,7 @@ const router = (0, express_1.Router)();
  * Retorna:
  * - Un arreglo de tiendaProductoPrecio con sus IDs y otros datos
  */
-router.get('/tiendaProductoPrecio', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaProductoPrecioController_1.getAllTiendaProductoPrecioController);
+router.get('/tiendaProductoPrecio', tiendaProductoPrecioController_1.getAllTiendaProductoPrecioController);
 /**
  * Agregar un nuevo registro de TiendaProductoPrecio
  *
@@ -27,7 +23,7 @@ router.get('/tiendaProductoPrecio', (0, authenticate_1.default)(['Administrador'
  * Retorna:
  * - El tiendaProductoPrecio creado con su ID y otros datos
  */
-router.post('/tiendaProductoPrecio/createTiendaProductoPrecio', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaProductoPrecioController_1.addTiendaProductoPrecioController);
+router.post('/tiendaProductoPrecio/createTiendaProductoPrecio', tiendaProductoPrecioController_1.addTiendaProductoPrecioController);
 /**
  * Obtener un registro de TiendaProductoPrecio por ID
  *
@@ -39,7 +35,7 @@ router.post('/tiendaProductoPrecio/createTiendaProductoPrecio', (0, authenticate
  * Retorna:
  * - El tiendaProductoPrecio con su ID y otros datos
  */
-router.get('/tiendaProductoPrecio/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaProductoPrecioController_1.getTiendaProductoPrecioByIdController);
+router.get('/tiendaProductoPrecio/:id', tiendaProductoPrecioController_1.getTiendaProductoPrecioByIdController);
 /**
  * Obtener todos los tiendaProductoPrecio donde esté contenido un producto por su ID
  *
@@ -51,7 +47,7 @@ router.get('/tiendaProductoPrecio/:id', (0, authenticate_1.default)(['Administra
  * Retorna:
  * - Un arreglo de tiendaProductoPrecio que coinciden con el ID de producto proporcionado
  */
-router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaProductoPrecioController_1.getTiendaProductoPrecioByProductIdController);
+router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', tiendaProductoPrecioController_1.getTiendaProductoPrecioByProductIdController);
 /**
  * Actualizar un registro de TiendaProductoPrecio
  *
@@ -66,7 +62,7 @@ router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', (0, au
  * Retorna:
  * - El tiendaProductoPrecio actualizado con su ID y otros datos
  */
-router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaProductoPrecioController_1.updateTiendaProductoPrecioController);
+router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', tiendaProductoPrecioController_1.updateTiendaProductoPrecioController);
 /**
  * Eliminar un registro de TiendaProductoPrecio
  *
@@ -78,5 +74,5 @@ router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', (0, authentic
  * Retorna:
  * - Un mensaje de confirmación de eliminación
  */
-router.delete('/tiendaProductoPrecio/deleteTiendaProductoPrecio/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaProductoPrecioController_1.deleteTiendaProductoPrecioController);
+router.delete('/tiendaProductoPrecio/deleteTiendaProductoPrecio/:id', tiendaProductoPrecioController_1.deleteTiendaProductoPrecioController);
 exports.default = router;

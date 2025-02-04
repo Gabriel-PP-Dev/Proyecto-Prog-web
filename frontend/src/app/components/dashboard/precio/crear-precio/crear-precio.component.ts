@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Precio } from 'src/app/interface/precio';
+import { Producto_Precio } from 'src/app/interface/precio';
 import { FormGroup } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -46,13 +46,13 @@ export class CrearPrecioComponent implements OnInit {
   }
 
   agregarPrecio() {   
-    const precio: Precio = {
+    /*const precio: Producto_Precio = {
       precio: this.form_precio.value.precio,
-      tienda: this.form_precio.value.tienda,
+      tiendaProductoPrecio: this.form_precio.value.tienda,
       producto: this.form_precio.value.producto,
-      cantidad: this.form_precio.value.cantidad,
-      id: this.form_precio.value.id
-    };
+      id_producto_precio: this.form_precio.value.cantidad,
+      id_producto: this.form_precio.value.id
+    };*/
   }
 }
 

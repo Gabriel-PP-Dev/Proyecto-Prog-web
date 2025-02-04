@@ -15,16 +15,6 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-// Middleware de registro
-const loggerMiddleware = (req, res, next) => {
-    const originalSend = res.send;
-    res.send = (data) => {
-        console.log(`[${req.method}] ${req.url} - : ${res.statusCode}`);
-        return originalSend.call(res, data);
-    };
-    next();
-};
-app.use(loggerMiddleware);
 // Inicializa la conexión a la base de datos
 data_source_1.AppDataSource.initialize()
     .then(() => {

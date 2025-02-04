@@ -19,7 +19,7 @@ const router = Router();
  * Retorna:
  * - Un arreglo de tiendaProductoPrecio con sus IDs y otros datos
  */
-router.get('/tiendaProductoPrecio', authenticate(['Administrador', 'Trabajador']), getAllTiendaProductoPrecioController);
+router.get('/tiendaProductoPrecio', getAllTiendaProductoPrecioController);
 
 /**
  * Agregar un nuevo registro de TiendaProductoPrecio
@@ -32,7 +32,7 @@ router.get('/tiendaProductoPrecio', authenticate(['Administrador', 'Trabajador']
  * Retorna:
  * - El tiendaProductoPrecio creado con su ID y otros datos
  */
-router.post('/tiendaProductoPrecio/createTiendaProductoPrecio', authenticate(['Administrador', 'Trabajador']), addTiendaProductoPrecioController);
+router.post('/tiendaProductoPrecio/createTiendaProductoPrecio', addTiendaProductoPrecioController);
 
 /**
  * Obtener un registro de TiendaProductoPrecio por ID
@@ -45,7 +45,7 @@ router.post('/tiendaProductoPrecio/createTiendaProductoPrecio', authenticate(['A
  * Retorna:
  * - El tiendaProductoPrecio con su ID y otros datos
  */
-router.get('/tiendaProductoPrecio/:id', authenticate(['Administrador', 'Trabajador']), getTiendaProductoPrecioByIdController);
+router.get('/tiendaProductoPrecio/:id', getTiendaProductoPrecioByIdController);
 
 /**
  * Obtener todos los tiendaProductoPrecio donde esté contenido un producto por su ID
@@ -58,7 +58,7 @@ router.get('/tiendaProductoPrecio/:id', authenticate(['Administrador', 'Trabajad
  * Retorna:
  * - Un arreglo de tiendaProductoPrecio que coinciden con el ID de producto proporcionado
  */
-router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', authenticate(['Administrador', 'Trabajador']), getTiendaProductoPrecioByProductIdController);
+router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', getTiendaProductoPrecioByProductIdController);
 
 /**
  * Actualizar un registro de TiendaProductoPrecio
@@ -74,7 +74,7 @@ router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', authen
  * Retorna:
  * - El tiendaProductoPrecio actualizado con su ID y otros datos
  */
-router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', authenticate(['Administrador', 'Trabajador']), updateTiendaProductoPrecioController);
+router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', updateTiendaProductoPrecioController);
 
 /**
  * Eliminar un registro de TiendaProductoPrecio
@@ -87,6 +87,6 @@ router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', authenticate(
  * Retorna:
  * - Un mensaje de confirmación de eliminación
  */
-router.delete('/tiendaProductoPrecio/deleteTiendaProductoPrecio/:id', authenticate(['Administrador', 'Trabajador']), deleteTiendaProductoPrecioController);
+router.delete('/tiendaProductoPrecio/deleteTiendaProductoPrecio/:id', deleteTiendaProductoPrecioController);
 
 export default router;

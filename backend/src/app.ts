@@ -4,27 +4,23 @@ import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuar
 import tiendaRoutes from "./rutes/tiendaRoutes";
 import productoRoutes from "./rutes/productoRoutes"
 import ventaRoutes from './rutes/ventaRoutes';
+import cors from "cors";
 import producto_precio from "./rutes/producto_PrecioRoutes";
 import tiendaProductoPrecio from "./rutes/tiendaProductoPrecioRoutes";
 import dotenv from 'dotenv';
 dotenv.config();
-
 const app = express();
 app.use(express.json());
 
-// Middleware de registro
-const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const originalSend = res.send;
-    res.send = (data: any) => {
-      console.log(`[${req.method}] ${req.url} - : ${res.statusCode}`);
-      return originalSend.call(res, data);
-    };
-    next();
-  };
+// Configuración de CORS
+const corsOptions = {
+    origin: "http://localhost:4200",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}
 
-app.use(loggerMiddleware);
+app.use(cors(corsOptions));
 
-// Inicializa la conexión a la base de datos
 AppDataSource.initialize()
     .then(() => {
         console.log("Conexión a la base de datos establecida");

@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
      const password = this.form_login.value.password;
       if (usuario == 'admin' && password == 'admin123') {
         // redireccionamos al dashboard
-        this.face_cargando;
+        this.face_cargando();
         }else{
         //mostrando mensaje de error mediante una función
       	this.error();
@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
     	}
 
     console.log("this.form_login");
-
   }        
 
 

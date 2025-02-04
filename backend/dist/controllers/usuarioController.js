@@ -8,12 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUserController = exports.getUserByNameController = exports.deleteUserController = exports.updateUserController = exports.getUserByIdController = exports.addUserController = exports.getAllUsersController = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+exports.getUserByNameController = exports.deleteUserController = exports.updateUserController = exports.getUserByIdController = exports.addUserController = exports.getAllUsersController = void 0;
 const usuarioServices_1 = require("../services/usuarioServices");
 // Obtener todos los usuarios
 const getAllUsersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -181,29 +177,3 @@ const getUserByNameController = (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.getUserByNameController = getUserByNameController;
-// Metodo de autentficación de usuario
-const authenticateUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { nombre_usuario, contrasenna } = req.body;
-        // Verificar que se estén pasando un nombre_usuario y una contrasenna
-        if (!nombre_usuario || !contrasenna) {
-            res.status(400).json({
-                message: "Debes proporcionar un nombre_usuario y una contrasenna",
-            });
-            return;
-        }
-        const user = yield (0, usuarioServices_1.authenticateUser)(nombre_usuario, contrasenna);
-        if (user) {
-            const token = jsonwebtoken_1.default.sign({ userId: user.id_usuario, rol: user.rol }, process.env.JWT_SECRET, { expiresIn: '8h' });
-            res.status(200).json(Object.assign(Object.assign({}, user), { token })); // Incluir el token en la respuesta
-        }
-        else {
-            res.status(401).json({ message: "Credenciales inválidas" });
-        }
-    }
-    catch (error) {
-        console.error("Error al autenticar el usuario:", error);
-        res.status(500).json({ message: "Error al autenticar el usuario", error });
-    }
-});
-exports.authenticateUserController = authenticateUserController;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUser = exports.getUserByName = exports.checkUniqueUsername = exports.deleteUser = exports.updateUser = exports.getUserById = exports.addUser = exports.getAllUsers = void 0;
+exports.getUserByName = exports.checkUniqueUsername = exports.deleteUser = exports.updateUser = exports.getUserById = exports.addUser = exports.getAllUsers = void 0;
 const data_source_1 = require("../data-source");
 const Tienda_1 = require("../entities/Tienda");
 const Usuario_1 = require("../entities/Usuario");
@@ -128,15 +128,3 @@ const getUserByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     return users.filter(user => (0, AuxiliarFunctions_1.removeAccents)(user.nombre.toLowerCase()).includes(normalizedName));
 });
 exports.getUserByName = getUserByName;
-const authenticateUser = (nombre_usuario, contrasenna) => __awaiter(void 0, void 0, void 0, function* () {
-    const userRepository = data_source_1.AppDataSource.getRepository(Usuario_1.Usuario);
-    const user = yield userRepository.findOneBy({ nombre_usuario });
-    if (user) {
-        const isValidPassword = yield (0, passwordService_1.comparePassword)(contrasenna, user.contrasenna);
-        if (isValidPassword) {
-            return user;
-        }
-    }
-    return null;
-});
-exports.authenticateUser = authenticateUser;

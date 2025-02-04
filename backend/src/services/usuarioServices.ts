@@ -127,15 +127,3 @@ export const getUserByName = async (name: string): Promise<Usuario[]> => {
       removeAccents(user.nombre.toLowerCase()).includes(normalizedName)
   );
 };
-
-export const authenticateUser  = async (nombre_usuario: string, contrasenna: string): Promise<Usuario | null> => {
-  const userRepository = AppDataSource.getRepository(Usuario);
-  const user = await userRepository.findOneBy({ nombre_usuario });
-  if (user) {
-    const isValidPassword = await comparePassword(contrasenna, user.contrasenna);
-    if (isValidPassword) {
-      return user;
-    }
-  }
-  return null;
-};

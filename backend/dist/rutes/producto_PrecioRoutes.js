@@ -1,14 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const producto_PrecioController_1 = require("../controllers/producto_PrecioController");
-const authenticate_1 = __importDefault(require("../helpers/authenticate"));
 const router = (0, express_1.Router)();
 // Obtener todos los producto_precio
-router.get('/Producto_Precio', (0, authenticate_1.default)(['Administrador', 'Trabajador']), producto_PrecioController_1.getAllProducto_PrecioController);
+router.get('/Producto_Precio', producto_PrecioController_1.getAllProducto_PrecioController);
 /**
  * Obtener todos los producto_precio
  *
@@ -18,7 +14,7 @@ router.get('/Producto_Precio', (0, authenticate_1.default)(['Administrador', 'Tr
  * - Un arreglo de producto_precio con sus IDs y otros datos
  */
 // Agregar un nuevo producto_precio
-router.post('/Producto_Precio/createProducto_Precio', (0, authenticate_1.default)(['Administrador', 'Trabajador']), producto_PrecioController_1.addProducto_PrecioController);
+router.post('/Producto_Precio/createProducto_Precio', producto_PrecioController_1.addProducto_PrecioController);
 /**
  * Agregar un nuevo producto_precio
  *
@@ -30,7 +26,7 @@ router.post('/Producto_Precio/createProducto_Precio', (0, authenticate_1.default
  * - El producto_precio creado con su ID y otros datos
  */
 // Obtener un producto_precio por ID
-router.get('/Producto_Precio/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), producto_PrecioController_1.getProducto_PrecioByIdController);
+router.get('/Producto_Precio/:id', producto_PrecioController_1.getProducto_PrecioByIdController);
 /**
  * Obtener un producto_precio por ID
  *
@@ -41,7 +37,7 @@ router.get('/Producto_Precio/:id', (0, authenticate_1.default)(['Administrador',
  * - El producto_precio con su ID y otros datos
  */
 // Actualizar un producto_precio
-router.put('/Producto_Precio/updateProducto_Precio/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), producto_PrecioController_1.updateProducto_PrecioController);
+router.put('/Producto_Precio/updateProducto_Precio/:id', producto_PrecioController_1.updateProducto_PrecioController);
 /**
  * Actualizar un producto_precio
  *
@@ -56,7 +52,7 @@ router.put('/Producto_Precio/updateProducto_Precio/:id', (0, authenticate_1.defa
  * - El producto_precio actualizado con su ID y otros datos
  */
 // Eliminar un producto_precio
-router.delete('/Producto_Precio/deleteProducto_Precio/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), producto_PrecioController_1.deleteProductoPrecioController);
+router.delete('/Producto_Precio/deleteProducto_Precio/:id', producto_PrecioController_1.deleteProductoPrecioController);
 /**
  * Eliminar un producto_precio
  *
@@ -69,7 +65,7 @@ router.delete('/Producto_Precio/deleteProducto_Precio/:id', (0, authenticate_1.d
  * - Un mensaje de confirmación de eliminación
  */
 // Obtener todos los producto_precio por ID de producto
-router.get('/Producto_Precio/getProducto_PrecioByProducto/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), producto_PrecioController_1.getProducto_PrecioByProductIdController);
+router.get('/Producto_Precio/getProducto_PrecioByProducto/:id', producto_PrecioController_1.getProducto_PrecioByProductIdController);
 /**
  * Obtener todos los producto_precio por ID de producto
  *

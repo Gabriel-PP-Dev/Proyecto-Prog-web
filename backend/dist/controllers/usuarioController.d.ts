@@ -5,4 +5,3 @@ export declare const getUserByIdController: (req: Request, res: Response) => Pro
 export declare const updateUserController: (req: Request, res: Response) => Promise<void>;
 export declare const deleteUserController: (req: Request, res: Response) => Promise<void>;
 export declare const getUserByNameController: (req: Request, res: Response) => Promise<void>;
-export declare const authenticateUserController: (req: Request, res: Response) => Promise<void>;

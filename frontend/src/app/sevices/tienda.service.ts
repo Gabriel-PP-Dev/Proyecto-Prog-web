@@ -16,10 +16,10 @@ private apiUrl = 'http://localhost:4000/tienda';
   }
 
   deleteTienda(id: string) {
-    return this.http.delete(`${this.apiUrl}/tienda/DeleteTienda/${id}`);
+    return this.http.delete(`${this.apiUrl}/DeleteTienda/${id}`);
   }
 
     updateTienda(id: string, tienda: Tienda) {
-      return this.http.put(`${this.apiUrl}/tienda/updateTienda/${id}`, tienda);
+      return this.http.put(`${this.apiUrl}/updateTienda/${id}`, tienda);
     }
 }

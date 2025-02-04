@@ -12,7 +12,7 @@ import authenticate from '../helpers/authenticate';
 const router = Router();
 
 // Obtener todos los producto_precio
-router.get('/Producto_Precio', authenticate(['Administrador', 'Trabajador']), getAllProducto_PrecioController);
+router.get('/Producto_Precio', getAllProducto_PrecioController);
 /**
  * Obtener todos los producto_precio
  * 
@@ -23,7 +23,7 @@ router.get('/Producto_Precio', authenticate(['Administrador', 'Trabajador']), ge
  */
 
 // Agregar un nuevo producto_precio
-router.post('/Producto_Precio/createProducto_Precio', authenticate(['Administrador', 'Trabajador']), addProducto_PrecioController);
+router.post('/Producto_Precio/createProducto_Precio', addProducto_PrecioController);
 /**
  * Agregar un nuevo producto_precio
  * 
@@ -36,7 +36,7 @@ router.post('/Producto_Precio/createProducto_Precio', authenticate(['Administrad
  */
 
 // Obtener un producto_precio por ID
-router.get('/Producto_Precio/:id', authenticate(['Administrador', 'Trabajador']), getProducto_PrecioByIdController);
+router.get('/Producto_Precio/:id', getProducto_PrecioByIdController);
 /**
  * Obtener un producto_precio por ID
  * 
@@ -48,7 +48,7 @@ router.get('/Producto_Precio/:id', authenticate(['Administrador', 'Trabajador'])
  */
 
 // Actualizar un producto_precio
-router.put('/Producto_Precio/updateProducto_Precio/:id', authenticate(['Administrador', 'Trabajador']), updateProducto_PrecioController);
+router.put('/Producto_Precio/updateProducto_Precio/:id', updateProducto_PrecioController);
 /**
  * Actualizar un producto_precio
  * 
@@ -64,7 +64,7 @@ router.put('/Producto_Precio/updateProducto_Precio/:id', authenticate(['Administ
  */
 
 // Eliminar un producto_precio
-router.delete('/Producto_Precio/deleteProducto_Precio/:id', authenticate(['Administrador', 'Trabajador']), deleteProductoPrecioController);
+router.delete('/Producto_Precio/deleteProducto_Precio/:id', deleteProductoPrecioController);
 /**
  * Eliminar un producto_precio
  * 
@@ -78,7 +78,7 @@ router.delete('/Producto_Precio/deleteProducto_Precio/:id', authenticate(['Admin
  */
 
 // Obtener todos los producto_precio por ID de producto
-router.get('/Producto_Precio/getProducto_PrecioByProducto/:id', authenticate(['Administrador', 'Trabajador']), getProducto_PrecioByProductIdController);
+router.get('/Producto_Precio/getProducto_PrecioByProducto/:id', getProducto_PrecioByProductIdController);
 /**
  * Obtener todos los producto_precio por ID de producto
  * 

@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const tiendaController_1 = require("../controllers/tiendaController");
-const authenticate_1 = __importDefault(require("../helpers/authenticate"));
 const router = (0, express_1.Router)();
 // Agregar una nueva tienda
 router.post('/tienda/createTienda', tiendaController_1.addTiendaController);
@@ -20,7 +16,7 @@ router.post('/tienda/createTienda', tiendaController_1.addTiendaController);
  * - La tienda creada con su ID y otros datos
  */
 // Actualizar una tienda
-router.put('/tienda/updateTienda/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaController_1.updateTiendaController);
+router.put('/tienda/updateTienda/:id', tiendaController_1.updateTiendaController);
 /**
  * Actualizar una tienda
  *
@@ -35,7 +31,7 @@ router.put('/tienda/updateTienda/:id', (0, authenticate_1.default)(['Administrad
  * - La tienda actualizada con su ID y otros datos
  */
 // Eliminar una tienda
-router.delete('/tienda/deleteTienda/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaController_1.deleteTiendaController);
+router.delete('/tienda/deleteTienda/:id', tiendaController_1.deleteTiendaController);
 /**
  * Eliminar una tienda
  *
@@ -48,7 +44,7 @@ router.delete('/tienda/deleteTienda/:id', (0, authenticate_1.default)(['Administ
  * - Un mensaje de confirmación de eliminación
  */
 // Obtener una tienda por ID
-router.get('/tienda/:id', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaController_1.getTiendaByIdController);
+router.get('/tienda/:id', tiendaController_1.getTiendaByIdController);
 /**
  * Obtener una tienda por ID
  *
@@ -61,7 +57,7 @@ router.get('/tienda/:id', (0, authenticate_1.default)(['Administrador', 'Trabaja
  * - La tienda con su ID y otros datos
  */
 // Obtener todas las tiendas
-router.get('/tienda', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaController_1.getAllTiendasController);
+router.get('/tienda', tiendaController_1.getAllTiendasController);
 /**
  * Obtener todas las tiendas
  *
@@ -71,7 +67,7 @@ router.get('/tienda', (0, authenticate_1.default)(['Administrador', 'Trabajador'
  * - Un arreglo de tiendas con sus IDs y otros datos
  */
 // Buscar tiendas por nombre
-router.get('/tienda/searchByName/:name', (0, authenticate_1.default)(['Administrador', 'Trabajador']), tiendaController_1.getTiendaByNameController);
+router.get('/tienda/searchByName/:name', tiendaController_1.getTiendaByNameController);
 /**
  * Buscar tiendas por nombre
  *
