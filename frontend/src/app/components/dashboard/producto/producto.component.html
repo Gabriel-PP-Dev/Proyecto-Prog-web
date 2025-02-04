@@ -30,9 +30,17 @@
         <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef> Acciones </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-button (click)="editarProducto(element)">Editar</button>
-                <button mat-button color="warn" (click)="eliminarProducto(element)">Eliminar</button>
-                <button mat-button color="accent" (click)="venderProducto(element)">Vender</button>
+                <button mat-button (click)="editarProducto(element)">
+                <mat-icon>edit</mat-icon>Editar
+                </button>
+                
+                <button mat-button (click)="eliminarProducto(element)">
+                <mat-icon>delete</mat-icon>Eliminar
+                </button>
+
+                <button mat-button (click)="venderProducto(element)">
+                <mat-icon>shopp_cart</mat-icon>Vender
+                </button>
             </td>
         </ng-container>
 
