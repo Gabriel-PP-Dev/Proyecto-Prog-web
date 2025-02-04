@@ -13,6 +13,7 @@ exports.Tienda = void 0;
 const typeorm_1 = require("typeorm");
 const Usuario_1 = require("./Usuario"); // Asegúrate de importar la entidad Usuario
 const TiendaProductoPrecio_1 = require("./TiendaProductoPrecio"); // Asegúrate de importar la entidad TiendaProductoPrecio
+const Venta_1 = require("./Venta"); // Asegúrate de importar la entidad Venta
 let Tienda = class Tienda {
 };
 exports.Tienda = Tienda;
@@ -36,6 +37,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.tienda),
     __metadata("design:type", Array)
 ], Tienda.prototype, "tiendaProductoPrecios", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Venta_1.Venta, venta => venta.tienda),
+    __metadata("design:type", Array)
+], Tienda.prototype, "ventas", void 0);
 exports.Tienda = Tienda = __decorate([
     (0, typeorm_1.Entity)()
 ], Tienda);

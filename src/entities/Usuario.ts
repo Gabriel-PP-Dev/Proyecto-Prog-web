@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Tienda } from "./Tienda";
 
 @Entity()
 export class Usuario {
 
-  @PrimaryGeneratedColumn()
-  id_usuario!:number
+  @PrimaryGeneratedColumn("uuid")
+  id_usuario!:string
 
   @Column()
   nombre!: string;
@@ -20,5 +20,6 @@ export class Usuario {
   rol!: string;
 
   @ManyToOne(() => Tienda, tienda => tienda.usuarios)
+  @JoinColumn({ name: "id_tienda" })
   tienda!: Tienda; // Relación con la entidad Tienda
 }

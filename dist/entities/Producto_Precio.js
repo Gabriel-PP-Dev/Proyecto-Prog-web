@@ -34,6 +34,8 @@ __decorate([
 ], Producto_Precio.prototype, "tiendaProductoPrecios", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Producto_1.Producto, producto => producto.producto_precios),
+    (0, typeorm_1.ManyToOne)(() => Producto_1.Producto, producto => producto.producto_precios),
+    (0, typeorm_1.JoinColumn)({ name: 'productoId', referencedColumnName: 'id_producto' }),
     __metadata("design:type", Producto_1.Producto)
 ], Producto_Precio.prototype, "producto", void 0);
 exports.Producto_Precio = Producto_Precio = __decorate([

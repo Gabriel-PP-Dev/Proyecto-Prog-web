@@ -21,7 +21,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Venta.prototype, "id_venta", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.ventas),
+    (0, typeorm_1.ManyToOne)(() => Tienda_1.Tienda, tienda => tienda.ventas),
     __metadata("design:type", Tienda_1.Tienda)
 ], Venta.prototype, "tienda", void 0);
 __decorate([
