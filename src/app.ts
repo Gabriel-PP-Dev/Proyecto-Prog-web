@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cors from "cors";
 import { AppDataSource } from './data-source'; // Importa la configuración de la base de datos
 import usuarioRoutes from './rutes/usuarioRoutes'; // Importa las rutas de usuario
 import tiendaRoutes from "./rutes/tiendaRoutes";
@@ -21,6 +22,16 @@ const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
     };
     next();
   };
+
+  // Configuración de CORS
+const corsOptions = {
+  origin: "http://localhost:4200", // Permitir solo solicitudes desde este origen
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+};
+
+// Habilitar CORS con las opciones configuradas
+app.use(cors(corsOptions));
 
 app.use(loggerMiddleware);
 
