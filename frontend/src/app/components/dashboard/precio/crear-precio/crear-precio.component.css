@@ -1,0 +1,27 @@
+.form-card {
+    width: 300px; /* Ajusta según sea necesario */
+    padding: 20px;
+    margin: auto; /* Centra la tarjeta en su contenedor */
+    border: 2px solid #000000; /* Color del borde */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+}
+
+.form-title {
+    text-align: center; /* Centra el texto del título */
+    margin-bottom: 20px; /* Espacio entre el título y los campos del formulario */
+}
+
+.form-field {
+    margin-bottom: 20px; /* Espacio entre los campos */
+}
+
+/* Añadir un margen superior específico al primer campo */
+.form-field:first-child {
+    margin-top: 30px; /* Ajusta este valor según sea necesario para el espacio deseado */
+}
+
+.form-buttons {
+    display: flex; /* Usar flexbox para alinear los botones */
+    justify-content: space-between; /* Espacio entre los botones */
+}

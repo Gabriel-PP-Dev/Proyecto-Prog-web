@@ -1,0 +1,12 @@
+import { Producto } from '../entities/Producto';
+import { TiendaProductoPrecio } from '../entities/TiendaProductoPrecio';
+export declare const getAllProductos: () => Promise<Producto[]>;
+export declare const addProducto: (productoData: Partial<Producto>) => Promise<Producto | null>;
+export declare const getProductoById: (id: string) => Promise<Producto | null>;
+export declare const getProductoByName: (name: string) => Promise<Producto | null>;
+export declare const updateProducto: (id: string, productoData: Partial<Producto>) => Promise<Producto | null>;
+export declare const moveTiendaProductoPrecio: (idTiendaProductoPrecio: string, idTienda: string) => Promise<TiendaProductoPrecio | null>;
+export declare const moveProducto: (id_producto: string, id_tienda_destino: string, cantidad: number) => Promise<boolean>;
+export declare const deleteProducto: (id: string) => Promise<boolean>;
+export declare const getProductosByName: (name: string) => Promise<Producto[]>;
+export declare const getProductosByTiendaSortedByQuantity: (id: string) => Promise<TiendaProductoPrecio[]>;

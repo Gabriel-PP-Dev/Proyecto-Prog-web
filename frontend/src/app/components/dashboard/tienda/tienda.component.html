@@ -1,0 +1,48 @@
+<mat-toolbar>
+    <span>Tiendas</span>
+</mat-toolbar>
+
+<hr class="separator">
+
+<div class="vertical-line"></div>
+
+<div class="action-container">
+    <button mat-raised-button color="primary" routerLink="/dashboard/tiendas/crear-tienda">Agregar</button>
+    <mat-form-field>
+        <mat-label>Filtrar</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ej. nombre" #input autocomplete="off">
+    </mat-form-field>
+</div>
+
+<div class="table-container">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+        
+        <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tienda </th>
+            <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="direccion">
+            <th mat-header-cell *matHeaderCellDef> Dirección</th>
+            <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-button (click)="editarTienda(element)">
+                <mat-icon>edit</mat-icon>Editar
+                </button>
+                
+                <button mat-button (click)="eliminarTienda(element)">
+                <mat-icon>delete</mat-icon>Eliminar
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+</div>
