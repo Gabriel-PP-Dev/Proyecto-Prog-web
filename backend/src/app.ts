@@ -9,8 +9,19 @@ import producto_precio from "./rutes/producto_PrecioRoutes";
 import tiendaProductoPrecio from "./rutes/tiendaProductoPrecioRoutes";
 import dotenv from 'dotenv';
 dotenv.config();
+
 const app = express();
 app.use(express.json());
+
+// Middleware de registro
+const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const originalSend = res.send;
+    res.send = (data: any) => {
+      console.log(`[${req.method}] ${req.url} - : ${res.statusCode}`);
+      return originalSend.call(res, data);
+    };
+    next();
+  };
 
 // Configuración de CORS
 const corsOptions = {

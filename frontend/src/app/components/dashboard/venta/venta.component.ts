@@ -11,28 +11,41 @@ import { Router } from '@angular/router';
 })
 
 export class VentaComponent implements OnInit{
-  displayedColumns: string[] = ['cantidad', 'usuario', 'precio', 'tienda', 'precioentienda', 'acciones'];
+  displayedColumns: string[] = ['cantidad', 'usuario', 'precio', 'tienda', 'precio_en_tienda', 'acciones'];
   dataSource = new MatTableDataSource<Venta>([]); // Inicializa con un array vacío
   constructor(private router:Router){}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
-    this.loadData();
+    this.cargarVenta();
   }
 
-  loadData() {
-    const ventas: Venta[] = [
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-    ];
-    
-    this.dataSource.data = ventas;
-    this.dataSource.paginator = this.paginator;
-  }
+  async cargarVenta() {
+      try {
+        const response = await fetch(`http://localhost:4000/venta`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los productos');
+        }
+        
+        const ventas: Venta[] = await response.json();
+        // Mapeamos las propiedades correctamente
+        const mappedVentas = ventas.map(venta => ({
+          id: venta.id,
+          precio: venta.precio,
+          cantidad: venta.cantidad,
+          usuario: venta.usuario,
+          tienda: venta.tienda,
+          precio_en_tienda: venta.precio_en_tienda
+        }));
+        console.log(mappedVentas);
+        
+        this.dataSource.data = mappedVentas;
+        this.dataSource.paginator = this.paginator;
+      } catch (error) {
+        console.error('Error al cargar productos:', error);
+      }
+    }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -43,6 +56,17 @@ export class VentaComponent implements OnInit{
     this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id }});
   }
 
-  eliminarVenta(venta:Venta) {
+  async eliminarVenta(venta:Venta) {
+    try {
+      const response = await fetch(`http://localhost:4000/venta/DeleteVenta/${venta.id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error('Error al eliminar el precio');
+      }
+      this.cargarVenta(); // Recargar productos después de eliminar
+    } catch (error) {
+      console.error('Error al eliminar precio:', error);
+    }
   }
 }

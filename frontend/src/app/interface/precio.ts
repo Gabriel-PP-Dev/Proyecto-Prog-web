@@ -5,5 +5,5 @@ export interface Producto_Precio{
     id_producto_precio: string;
     precio: number;
     producto: Producto;
-    tiendaProductoPrecio?: TiendaProductoPrecio;
+    tiendaProductoPrecio?: any[];
 }
