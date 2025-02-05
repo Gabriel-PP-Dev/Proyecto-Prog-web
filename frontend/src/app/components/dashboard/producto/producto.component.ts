@@ -38,8 +38,6 @@ export class ProductoComponent implements OnInit {
         costo: producto.costo,
         producto_precios: producto.producto_precios // Si necesitas mostrar esto también
       }));
-      console.log(mappedProductos);
-      
       this.dataSource.data = mappedProductos;
       this.dataSource.paginator = this.paginator;
     } catch (error) {
@@ -53,12 +51,12 @@ export class ProductoComponent implements OnInit {
   }
 
   editarProducto(producto: Producto) {
-    this.router.navigate(['/dashboard/producto/crear-producto'], { state: { productoId: producto.id_producto }});
+      this.router.navigate(['/dashboard/productos/crear-producto'], { state: { producto } });
   }
 
   async eliminarProducto(producto: Producto) {
     try {
-      const response = await fetch(`http://localhost:4000/producto/${producto.id_producto}`, {
+      const response = await fetch(`http://localhost:4000/producto/deleteProducto/${producto.id_producto}`, {
         method: 'DELETE'
       });
       if (!response.ok) {

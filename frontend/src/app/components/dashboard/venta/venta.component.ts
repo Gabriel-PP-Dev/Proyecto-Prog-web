@@ -53,7 +53,7 @@ export class VentaComponent implements OnInit{
   }
 
   editarVenta(venta:Venta) {
-    this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id }});
+    this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id_venta }});
   }
 
   async eliminarVenta(venta:Venta) {

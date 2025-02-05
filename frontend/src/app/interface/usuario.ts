@@ -1,8 +1,9 @@
+import { Tienda } from "./tienda";
 export interface Usuario{
+    id_usuario: string;
     nombre: string;
-    usuario: String;
-    apellidos: String;
+    nombre_usuario: string;
+    contrasenna: string;
     rol: string;
-    estado: string;
-    id: String
+    tienda: Tienda;
 }

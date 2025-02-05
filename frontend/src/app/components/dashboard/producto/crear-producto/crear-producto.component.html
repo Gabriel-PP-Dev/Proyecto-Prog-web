@@ -2,12 +2,6 @@
     <mat-card class="form-card">
         <h3 class="form-title">Formulario de Producto</h3>
         <form [formGroup]="form_producto" (ngSubmit)="agregarProducto()">
-            <div class="form-field">
-                <mat-form-field class="ancho">
-                    <mat-label>Usuario</mat-label>
-                    <input matInput autocomplete="off" formControlName="usuario">
-                </mat-form-field>
-            </div>
 
             <div class="form-field">
                 <mat-form-field class="ancho">
@@ -18,31 +12,9 @@
 
             <div class="form-field">
                 <mat-form-field class="ancho">
-                    <mat-label>Apellidos</mat-label>
-                    <input matInput autocomplete="off" formControlName="apellidos">
+                    <mat-label>Costo</mat-label>
+                    <input matInput type="number" autocomplete="off" formControlName="costo">
                 </mat-form-field> 
-            </div>
-
-            <div class="form-field">
-                <mat-form-field class="ancho">
-                    <mat-label>Rol</mat-label>
-                    <mat-select formControlName="rol">
-                        <mat-option *ngFor="let role of roles" [value]="role.value">
-                            {{role.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-
-            <div class="form-field">
-                <mat-form-field class="ancho">
-                    <mat-label>Estado</mat-label>
-                    <mat-select formControlName="estado">
-                        <mat-option *ngFor="let estado of estados" [value]="estado.value">
-                            {{estado.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
             </div>
 
             <div class="form-buttons">
@@ -52,5 +24,3 @@
         </form>
     </mat-card>
 </div>
-
-

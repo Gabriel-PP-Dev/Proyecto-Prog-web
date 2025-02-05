@@ -45,14 +45,7 @@ export class CrearUsuarioComponent implements OnInit {
   }
 
   agregarUsuario() {   
-    const user: Usuario = {
-      usuario: this.form_usuario.value.usuario,
-      nombre: this.form_usuario.value.nombre,
-      apellidos: this.form_usuario.value.apellidos,
-      rol: this.form_usuario.value.rol,
-      estado: this.form_usuario.value.estado,
-      id: this.form_usuario.value.id
-    };
+ 
   }
 }
 
