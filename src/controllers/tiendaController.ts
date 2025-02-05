@@ -32,12 +32,10 @@ export const addTiendaController = async (
 
     // Validación básica
     if (!nombre || direccion === undefined) {
-      res
-        .status(400)
-        .json({
-          message:
-            "El nombre y la direccion son obligatorios para crear la tienda",
-        });
+      res.status(400).json({
+        message:
+          "El nombre y la direccion son obligatorios para crear la tienda",
+      });
       return;
     }
 
@@ -56,6 +54,13 @@ export const getTiendaByIdController = async (
 ): Promise<void> => {
   const { id } = req.params;
   try {
+    // Validar si el id es un uuid válido
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
+    ) {
+      res.status(400).json({ message: "El id debe ser un uuid válido" });
+      return;
+    }
 
     const tienda = await getTiendaById(id);
     if (tienda) {
@@ -71,36 +76,47 @@ export const getTiendaByIdController = async (
 
 // Actualizar una tienda
 export const updateTiendaController = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-    const { id } = req.params;
-    try {
-  
-      const { nombre, direccion } = req.body;
-  
-      // Validar que al menos un campo sea proporcionado
-      if (!nombre && direccion === undefined) {
-        res.status(400).json({ message: "Se debe proporcionar al menos un campo para actualizar." });
-        return;
-      }
-  
-      // Crear un objeto con solo los campos proporcionados
-      const fieldsToUpdate: any = {};
-      if (nombre) fieldsToUpdate.nombre = nombre;
-      if (direccion) fieldsToUpdate.direccion = direccion;
-  
-      const updatedTienda = await updateTienda(id, fieldsToUpdate);
-      if (updatedTienda) {
-        res.status(200).json(updatedTienda);
-      } else {
-        res.status(404).json({ message: "Tienda no encontrada" });
-      }
-    } catch (error) {
-      console.error("Error al actualizar la tienda:", error);
-      res.status(500).json({ message: "Error al actualizar la tienda", error });
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  try {
+    // Validar si el id es un uuid válido
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
+    ) {
+      res.status(400).json({ message: "El id debe ser un uuid válido" });
+      return;
     }
-  };
+
+    const { nombre, direccion } = req.body;
+
+    // Validar que al menos un campo sea proporcionado
+    if (!nombre && direccion === undefined) {
+      res
+        .status(400)
+        .json({
+          message: "Se debe proporcionar al menos un campo para actualizar.",
+        });
+      return;
+    }
+
+    // Crear un objeto con solo los campos proporcionados
+    const fieldsToUpdate: any = {};
+    if (nombre) fieldsToUpdate.nombre = nombre;
+    if (direccion) fieldsToUpdate.direccion = direccion;
+
+    const updatedTienda = await updateTienda(id, fieldsToUpdate);
+    if (updatedTienda) {
+      res.status(200).json(updatedTienda);
+    } else {
+      res.status(404).json({ message: "Tienda no encontrada" });
+    }
+  } catch (error) {
+    console.error("Error al actualizar la tienda:", error);
+    res.status(500).json({ message: "Error al actualizar la tienda", error });
+  }
+};
 
 // Eliminar una tienda
 export const deleteTiendaController = async (
@@ -109,6 +125,13 @@ export const deleteTiendaController = async (
 ): Promise<void> => {
   const { id } = req.params;
   try {
+    // Validar si el id es un uuid válido
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
+    ) {
+      res.status(400).json({ message: "El id debe ser un uuid válido" });
+      return;
+    }
 
     const deleted = await deleteTienda(id);
     if (deleted) {
@@ -133,7 +156,7 @@ export const getTiendaByNameController = async (
     if (tiendas.length > 0) {
       res.status(200).json(tiendas);
     } else {
-        res.status(200).json([]);
+      res.status(200).json([]);
     }
   } catch (error) {
     console.error("Error al obtener la tienda por nombre:", error);

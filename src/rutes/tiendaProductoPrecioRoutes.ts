@@ -5,6 +5,8 @@ import {
     getAllTiendaProductoPrecioController, 
     getTiendaProductoPrecioByIdController, 
     getTiendaProductoPrecioByProductIdController, 
+    getTiendaProductoPrecioByTiendaIdController, 
+    getTiendaProductoPrecioByTiendaIdOrdenadosController, 
     updateTiendaProductoPrecioController 
 } from '../controllers/tiendaProductoPrecioController';
 import authenticate from '../helpers/authenticate';
@@ -58,7 +60,8 @@ router.get('/tiendaProductoPrecio/:id', getTiendaProductoPrecioByIdController);
  * Retorna:
  * - Un arreglo de tiendaProductoPrecio que coinciden con el ID de producto proporcionado
  */
-router.get('/tiendaProductoPrecio/getTiendaProductoPrecioByProducto/:id', getTiendaProductoPrecioByProductIdController);
+router.get('/tiendaProductoPrecio/Producto/:id', getTiendaProductoPrecioByProductIdController);
+
 
 /**
  * Actualizar un registro de TiendaProductoPrecio
@@ -88,5 +91,19 @@ router.put('/tiendaProductoPrecio/updateTiendaProductoPrecio/:id', updateTiendaP
  * - Un mensaje de confirmación de eliminación
  */
 router.delete('/tiendaProductoPrecio/deleteTiendaProductoPrecio/:id', deleteTiendaProductoPrecioController);
+
+router.get('/tiendaProductoPrecio/tienda/:id', getTiendaProductoPrecioByTiendaIdController);
+/**
+ * Obtener todos los TiendaProductoPrecio de una tienda por ID
+ * 
+ * Recibe en el parámetro :id:
+ * - id (string): ID de la tienda
+ * 
+ * Retorna:
+ * - Un arreglo de TiendaProductoPrecio que coinciden con la tienda proporcionada
+ */
+
+// Obtener todos los TiendaProductoPrecio de una tienda por ID ordenados por cantidad
+router.get('/tiendaProductoPrecio/tienda/:id/ordenados', getTiendaProductoPrecioByTiendaIdOrdenadosController);
 
 export default router;

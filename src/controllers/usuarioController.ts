@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import {
   addUser,
   authenticateUser,
@@ -51,7 +51,9 @@ export const addUserController = async (
 
     // Validar que el rol sea "Administrador" o "Trabajador"
     if (rol !== "Administrador" && rol !== "Trabajador") {
-      res.status(400).json({ message: "El rol debe ser 'Administrador' o 'Trabajador'" });
+      res
+        .status(400)
+        .json({ message: "El rol debe ser 'Administrador' o 'Trabajador'" });
       return;
     }
 
@@ -86,6 +88,14 @@ export const getUserByIdController = async (
   const { id } = req.params;
 
   try {
+    // Validar si el id es un uuid válido
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
+    ) {
+      res.status(400).json({ message: "El id debe ser un uuid válido" });
+      return;
+    }
+
     const user = await getUserById(id);
     if (user) {
       res.status(200).json(user);
@@ -104,8 +114,18 @@ export const updateUserController = async (
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
+
+  // Validar si el id es un uuid válido
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
+  ) {
+    res.status(400).json({ message: "El id debe ser un uuid válido" });
+    return;
+  }
+
   try {
-    const { nombre, nombre_usuario, contrasenna, rol, tienda, email } = req.body;
+    const { nombre, nombre_usuario, contrasenna, rol, tienda, email } =
+      req.body;
 
     // Validar que se proporcione al menos un campo para actualizar
     if (
@@ -130,7 +150,9 @@ export const updateUserController = async (
 
     // Validar que el rol sea "Trabajador" o "Administrador" si se proporciona
     if (rol && rol !== "Trabajador" && rol !== "Administrador") {
-      res.status(400).json({ message: "El rol debe ser 'Trabajador' o 'Administrador'" });
+      res
+        .status(400)
+        .json({ message: "El rol debe ser 'Trabajador' o 'Administrador'" });
       return;
     }
 
@@ -162,6 +184,14 @@ export const deleteUserController = async (
 ): Promise<void> => {
   const { id } = req.params;
   try {
+    // Validar si el id es un uuid válido
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)
+    ) {
+      res.status(400).json({ message: "El id debe ser un uuid válido" });
+      return;
+    }
+
     const deleted = await deleteUser(id);
     if (deleted) {
       res.status(204).send(); // No content
@@ -216,7 +246,7 @@ export const authenticateUserController = async (
       const token = jwt.sign(
         { userId: user.id_usuario, rol: user.rol },
         process.env.JWT_SECRET as string,
-        { expiresIn: '8h' }
+        { expiresIn: "8h" }
       );
       res.status(200).json({ ...user, token }); // Incluir el token en la respuesta
     } else {

@@ -4,6 +4,7 @@ import { Tienda } from '../entities/Tienda';
 import { Producto_Precio } from '../entities/Producto_Precio';
 import { removeAccents } from "../helpers/AuxiliarFunctions";
 import { TiendaProductoPrecio } from '../entities/TiendaProductoPrecio';
+import { Venta } from '../entities/Venta';
 
 // Obtener todos los productos
 export const getAllProductos = async (): Promise<Producto[]> => {
