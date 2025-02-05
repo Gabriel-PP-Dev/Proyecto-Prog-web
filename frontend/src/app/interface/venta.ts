@@ -1,8 +1,10 @@
+import { Tienda } from "./tienda";
+import { TiendaProductoPrecio } from "./tiendaproductoprecio";
+
 export interface Venta{
-    cantidad: number,
-    usuario: String,
-    precio: number,
-    tienda: string,
-    precio_en_tienda: number,
-    id:String
+    id_venta: string;
+    tienda: Tienda;
+    producto_precio: TiendaProductoPrecio;
+    cantidad: number;
+    precio: number;
 }

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Tienda } from 'src/app/interface/tienda';
-import { FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TiendaService } from 'src/app/sevices/tienda.service';
-import { FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBar
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Tienda } from 'src/app/interface/tienda';
+
+interface NavigationState {
+  tienda?: Tienda; 
+}
 
 @Component({
   selector: 'app-crear-tienda',
@@ -15,42 +16,89 @@ import { MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBa
 
 export class CrearTiendaComponent implements OnInit {
   form_tienda: FormGroup; 
-  roles: any[] = [
-    {value: 'admin', viewValue: 'Admin'},
-    {value: 'trabajador', viewValue: 'Trabajador'},
-    {value: 'estudiante', viewValue: 'Estudiante'},
-  ];
-  estados: any[] = [
-    {value: 'activo', viewValue: 'Activo'},
-    {value: 'bloqueado', viewValue: 'Bloqueado'},
-  ];
-  
+  isEditMode = false; // Variable para determinar si estamos en modo edición
+  tienda?: Tienda; 
+
   constructor(
     private fb: FormBuilder, 
     private router: Router, 
-    private _tiendaService: TiendaService,
-    private _snackBar: MatSnackBar // Inyecta MatSnackBar aquí
+    private _snackBar: MatSnackBar 
   ) { 
-
     this.form_tienda = this.fb.group({
-      usuario: ['', Validators.required],
       nombre: ['', Validators.required],
-      apellidos: ['', Validators.required],
-      contrasena: ['', Validators.required],
-      rol: ['', Validators.required],
-      estado: ['', Validators.required], 
+      direccion: ['',  Validators.required], 
     });
   }
   
   ngOnInit(): void {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      const state = navigation.extras.state as NavigationState; // Usa la interfaz aquí
+      this.tienda = state.tienda; // Accede a producto usando la interfaz
+      if (this.tienda) {
+        this.isEditMode = true;
+        this.cargarTienda(); // Llenar el formulario con los datos del producto
+      }
+    }
+  }
+
+  cargarTienda() {
+    if (this.tienda) {
+      this.form_tienda.patchValue({
+        nombre: this.tienda.nombre,
+        direccion: this.tienda.direccion
+      });
+    }
   }
 
   agregarTienda() {   
-    const tienda: Tienda = {
-      nombre: this.form_tienda.value.usuario,
-      direccion: this.form_tienda.value.nombre,
-      id: this.form_tienda.value.id
-    };
-  }
+    if (this.form_tienda.valid) {
+      const tiendaData = {
+        nombre: this.form_tienda.value.nombre,
+        direccion: this.form_tienda.value.direccion,
+      };
+  
+      let url: string;
+      let method: string;
+  
+      if (this.isEditMode) {
+        method = 'PUT';
+        url = `http://localhost:4000/tienda/updateProducto/${this.tienda?.id_tienda}`; // URL para editar el producto
+      } else {
+        method = 'POST';
+        url = 'http://localhost:4000/tienda/createTienda'; // URL para crear un nuevo producto
+      }
+  
+      fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tiendaData) // Envía los datos del formulario
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al guardar el producto');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const message = this.isEditMode ? 'Tienda actualizada exitosamente!' : 'Tienda creada exitosamente!';
+        this._snackBar.open(message, 'Cerrar', {
+          duration: 2000,
+        });
+        this.router.navigate(['/dashboard/tiendas']); // Redirigir a la lista de productos
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this._snackBar.open('Error al guardar la tienda', 'Cerrar', {
+          duration: 2000,
+        });
+      });
+    } else {
+      this._snackBar.open('Por favor completa todos los campos requeridos', 'Cerrar', {
+        duration: 2000,
+      });
+    }
+  }  
 }
-

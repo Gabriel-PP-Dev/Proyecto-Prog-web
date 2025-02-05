@@ -22,8 +22,7 @@ export class UsuarioComponent implements OnInit {
 
   loadData() {
     const usuarios: Usuario[] = [
-      { usuario: 'jdoe', nombre: 'John', apellidos: 'Doe', rol: 'Admin', estado: 'Activo', id:'kjfdkfdkfd' },
-      { usuario: 'asmith', nombre: 'Alice', apellidos: 'Smith', rol: 'User', estado: 'Inactivo', id:'kfjfj' },
+     
     ];
     
     this.dataSource.data = usuarios;
@@ -36,7 +35,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   editarUsuario(usuario:Usuario) {
-    this.router.navigate(['/dashboard/usuarios/crear-usuario'], { state: { tiendaId: usuario.id }});
+    this.router.navigate(['/dashboard/usuarios/crear-usuario'], { state: { tiendaId: usuario.id_usuario}});
   }
 
   eliminarUsuario(usuario:Usuario) {

@@ -23,11 +23,7 @@ export class VentaComponent implements OnInit{
 
   loadData() {
     const ventas: Venta[] = [
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
-        {cantidad: 5, usuario: 'Julio', precio:56, tienda:'tiendaName', precio_en_tienda:3883, id:'kdkdkd'},  
+       
     ];
     
     this.dataSource.data = ventas;
@@ -40,7 +36,7 @@ export class VentaComponent implements OnInit{
   }
 
   editarVenta(venta:Venta) {
-    this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id }});
+    this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id_venta }});
   }
 
   eliminarVenta(venta:Venta) {

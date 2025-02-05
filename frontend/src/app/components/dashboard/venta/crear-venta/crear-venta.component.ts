@@ -46,14 +46,7 @@ export class CrearVentaComponent implements OnInit {
   }
 
   agregarVenta() {   
-    const venta: Venta = {
-      cantidad: this.form_venta.value.cantidad,
-      usuario: this.form_venta.value.usuario,
-      precio: this.form_venta.value.precio,
-      precio_en_tienda: this.form_venta.value.precio_en_tienda,
-      tienda: this.form_venta.value.tienda,
-      id: this.form_venta.value.id
-    };
+   
   }
 }
 
