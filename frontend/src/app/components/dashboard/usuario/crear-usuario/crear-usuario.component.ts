@@ -36,14 +36,9 @@ export class CrearUsuarioComponent implements OnInit {
       contrasenna: ['', Validators.required],
       rol: ['', Validators.required],
       tienda: ['', Validators.required],
-      email: ['', this.getEmailValidators()],
+      email: null
     });
   }
-
-  getEmailValidators() {
-    return this.isEditMode ? null : [Validators.required];
-  }
-  
   
   ngOnInit(): void {
   this.cargarTiendas()
@@ -118,6 +113,7 @@ export class CrearUsuarioComponent implements OnInit {
       let method: string;
   
       if (this.isEditMode) {
+        console.log(usuarioData)
         usuarioData = {
           nombre: this.form_usuario.value.nombre,
           nombre_usuario: this.form_usuario.value.nombre_usuario,
@@ -125,6 +121,7 @@ export class CrearUsuarioComponent implements OnInit {
           rol: this.form_usuario.value.rol,
           tienda: {id_tienda: this.tiendaSeleccionada?.id_tienda}
         };  
+        console.log(usuarioData)
         method = 'PUT';
         url = `http://localhost:4000/usuario/updateUsuari/${this.usuario?.id_usuario}`; // URL para editar el producto
       } else {
@@ -136,6 +133,7 @@ export class CrearUsuarioComponent implements OnInit {
           email: this.form_usuario.value.email,
           tienda: {id_tienda: this.tiendaSeleccionada?.id_tienda}
         };  
+        console.log(usuarioData)
         method = 'POST';
         url = 'http://localhost:4000/usuario/createUsuario'; // URL para crear un nuevo producto
       }
