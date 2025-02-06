@@ -26,7 +26,7 @@
         <!-- Definición de columnas -->
         <ng-container matColumnDef="usuario">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
-            <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.nombre_usuario}} </td>
         </ng-container>
 
         <ng-container matColumnDef="nombre">
@@ -34,19 +34,14 @@
             <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="apellidos">
-            <th mat-header-cell *matHeaderCellDef> Apellidos </th>
-            <td mat-cell *matCellDef="let element"> {{element.apellidos}} </td>
-        </ng-container>
-
         <ng-container matColumnDef="rol">
             <th mat-header-cell *matHeaderCellDef> Rol </th>
             <td mat-cell *matCellDef="let element"> {{element.rol}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="estado">
-            <th mat-header-cell *matHeaderCellDef> Estado </th>
-            <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+        <ng-container matColumnDef="tienda">
+            <th mat-header-cell *matHeaderCellDef> Tienda </th>
+            <td mat-cell *matCellDef="let element"> {{element.tienda.nombre}} </td>
         </ng-container>
 
         <ng-container matColumnDef="acciones">

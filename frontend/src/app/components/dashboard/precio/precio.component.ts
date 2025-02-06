@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 
 export class PrecioComponent implements OnInit{
-  displayedColumns: string[] = ['producto', 'cantidad', 'precio', 'tienda', 'acciones'];
+  displayedColumns: string[] = ['precio', 'producto', 'tienda', 'acciones'];
   dataSource = new MatTableDataSource<Producto_Precio>([]); // Inicializa con un array vacío
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -19,16 +19,31 @@ export class PrecioComponent implements OnInit{
   constructor(private router:Router){}
 
   ngOnInit(): void {
-    this.loadData();
+    this.cargarPrecios();
   }
 
-  loadData() {
-    const ventas: Producto_Precio[] = [
-
-    ];
-    
-    this.dataSource.data = ventas;
-    this.dataSource.paginator = this.paginator;
+async cargarPrecios() {
+    try {
+      const response = await fetch(`http://localhost:4000/producto_precio`);
+      if (!response.ok) {
+        throw new Error('Error al obtener los productos');
+      }
+      
+      const precios: Producto_Precio[] = await response.json();
+      // Mapeamos las propiedades correctamente
+      const mappedPrecios = precios.map(precio => ({
+        id_producto_precio: precio.id_producto_precio,
+        precio: precio.precio,
+        producto: precio.producto,
+        tienda_precios: precio.tiendaProductoPrecio // Si necesitas mostrar esto también
+      }));
+      console.log(mappedPrecios);
+      
+      this.dataSource.data = mappedPrecios;
+      this.dataSource.paginator = this.paginator;
+    } catch (error) {
+      console.error('Error al cargar productos:', error);
+    }
   }
 
   applyFilter(event: Event) {
@@ -36,11 +51,21 @@ export class PrecioComponent implements OnInit{
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  editarVenta(precio:Producto_Precio) {
+  editarPrecio(precio:Producto_Precio) {
     this.router.navigate(['/dashboard/precios/crear-precio'], { state: { precioId: precio.id_producto_precio}});
   }
 
-  eliminarVenta(precio:Producto_Precio) {
-  
-  }
+  async eliminarPrecio(precio: Producto_Precio) {
+      try {
+        const response = await fetch(`http://localhost:4000/Producto_Precio/deleteProducto_Precio/${precio.id_producto_precio}`, {
+          method: 'DELETE'
+        });
+        if (!response.ok) {
+          throw new Error('Error al eliminar el precio');
+        }
+        this.cargarPrecios(); // Recargar productos después de eliminar
+      } catch (error) {
+        console.error('Error al eliminar precio:', error);
+      }
+    }
 }
