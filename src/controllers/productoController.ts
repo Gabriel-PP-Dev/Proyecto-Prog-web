@@ -187,25 +187,25 @@ export const addProductoController = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { nombre, costo } = req.body;
+    const { nombre } = req.body;
 
-    if (!nombre || !costo) {
+    if (!nombre) {
       res
         .status(400)
         .json({
-          message: "Asegúrese de pasar como información: nombre, costo",
+          message: "Asegúrese de pasar como información: nombre",
         });
       return;
     }
 
-    if (typeof nombre !== "string" || typeof costo !== "number") {
+    if (typeof nombre !== "string") {
       res
         .status(400)
         .json({ message: "Los campos deben tener el tipo de dato correcto" });
       return;
     }
 
-    const productoData = { nombre, costo };
+    const productoData = { nombre };
     const newProducto = await addProducto(productoData);
     if (newProducto) {
       res.status(201).json(newProducto);
@@ -224,7 +224,7 @@ export const updateProductoController = async (
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
-  const { nombre, costo } = req.body;
+  const { nombre } = req.body;
 
   // Crear un objeto con solo los campos proporcionados
   const fieldsToUpdate: any = {};
@@ -244,22 +244,21 @@ export const updateProductoController = async (
     return;
   }
 
-  if (!nombre && !costo) {
+  if (!nombre) {
     res
       .status(400)
       .json({
         message:
-          "Asegúrese de pasar como información: nombre y costo por el body",
+          "Asegúrese de pasar como información: nombre por el body",
       });
     return;
-  } else if (typeof nombre !== "string" || typeof costo !== "number") {
+  } else if (typeof nombre !== "string") {
     res
       .status(400)
       .json({ message: "Los campos deben tener el tipo de dato correcto" });
     return;
   } else {
     if (nombre) fieldsToUpdate.nombre = nombre;
-    if (costo) fieldsToUpdate.costo = costo;
   }
 
   try {
