@@ -1,0 +1,3 @@
+poner en la terminal:
+-npm install
+- ng serve

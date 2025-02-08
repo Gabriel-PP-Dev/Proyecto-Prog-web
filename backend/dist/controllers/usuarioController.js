@@ -18,8 +18,8 @@ const getAllUsersController = (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(200).json(users);
     }
     catch (error) {
-        console.error("Error al obtener usuarios:", error);
-        res.status(500).json({ message: "Error al obtener usuarios", error });
+        console.error('Error al obtener usuarios:', error);
+        res.status(500).json({ message: 'Error al obtener usuarios', error });
     }
 });
 exports.getAllUsersController = getAllUsersController;
@@ -27,42 +27,23 @@ exports.getAllUsersController = getAllUsersController;
 const addUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre, nombre_usuario, contrasenna, rol, tienda, email } = req.body;
-        // Verificar que se estén pasando todos los campos requeridos
-        if (!nombre ||
-            !nombre_usuario ||
-            !contrasenna ||
-            !rol ||
-            !tienda ||
-            email === undefined) {
-            res
-                .status(400)
-                .json({ message: "Debes proporcionar todos los campos requeridos" });
+        // Validación básica
+        if (!nombre || !nombre_usuario || !contrasenna || !rol || !tienda || !email) {
+            res.status(400).json({ message: 'Todos los campos son obligatorios' });
             return;
         }
-        // Validar que el rol sea "Administrador" o "Trabajador"
-        if (rol !== "Administrador" && rol !== "Trabajador") {
-            res.status(400).json({ message: "El rol debe ser 'Administrador' o 'Trabajador'" });
-            return;
-        }
-        // Verificar que el nombre de usuario sea único
-        const isUnique = yield (0, usuarioServices_1.checkUniqueUsername)(nombre_usuario);
-        if (!isUnique) {
-            res
-                .status(400)
-                .json({ message: "El nombre de usuario ya existe en el sistema" });
-            return;
-        }
-        // Validar formato de correo electrónico si se proporciona
-        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            res.status(400).json({ message: "El correo electrónico no es válido" });
+        // Validar formato de correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            res.status(400).json({ message: 'El correo electrónico no es válido' });
             return;
         }
         const newUser = yield (0, usuarioServices_1.addUser)(req.body);
         res.status(201).json(newUser);
     }
     catch (error) {
-        console.error("Error al crear el usuario:", error);
-        res.status(500).json({ message: "Error al crear el usuario", error });
+        console.error('Error al agregar usuario:', error);
+        res.status(500).json({ message: 'Error al agregar usuario', error });
     }
 });
 exports.addUserController = addUserController;
@@ -70,17 +51,17 @@ exports.addUserController = addUserController;
 const getUserByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield (0, usuarioServices_1.getUserById)(id);
+        const user = yield (0, usuarioServices_1.getUserById)(Number(id));
         if (user) {
             res.status(200).json(user);
         }
         else {
-            res.status(404).json({ message: "Usuario no encontrado" });
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }
     }
     catch (error) {
-        console.error("Error al obtener el usuario:", error);
-        res.status(500).json({ message: "Error al obtener el usuario", error });
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ message: 'Error al obtener el usuario', error });
     }
 });
 exports.getUserByIdController = getUserByIdController;
@@ -89,53 +70,28 @@ const updateUserController = (req, res) => __awaiter(void 0, void 0, void 0, fun
     const { id } = req.params;
     try {
         const { nombre, nombre_usuario, contrasenna, rol, tienda, email } = req.body;
-        // Validar que se proporcione al menos un campo para actualizar
-        if (!nombre &&
-            !nombre_usuario &&
-            !contrasenna &&
-            !rol &&
-            !tienda &&
-            !email) {
-            res.status(400).json({
-                message: "Se debe proporcionar al menos un campo para actualizar.",
-            });
+        // Validación básica
+        if (!nombre || !nombre_usuario || !contrasenna || !rol || !tienda || !email) {
+            res.status(400).json({ message: 'Todos los campos son obligatorios' });
             return;
         }
-        // Validar formato de correo electrónico si se proporciona
-        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            res.status(400).json({ message: "El correo electrónico no es válido" });
+        // Validar formato de correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            res.status(400).json({ message: 'El correo electrónico no es válido' });
             return;
         }
-        // Validar que el rol sea "Trabajador" o "Administrador" si se proporciona
-        if (rol && rol !== "Trabajador" && rol !== "Administrador") {
-            res.status(400).json({ message: "El rol debe ser 'Trabajador' o 'Administrador'" });
-            return;
-        }
-        // Crear un objeto con solo los campos proporcionados
-        const fieldsToUpdate = {};
-        if (nombre)
-            fieldsToUpdate.nombre = nombre;
-        if (nombre_usuario)
-            fieldsToUpdate.nombre_usuario = nombre_usuario;
-        if (contrasenna)
-            fieldsToUpdate.contrasenna = contrasenna;
-        if (rol)
-            fieldsToUpdate.rol = rol;
-        if (tienda)
-            fieldsToUpdate.tienda = tienda;
-        if (email)
-            fieldsToUpdate.email = email;
-        const updatedUser = yield (0, usuarioServices_1.updateUser)(id, fieldsToUpdate);
+        const updatedUser = yield (0, usuarioServices_1.updateUser)(Number(id), req.body);
         if (updatedUser) {
             res.status(200).json(updatedUser);
         }
         else {
-            res.status(404).json({ message: "Usuario no encontrado" });
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }
     }
     catch (error) {
-        console.error("Error al actualizar el usuario:", error);
-        res.status(500).json({ message: "Error al actualizar el usuario", error });
+        console.error('Error al actualizar el usuario:', error);
+        res.status(500).json({ message: 'Error al actualizar el usuario', error });
     }
 });
 exports.updateUserController = updateUserController;
@@ -143,37 +99,36 @@ exports.updateUserController = updateUserController;
 const deleteUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const deleted = yield (0, usuarioServices_1.deleteUser)(id);
+        const deleted = yield (0, usuarioServices_1.deleteUser)(Number(id));
         if (deleted) {
             res.status(204).send(); // No content
         }
         else {
-            res.status(404).json({ message: "Usuario no encontrado" });
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }
     }
     catch (error) {
-        console.error("Error al eliminar el usuario:", error);
-        res.status(500).json({ message: "Error al eliminar el usuario", error });
+        console.error('Error al eliminar el usuario:', error);
+        res.status(500).json({ message: 'Error al eliminar el usuario', error });
     }
 });
 exports.deleteUserController = deleteUserController;
 // Obtener un usuario por nombre
 const getUserByNameController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.params;
+    console.log("Nombre recibido:", name); // Agregar esta línea para depuración
     try {
         const users = yield (0, usuarioServices_1.getUserByName)(name);
         if (users.length > 0) {
             res.status(200).json(users);
         }
         else {
-            res.status(404).json({ message: "Usuario no encontrado" });
+            res.status(404).json({ message: 'Usuario no encontrado' });
         }
     }
     catch (error) {
-        console.error("Error al obtener el usuario por nombre:", error);
-        res
-            .status(500)
-            .json({ message: "Error al obtener el usuario por nombre", error });
+        console.error('Error al obtener el usuario por nombre:', error);
+        res.status(500).json({ message: 'Error al obtener el usuario por nombre', error });
     }
 });
 exports.getUserByNameController = getUserByNameController;

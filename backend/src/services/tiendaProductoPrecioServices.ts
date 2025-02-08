@@ -54,3 +54,26 @@ export const getTiendaProductoPrecioByProductId = async (id_producto: string): P
         }
     });
 };
+
+// Obtener todos los TiendaProductoPrecio de una tienda por ID
+export const getTiendaProductoPrecioByTiendaId = async (id_tienda: string): Promise<TiendaProductoPrecio[]> => {
+    const tiendaProductoPrecioRepository = AppDataSource.getRepository(TiendaProductoPrecio);
+    return await tiendaProductoPrecioRepository.find({
+      where: { tienda: { id_tienda } },
+      relations: ['tienda', 'producto_precios', 'producto_precios.producto']
+    });
+  };
+
+  // Obtener todos los TiendaProductoPrecio de una tienda por ID ordenados por cantidad
+export const getTiendaProductoPrecioByTiendaIdOrdenados = async (
+    id_tienda: string
+  ): Promise<TiendaProductoPrecio[]> => {
+    const tiendaProductoPrecioRepository = AppDataSource.getRepository(
+      TiendaProductoPrecio
+    );
+    return await tiendaProductoPrecioRepository.find({
+      where: { tienda: { id_tienda } },
+      order: { cantidad_en_tienda: 'ASC' }, // Ordenar por cantidad de menor a mayor
+      relations: ['tienda', 'producto_precios', 'producto_precios.producto'],
+    });
+  };

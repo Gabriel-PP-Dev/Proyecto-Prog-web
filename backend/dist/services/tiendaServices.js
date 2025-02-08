@@ -16,11 +16,7 @@ const AuxiliarFunctions_1 = require("../helpers/AuxiliarFunctions");
 // Obtener todas las tiendas
 const getAllTiendas = () => __awaiter(void 0, void 0, void 0, function* () {
     const tiendaRepository = data_source_1.AppDataSource.getRepository(Tienda_1.Tienda);
-    return yield tiendaRepository.find({
-        relations: {
-            usuarios: true, // Incluye la relación con Usuario
-        }
-    });
+    return yield tiendaRepository.find();
 });
 exports.getAllTiendas = getAllTiendas;
 // Agregar una nueva tienda
@@ -33,12 +29,7 @@ exports.addTienda = addTienda;
 // Obtener una tienda por ID
 const getTiendaById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const tiendaRepository = data_source_1.AppDataSource.getRepository(Tienda_1.Tienda);
-    return yield tiendaRepository.findOne({
-        where: { id_tienda: id },
-        relations: {
-            usuarios: true, // Incluye la relación con Usuario
-        }
-    });
+    return yield tiendaRepository.findOneBy({ id_tienda: id });
 });
 exports.getTiendaById = getTiendaById;
 // Actualizar una tienda
@@ -64,11 +55,7 @@ const getTiendaByName = (name) => __awaiter(void 0, void 0, void 0, function* ()
     const tiendaRepository = data_source_1.AppDataSource.getRepository(Tienda_1.Tienda);
     const normalizedName = (0, AuxiliarFunctions_1.removeAccents)(name.toLowerCase()); // Normalizar el nombre buscado
     // Obtener todas las tiendas y filtrar en memoria
-    const tiendas = yield tiendaRepository.find({
-        relations: {
-            usuarios: true, // Incluye la relación con Usuario
-        }
-    });
+    const tiendas = yield tiendaRepository.find();
     // Filtrar tiendas que contengan el nombre normalizado
     return tiendas.filter(tienda => (0, AuxiliarFunctions_1.removeAccents)(tienda.nombre.toLowerCase()).includes(normalizedName));
 });

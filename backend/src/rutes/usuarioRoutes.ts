@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getAllUsersController, addUserController, getUserByIdController, updateUserController, deleteUserController, getUserByNameController} from '../controllers/usuarioController';
-
+import { getAllUsersController, addUserController, getUserByIdController, updateUserController, deleteUserController, getUserByNameController, authenticateUserController } from '../controllers/usuarioController';
+import authenticate from '../helpers/authenticate';
 
 const router = Router();
 
@@ -25,5 +25,9 @@ router.delete('/usuario/deleteUsuario/:id', deleteUserController);
 
 // Busca un usuario por su nombre
 router.get('/usuario/searchByName/:name', getUserByNameController);
+
+// Autentificacion de usuario
+// (body: {nombre_usuario: string, contrasenna: string})
+router.post('/usuario/authenticate', authenticateUserController);
 
 export default router;

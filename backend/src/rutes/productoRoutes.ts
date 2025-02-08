@@ -43,7 +43,6 @@ router.post('/producto/createProducto', addProductoController);
  * 
  * Recibe en el body:
  * - nombre (string): Nombre del producto
- * - costo (number): Costo del producto
  * 
  * Retorna:
  * - El producto creado con su ID y otros datos
@@ -59,7 +58,6 @@ router.put('/producto/updateProducto/:id', updateProductoController);
  * 
  * Recibe en el body:
  * - nombre (string): Nuevo nombre del producto (opcional)
- * - costo (number): Nuevo costo del producto (opcional)
  * 
  * Retorna:
  * - El producto actualizado con su ID y otros datos

@@ -18,8 +18,8 @@ let Tienda = class Tienda {
 };
 exports.Tienda = Tienda;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], Tienda.prototype, "id_tienda", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -31,17 +31,14 @@ __decorate([
 ], Tienda.prototype, "direccion", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Usuario_1.Usuario, usuario => usuario.tienda),
-    (0, typeorm_1.JoinColumn)({ name: "id_tienda" }),
     __metadata("design:type", Array)
 ], Tienda.prototype, "usuarios", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.tienda),
-    (0, typeorm_1.JoinColumn)({ name: "id_tienda" }),
     __metadata("design:type", Array)
 ], Tienda.prototype, "tiendaProductoPrecios", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Venta_1.Venta, venta => venta.tienda),
-    (0, typeorm_1.JoinColumn)({ name: "id_tienda" }),
     __metadata("design:type", Array)
 ], Tienda.prototype, "ventas", void 0);
 exports.Tienda = Tienda = __decorate([

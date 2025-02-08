@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 
 export class ProductoComponent implements OnInit {
-  displayedColumns: string[] = ['nombre', 'costo', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'acciones'];
   dataSource = new MatTableDataSource<Producto>([]);
 
   constructor(private router: Router) {}
@@ -35,7 +35,6 @@ export class ProductoComponent implements OnInit {
       const mappedProductos = productos.map(producto => ({
         id_producto: producto.id_producto,
         nombre: producto.nombre,
-        costo: producto.costo,
         producto_precios: producto.producto_precios 
       }));
       this.dataSource.data = mappedProductos;
@@ -51,7 +50,7 @@ export class ProductoComponent implements OnInit {
   }
 
   editarProducto(producto: Producto) {
-      const productoData = { nombre: producto.nombre, costo: producto.costo, id_producto: producto.id_producto, producto_precios: producto.producto_precios};
+      const productoData = { nombre: producto.nombre, id_producto: producto.id_producto, producto_precios: producto.producto_precios};
       const queryParams = { producto: JSON.stringify(productoData) };
       this.router.navigate(['/dashboard/productos/crear-producto'], { queryParams });
   }

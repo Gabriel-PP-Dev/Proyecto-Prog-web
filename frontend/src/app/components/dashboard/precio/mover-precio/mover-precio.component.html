@@ -1,0 +1,30 @@
+<div class="form-container">
+    <mat-card class="form-card">
+      <h3 class="form-title">Formulario de Mover Precio</h3>
+      <form [formGroup]="form_mover_precio" (ngSubmit)="moverPrecio()">
+  
+        <div class="form-field">
+          <mat-form-field class="ancho">
+            <mat-label>Tienda</mat-label>
+            <mat-select formControlName="tienda">
+              <mat-option *ngFor="let tienda of tiendas" [value]="tienda">
+                {{tienda.nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-field">
+          <mat-form-field class="ancho">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" autocomplete="off" formControlName="cantidad">
+          </mat-form-field>
+        </div>
+  
+        <div class="form-buttons">
+          <button mat-raised-button style="margin-right: 20px;" routerLink="/dashboard/precios">Volver</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form_mover_precio.invalid">Aceptar</button>
+        </div>
+      </form>
+    </mat-card>
+  </div>

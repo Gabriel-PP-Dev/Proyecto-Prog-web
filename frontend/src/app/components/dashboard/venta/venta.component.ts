@@ -11,24 +11,40 @@ import { Router } from '@angular/router';
 })
 
 export class VentaComponent implements OnInit{
-  displayedColumns: string[] = ['cantidad', 'usuario', 'precio', 'tienda', 'precioentienda', 'acciones'];
+  displayedColumns: string[] = ['cantidad', 'precio', 'tienda', 'producto_precio', 'acciones'];
   dataSource = new MatTableDataSource<Venta>([]); // Inicializa con un array vacío
   constructor(private router:Router){}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
-    this.loadData();
+    this.cargarVenta();
   }
 
-  loadData() {
-    const ventas: Venta[] = [
-       
-    ];
-    
-    this.dataSource.data = ventas;
-    this.dataSource.paginator = this.paginator;
-  }
+  async cargarVenta() {
+      try {
+        const response = await fetch(`http://localhost:4000/venta`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los productos');
+        }
+        
+        const ventas: Venta[] = await response.json();
+        // Mapeamos las propiedades correctamente
+        const mappedVentas = ventas.map(venta => ({
+          id_venta: venta.id_venta,
+          precio: venta.precio,
+          cantidad: venta.cantidad,
+          producto_precio: venta.producto_precio,
+          tienda: venta.tienda
+        }));
+        console.log(mappedVentas);
+        
+        this.dataSource.data = mappedVentas;
+        this.dataSource.paginator = this.paginator;
+      } catch (error) {
+        console.error('Error al cargar productos:', error);
+      }
+    }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -39,6 +55,33 @@ export class VentaComponent implements OnInit{
     this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id_venta }});
   }
 
-  eliminarVenta(venta:Venta) {
+  async eliminarVenta(venta:Venta) {
+    try {
+      const response = await fetch(`http://localhost:4000/venta/DeleteVenta/${venta.id_venta}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error('Error al eliminar la venta');
+      }
+      this.cargarVenta(); // Recargar productos después de eliminar
+    } catch (error) {
+      console.error('Error al eliminar la venta', error);
+    }
   }
+
+  exportarVentasExcel(): void {
+    fetch('http://localhost:4000/venta_exportar-excel')
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ventas.xlsx';
+        a.click();
+      })
+      .catch(error => {
+        console.error('Error al exportar ventas a Excel:', error);
+      });
+  }
+
 }

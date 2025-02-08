@@ -18,26 +18,23 @@ let TiendaProductoPrecio = class TiendaProductoPrecio {
 };
 exports.TiendaProductoPrecio = TiendaProductoPrecio;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], TiendaProductoPrecio.prototype, "id_tiendaProductoPrecio", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Tienda_1.Tienda, tienda => tienda.tiendaProductoPrecios),
-    (0, typeorm_1.JoinColumn)({ name: "id_tienda" }),
     __metadata("design:type", Tienda_1.Tienda)
 ], TiendaProductoPrecio.prototype, "tienda", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Producto_Precio_1.Producto_Precio, producto_precio => producto_precio.tiendaProductoPrecio),
-    (0, typeorm_1.JoinColumn)({ name: "id_tiendaProductoPrecio" }),
-    __metadata("design:type", Array)
-], TiendaProductoPrecio.prototype, "producto_precios", void 0);
+    (0, typeorm_1.ManyToOne)(() => Producto_Precio_1.Producto_Precio, producto_precio => producto_precio.tiendaProductoPrecios),
+    __metadata("design:type", Producto_Precio_1.Producto_Precio)
+], TiendaProductoPrecio.prototype, "producto_precio", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], TiendaProductoPrecio.prototype, "cantidad_en_tienda", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Venta_1.Venta, venta => venta.producto_precio),
-    (0, typeorm_1.JoinColumn)({ name: "id_tiendaProductoPrecio" }),
     __metadata("design:type", Array)
 ], TiendaProductoPrecio.prototype, "ventas", void 0);
 exports.TiendaProductoPrecio = TiendaProductoPrecio = __decorate([

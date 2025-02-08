@@ -1,58 +1,120 @@
 import { Component, OnInit } from '@angular/core';
-import { Producto_Precio } from 'src/app/interface/precio';
-import { FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBar
-import { PrecioService } from 'src/app/sevices/precio.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Producto_Precio } from 'src/app/interface/precio';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-crear-precio',
   templateUrl: './crear-precio.component.html',
   styleUrls: ['./crear-precio.component.css']
 })
-
 export class CrearPrecioComponent implements OnInit {
-  form_precio: FormGroup; 
-  roles: any[] = [
-    {value: 'admin', viewValue: 'Admin'},
-    {value: 'trabajador', viewValue: 'Trabajador'},
-    {value: 'estudiante', viewValue: 'Estudiante'},
-  ];
-  estados: any[] = [
-    {value: 'activo', viewValue: 'Activo'},
-    {value: 'bloqueado', viewValue: 'Bloqueado'},
-  ];
-  
-  constructor(
-    private fb: FormBuilder, 
-    private router: Router, 
-    private _tiendaService: PrecioService,
-    private _snackBar: MatSnackBar // Inyecta MatSnackBar aquí
-  ) { 
+  form_precio: FormGroup;
+  isEditMode = false;
+  precio?: Producto_Precio;
+  productos: any[] = [];
 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private _snackBar: MatSnackBar,
+    private route: ActivatedRoute
+  ) {
     this.form_precio = this.fb.group({
-      usuario: ['', Validators.required],
-      nombre: ['', Validators.required],
-      apellidos: ['', Validators.required],
-      contrasena: ['', Validators.required],
-      rol: ['', Validators.required],
-      estado: ['', Validators.required], 
+      producto: ['', Validators.required],
+      precio: ['', [Validators.required, Validators.min(0)]],
     });
   }
-  
+
   ngOnInit(): void {
+    this.obtenerProductos()
+    this.route.queryParams.subscribe(params => {
+      const precioData = JSON.parse(params['precio']);
+      if (precioData) {
+        this.precio = precioData;
+        this.isEditMode = true;
+        this.cargarPrecio(); // Llenar el formulario con los datos del producto
+    }
+  });
   }
 
-  agregarPrecio() {   
-    /*const precio: Producto_Precio = {
-      precio: this.form_precio.value.precio,
-      tiendaProductoPrecio: this.form_precio.value.tienda,
-      producto: this.form_precio.value.producto,
-      id_producto_precio: this.form_precio.value.cantidad,
-      id_producto: this.form_precio.value.id
-    };*/
+  cargarPrecio() {
+    if (this.precio) {
+      this.form_precio.patchValue({
+        producto: this.precio.producto,
+        precio: this.precio.precio,
+      });
+    }
+  }
+
+  obtenerProductos() {
+    fetch('http://localhost:4000/producto')
+      .then(response => response.json())
+      .then(data => {
+        this.productos = data;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  agregarPrecio() {
+    if (this.form_precio.valid) {
+      let productoData;
+      if(this.isEditMode){
+       productoData = {
+        producto: this.form_precio.value.producto.id_producto,
+        precio: this.form_precio.value.precio,
+      };
+    }else{
+      productoData = {
+        producto: { id_producto: this.form_precio.value.producto.id_producto},
+        precio: this.form_precio.value.precio,
+      };
+    }
+      let url: string;
+      let method: string;
+
+      if (this.isEditMode) {
+        method = 'PUT';
+        url = `http://localhost:4000/Producto_Precio/updateProducto_Precio/${this.precio?.id_producto_precio}`;
+      } else {
+        method = 'POST';
+        url = 'http://localhost:4000/Producto_Precio/createProducto_Precio';
+      }
+
+      fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productoData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al guardar el precio');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const message = this.isEditMode ? 'Precio actualizado exitosamente!' : 'Precio creado exitosamente!';
+        this._snackBar.open(message, 'Cerrar', {
+          duration: 200,
+        });
+        this.router.navigate(['/dashboard/precios']);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this._snackBar.open('Error al guardar el precio', 'Cerrar', {
+          duration: 200,
+        });
+      });
+    } else {
+      this._snackBar.open('Por favor completa todos los campos requeridos', 'Cerrar', {
+        duration: 200,
+      });
+    }
   }
 }
-

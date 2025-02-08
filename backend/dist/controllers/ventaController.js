@@ -39,7 +39,7 @@ exports.addVentaController = addVentaController;
 const getVentaByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const venta = yield (0, ventaServices_1.getVentaById)(String(id));
+        const venta = yield (0, ventaServices_1.getVentaById)(Number(id));
         if (venta) {
             res.status(200).json(venta);
         }
@@ -57,7 +57,7 @@ exports.getVentaByIdController = getVentaByIdController;
 const updateVentaController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const updatedVenta = yield (0, ventaServices_1.updateVenta)(String(id), req.body);
+        const updatedVenta = yield (0, ventaServices_1.updateVenta)(Number(id), req.body);
         if (updatedVenta) {
             res.status(200).json(updatedVenta);
         }

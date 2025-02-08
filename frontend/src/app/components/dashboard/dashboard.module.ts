@@ -15,6 +15,7 @@ import { CrearTiendaComponent } from './tienda/crear-tienda/crear-tienda.compone
 import { CrearProductoComponent } from './producto/crear-producto/crear-producto.component';
 import { CrearPrecioComponent } from './precio/crear-precio/crear-precio.component';
 import { PrecioComponent } from './precio/precio.component';
+import { MoverPrecioComponent } from './precio/mover-precio/mover-precio.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { PrecioComponent } from './precio/precio.component';
     CrearTiendaComponent,
     CrearProductoComponent,
     CrearPrecioComponent,
-    PrecioComponent
+    PrecioComponent,
+    MoverPrecioComponent
   ],
   imports: [
     CommonModule,

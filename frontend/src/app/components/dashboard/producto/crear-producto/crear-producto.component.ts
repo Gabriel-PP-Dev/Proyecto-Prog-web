@@ -24,7 +24,6 @@ export class CrearProductoComponent implements OnInit {
   ) { 
     this.form_producto = this.fb.group({
       nombre: ['', Validators.required],
-      costo: ['', [Validators.required, Validators.min(0)]], 
     });
   }
   
@@ -44,7 +43,6 @@ export class CrearProductoComponent implements OnInit {
     if (this.producto) {
       this.form_producto.patchValue({
         nombre: this.producto.nombre,
-        costo: this.producto.costo
       });
     }
   }
@@ -53,7 +51,6 @@ export class CrearProductoComponent implements OnInit {
     if (this.form_producto.valid) {
       const productoData = {
         nombre: this.form_producto.value.nombre,
-        costo: this.form_producto.value.costo,
       };
   
       let url: string;

@@ -18,8 +18,8 @@ const getAllTiendasController = (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(200).json(tiendas);
     }
     catch (error) {
-        console.error("Error al obtener tiendas:", error);
-        res.status(500).json({ message: "Error al obtener tiendas", error });
+        console.error('Error al obtener tiendas:', error);
+        res.status(500).json({ message: 'Error al obtener tiendas', error });
     }
 });
 exports.getAllTiendasController = getAllTiendasController;
@@ -28,20 +28,16 @@ const addTiendaController = (req, res) => __awaiter(void 0, void 0, void 0, func
     try {
         const { nombre, direccion } = req.body;
         // Validación básica
-        if (!nombre || direccion === undefined) {
-            res
-                .status(400)
-                .json({
-                message: "El nombre y la direccion son obligatorios para crear la tienda",
-            });
+        if (!nombre || !direccion) {
+            res.status(400).json({ message: 'Todos los campos son obligatorios' });
             return;
         }
         const newTienda = yield (0, tiendaServices_1.addTienda)(req.body);
         res.status(201).json(newTienda);
     }
     catch (error) {
-        console.error("Error al agregar tienda:", error);
-        res.status(500).json({ message: "Error al agregar tienda", error });
+        console.error('Error al agregar tienda:', error);
+        res.status(500).json({ message: 'Error al agregar tienda', error });
     }
 });
 exports.addTiendaController = addTiendaController;
@@ -49,17 +45,17 @@ exports.addTiendaController = addTiendaController;
 const getTiendaByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const tienda = yield (0, tiendaServices_1.getTiendaById)(id);
+        const tienda = yield (0, tiendaServices_1.getTiendaById)(Number(id));
         if (tienda) {
             res.status(200).json(tienda);
         }
         else {
-            res.status(404).json({ message: "Tienda no encontrada" });
+            res.status(404).json({ message: 'Tienda no encontrada' });
         }
     }
     catch (error) {
-        console.error("Error al obtener la tienda:", error);
-        res.status(500).json({ message: "Error al obtener la tienda", error });
+        console.error('Error al obtener la tienda:', error);
+        res.status(500).json({ message: 'Error al obtener la tienda', error });
     }
 });
 exports.getTiendaByIdController = getTiendaByIdController;
@@ -68,28 +64,22 @@ const updateTiendaController = (req, res) => __awaiter(void 0, void 0, void 0, f
     const { id } = req.params;
     try {
         const { nombre, direccion } = req.body;
-        // Validar que al menos un campo sea proporcionado
-        if (!nombre && direccion === undefined) {
-            res.status(400).json({ message: "Se debe proporcionar al menos un campo para actualizar." });
+        // Validación básica
+        if (!nombre || !direccion) {
+            res.status(400).json({ message: 'Todos los campos son obligatorios' });
             return;
         }
-        // Crear un objeto con solo los campos proporcionados
-        const fieldsToUpdate = {};
-        if (nombre)
-            fieldsToUpdate.nombre = nombre;
-        if (direccion)
-            fieldsToUpdate.direccion = direccion;
-        const updatedTienda = yield (0, tiendaServices_1.updateTienda)(id, fieldsToUpdate);
+        const updatedTienda = yield (0, tiendaServices_1.updateTienda)(Number(id), req.body);
         if (updatedTienda) {
             res.status(200).json(updatedTienda);
         }
         else {
-            res.status(404).json({ message: "Tienda no encontrada" });
+            res.status(404).json({ message: 'Tienda no encontrada' });
         }
     }
     catch (error) {
-        console.error("Error al actualizar la tienda:", error);
-        res.status(500).json({ message: "Error al actualizar la tienda", error });
+        console.error('Error al actualizar la tienda:', error);
+        res.status(500).json({ message: 'Error al actualizar la tienda', error });
     }
 });
 exports.updateTiendaController = updateTiendaController;
@@ -97,17 +87,17 @@ exports.updateTiendaController = updateTiendaController;
 const deleteTiendaController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const deleted = yield (0, tiendaServices_1.deleteTienda)(id);
+        const deleted = yield (0, tiendaServices_1.deleteTienda)(Number(id));
         if (deleted) {
             res.status(204).send(); // No content
         }
         else {
-            res.status(404).json({ message: "Tienda no encontrada" });
+            res.status(404).json({ message: 'Tienda no encontrada' });
         }
     }
     catch (error) {
-        console.error("Error al eliminar la tienda:", error);
-        res.status(500).json({ message: "Error al eliminar la tienda", error });
+        console.error('Error al eliminar la tienda:', error);
+        res.status(500).json({ message: 'Error al eliminar la tienda', error });
     }
 });
 exports.deleteTiendaController = deleteTiendaController;
@@ -120,14 +110,12 @@ const getTiendaByNameController = (req, res) => __awaiter(void 0, void 0, void 0
             res.status(200).json(tiendas);
         }
         else {
-            res.status(200).json([]);
+            res.status(404).json({ message: 'No se encontraron tiendas con ese nombre' });
         }
     }
     catch (error) {
-        console.error("Error al obtener la tienda por nombre:", error);
-        res
-            .status(500)
-            .json({ message: "Error al obtener la tienda por nombre", error });
+        console.error('Error al obtener la tienda por nombre:', error);
+        res.status(500).json({ message: 'Error al obtener la tienda por nombre', error });
     }
 });
 exports.getTiendaByNameController = getTiendaByNameController;

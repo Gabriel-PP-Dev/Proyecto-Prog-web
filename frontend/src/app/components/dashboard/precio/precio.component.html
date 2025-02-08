@@ -49,6 +49,9 @@
                 <button mat-button (click)="eliminarPrecio(element)">
                     <mat-icon>delete</mat-icon>Eliminar
                 </button>
+                <button mat-button (click)="moverPrecio(element)">
+                    <mat-icon>shopp_card</mat-icon>Mover a tienda
+                </button>
             </td>
         </ng-container>
 
@@ -60,4 +63,3 @@
 
     <!-- Paginador -->
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-</div>

@@ -50,9 +50,16 @@ async cargarPrecios() {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
   editarPrecio(precio:Producto_Precio) {
-    this.router.navigate(['/dashboard/precios/crear-precio'], { state: { precioId: precio.id_producto_precio}});
+    const precioData = { precio: precio.precio, id_producto_precio: precio.id_producto_precio, tiendaProductoPrecio: precio.tiendaProductoPrecio, producto: precio.producto};
+    const queryParams = { precio: JSON.stringify(precioData) };
+    this.router.navigate(['/dashboard/precios/crear-precio'], { queryParams });
+  }
+
+  moverPrecio(precio:Producto_Precio) {
+    const precioData = { precio: precio.precio, id_producto_precio: precio.id_producto_precio, tiendaProductoPrecio: precio.tiendaProductoPrecio, producto: precio.producto};
+    const queryParams = { precio: JSON.stringify(precioData) };
+    this.router.navigate(['/dashboard/precios/mover-precio'], { queryParams });
   }
 
   async eliminarPrecio(precio: Producto_Precio) {
@@ -69,3 +76,6 @@ async cargarPrecios() {
       }
     }
 }
+
+
+

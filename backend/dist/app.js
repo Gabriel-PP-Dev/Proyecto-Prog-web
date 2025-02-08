@@ -9,10 +9,6 @@ const usuarioRoutes_1 = __importDefault(require("./rutes/usuarioRoutes")); // Im
 const tiendaRoutes_1 = __importDefault(require("./rutes/tiendaRoutes"));
 const productoRoutes_1 = __importDefault(require("./rutes/productoRoutes"));
 const ventaRoutes_1 = __importDefault(require("./rutes/ventaRoutes"));
-const producto_PrecioRoutes_1 = __importDefault(require("./rutes/producto_PrecioRoutes"));
-const tiendaProductoPrecioRoutes_1 = __importDefault(require("./rutes/tiendaProductoPrecioRoutes"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Inicializa la conexión a la base de datos
@@ -27,10 +23,6 @@ data_source_1.AppDataSource.initialize()
     app.use("/", productoRoutes_1.default);
     // Rutas de venta
     app.use("/", ventaRoutes_1.default);
-    // Rutas de producto_precio
-    app.use("/", producto_PrecioRoutes_1.default);
-    // Rutas de tiendaProductoPrecio
-    app.use("/", tiendaProductoPrecioRoutes_1.default);
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
         console.log(`Servidor corriendo en el puerto ${PORT}`);

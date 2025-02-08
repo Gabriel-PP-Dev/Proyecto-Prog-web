@@ -13,13 +13,14 @@ import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatPaginatorModule} from '@angular/material/paginator'; 
 import {MatSortModule} from '@angular/material/sort';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 // para los card o tarjetas
 import { MatCardModule } from '@angular/material/card';
 // para los grid o grilla
 import { MatGridListModule } from '@angular/material/grid-list';
 // para los select
 import { MatSelectModule}  from '@angular/material/select';
-
 
 @NgModule({
   declarations: [],
@@ -39,7 +40,9 @@ import { MatSelectModule}  from '@angular/material/select';
     MatSortModule,
     MatCardModule,
     MatGridListModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSidenavModule,
+    MatListModule
   ],
   exports: [
     MatFormFieldModule,
@@ -56,7 +59,9 @@ import { MatSelectModule}  from '@angular/material/select';
     MatSortModule,
     MatCardModule,
     MatGridListModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSidenavModule,
+    MatListModule,
   ]
 })
 export class SharedModule { }

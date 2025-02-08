@@ -19,7 +19,8 @@ const getAllVentas = () => __awaiter(void 0, void 0, void 0, function* () {
         relations: {
             tienda: true,
             producto_precio: {
-                tienda: true
+                tienda: true,
+                producto_precio: true
             }
         }
     });
@@ -39,6 +40,7 @@ const getVentaById = (id) => __awaiter(void 0, void 0, void 0, function* () {
             tienda: true,
             producto_precio: {
                 tienda: true,
+                producto_precio: true
             }
         }
     });

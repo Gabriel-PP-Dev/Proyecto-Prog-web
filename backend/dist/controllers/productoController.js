@@ -11,8 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProductosByNameController = exports.deleteProductoController = exports.updateProductoController = exports.addProductoController = exports.getAllProductosController = exports.getProductoByIdController = exports.moveProductoController = exports.getProductosByTiendaSortedByQuantityController = void 0;
 const productoServices_1 = require("../services/productoServices");
-const tiendaServices_1 = require("../services/tiendaServices");
-// Obtener productos de Tienda (id) ordenados por cantidad 
+//obtener productos de tienda (id) ordenados ascendentemente
 const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     if (!id) {
@@ -20,7 +19,7 @@ const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(v
         return;
     }
     try {
-        const productos = yield (0, productoServices_1.getProductosByTiendaSortedByQuantity)(id);
+        const productos = yield (0, productoServices_1.getProductosByTiendaSortedByQuantity)(Number(id));
         if (productos) {
             res.status(200).json(productos);
         }
@@ -34,47 +33,25 @@ const getProductosByTiendaSortedByQuantityController = (req, res) => __awaiter(v
     }
 });
 exports.getProductosByTiendaSortedByQuantityController = getProductosByTiendaSortedByQuantityController;
-// Mover producto a otra tienda
+//mover producto a otra tienda
 const moveProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { id_tienda_origen, id_tienda_destino, cantidad } = req.body;
+        const { idTienda } = req.body;
         // Validación básica
-        if (!id || !id_tienda_origen || !id_tienda_destino || !cantidad) {
-            res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), id_tienda_origen, id_tienda_destino y cantidad (body)' });
+        if (!id || !idTienda) {
+            res.status(400).json({ message: 'Aegúrese de pasar como información: id (parámetro, id de tiendaProductoPrecio), idTienda (id de la tienda a la que desea mover el producto)' });
             return;
         }
-        if (typeof cantidad !== 'number' || cantidad <= 0) {
-            res.status(400).json({ message: 'La cantidad debe ser un número entero positivo' });
-            return;
-        }
-        const producto = yield (0, productoServices_1.getProductoById)(id);
-        if (!producto) {
-            res.status(404).json({ message: 'Producto no encontrado' });
-            return;
-        }
-        const tiendaOrigen = yield (0, tiendaServices_1.getTiendaById)(id_tienda_origen);
-        if (!tiendaOrigen) {
-            res.status(404).json({ message: 'Tienda de origen no encontrada' });
-            return;
-        }
-        const tiendaDestino = yield (0, tiendaServices_1.getTiendaById)(id_tienda_destino);
-        if (!tiendaDestino) {
-            res.status(404).json({ message: 'Tienda de destino no encontrada' });
-            return;
-        }
-        // Mover el producto a la tienda de destino
-        const resultado = yield (0, productoServices_1.moveProducto)(id, id_tienda_destino, cantidad);
-        if (resultado) {
-            res.status(200).json({ message: 'Producto movido con éxito' });
-        }
-        else {
-            res.status(500).json({ message: 'Error al mover el producto' });
-        }
+        const newChange = yield (0, productoServices_1.moveProducto)(Number(id), idTienda);
+        if (newChange != null)
+            res.status(201).json(newChange);
+        else
+            res.status(201).json({ message: 'La tienda o el producto no existen' });
     }
     catch (error) {
-        console.error('Error al mover el producto:', error);
-        res.status(500).json({ message: 'Error al mover el producto', error });
+        console.error('Error al agregar producto:', error);
+        res.status(500).json({ message: 'Error al cambiar producto', error });
     }
 });
 exports.moveProductoController = moveProductoController;
@@ -87,7 +64,7 @@ const getProductoByIdController = (req, res) => __awaiter(void 0, void 0, void 0
         return;
     }
     try {
-        const producto = yield (0, productoServices_1.getProductoById)(id);
+        const producto = yield (0, productoServices_1.getProductoById)(Number(id));
         if (producto) {
             res.status(200).json(producto);
         }
@@ -115,20 +92,27 @@ const getAllProductosController = (req, res) => __awaiter(void 0, void 0, void 0
 exports.getAllProductosController = getAllProductosController;
 // Agregar un nuevo producto
 const addProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { nombre, costo, precio } = req.body;
+    if (!nombre || !costo || !precio) {
+        res.status(400).json({ message: 'Asegúrese de pasar como información: nombre, costo, precio' });
+        return;
+    }
+    if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
+        res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
+        return;
+    }
     try {
-        const { nombre, costo } = req.body;
-        if (!nombre || !costo) {
-            res.status(400).json({ message: 'Asegúrese de pasar como información: nombre, costo' });
-            return;
-        }
-        if (typeof nombre !== 'string' || typeof costo !== 'number') {
-            res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
-            return;
-        }
-        const productoData = { nombre, costo };
+        const productoData = { nombre, costo, precio };
         const newProducto = yield (0, productoServices_1.addProducto)(productoData);
         if (newProducto) {
-            res.status(201).json(newProducto);
+            // Excluir las propiedades que crean la estructura circular
+            const replacer = (key, value) => {
+                if (key === 'producto_precios') {
+                    return undefined;
+                }
+                return value;
+            };
+            res.status(201).json(JSON.stringify(newProducto, replacer));
         }
         else {
             res.status(404).json({ message: 'El producto ya existe' });
@@ -143,29 +127,17 @@ exports.addProductoController = addProductoController;
 // Actualizar un producto
 const updateProductoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { nombre, costo } = req.body;
-    // Crear un objeto con solo los campos proporcionados
-    const fieldsToUpdate = {};
-    if (!id) {
-        res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro)' });
+    const { nombre, costo, precio } = req.body;
+    if (!id || !nombre || !costo || !precio) {
+        res.status(400).json({ message: 'Asegúrese de pasar como información: id (parámetro), nombre, costo, precio' });
         return;
     }
-    if (!nombre && !costo) {
-        res.status(400).json({ message: 'Asegúrese de pasar como información: nombre y costo por el body' });
-        return;
-    }
-    else if (typeof nombre !== 'string' || typeof costo !== 'number') {
+    if (typeof nombre !== 'string' || typeof costo !== 'string' || typeof precio !== 'number') {
         res.status(400).json({ message: 'Los campos deben tener el tipo de dato correcto' });
         return;
     }
-    else {
-        if (nombre)
-            fieldsToUpdate.nombre = nombre;
-        if (costo)
-            fieldsToUpdate.costo = costo;
-    }
     try {
-        const updatedProducto = yield (0, productoServices_1.updateProducto)(id, fieldsToUpdate);
+        const updatedProducto = yield (0, productoServices_1.updateProducto)(Number(id), req.body);
         if (updatedProducto) {
             res.status(200).json(updatedProducto);
         }
@@ -187,7 +159,7 @@ const deleteProductoController = (req, res) => __awaiter(void 0, void 0, void 0,
         return;
     }
     try {
-        const deletedProducto = yield (0, productoServices_1.deleteProducto)(id);
+        const deletedProducto = yield (0, productoServices_1.deleteProducto)(Number(id));
         if (deletedProducto) {
             res.status(204).json({ message: 'El producto ha sido eliminado' });
         }

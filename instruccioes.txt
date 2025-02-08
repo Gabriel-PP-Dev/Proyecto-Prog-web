@@ -1,0 +1,9 @@
+requerimientos: 
+-postgre sql 16 instalado
+-conexión a internet para mejor experiencia
+-Angular CLI: 16.2.16
+-Node: 18.10.0
+-Package Manager: npm 8.19.2
+-OS: win32 x64
+PARA PROSEGUIR muévase a la carpeta "backend" usando el comando "cd" y lea las intrucciones que están en su respectivo documento dentro de la dicha carpeta
+LUEGO de haber seguido las instrucciones del backend, haga lo mismo con la carpeta "frontend" 

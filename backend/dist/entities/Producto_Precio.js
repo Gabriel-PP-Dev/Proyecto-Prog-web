@@ -11,29 +11,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Producto_Precio = void 0;
 const typeorm_1 = require("typeorm");
+const TiendaProductoPrecio_1 = require("./TiendaProductoPrecio"); // Asegúrate de importar la entidad TiendaProductoPrecio
 const Producto_1 = require("./Producto");
-const TiendaProductoPrecio_1 = require("./TiendaProductoPrecio");
 let Producto_Precio = class Producto_Precio {
 };
 exports.Producto_Precio = Producto_Precio;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], Producto_Precio.prototype, "id_producto_precio", void 0);
 __decorate([
-    (0, typeorm_1.Column)("decimal", { precision: 10, scale: 2 }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Producto_Precio.prototype, "precio", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Producto_1.Producto, (producto) => producto.producto_precios),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Producto_Precio.prototype, "productoId", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, tiendaProductoPrecio => tiendaProductoPrecio.producto_precio),
+    __metadata("design:type", Array)
+], Producto_Precio.prototype, "tiendaProductoPrecios", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Producto_1.Producto, producto => producto.producto_precios),
+    (0, typeorm_1.ManyToOne)(() => Producto_1.Producto, producto => producto.producto_precios),
+    (0, typeorm_1.JoinColumn)({ name: 'productoId', referencedColumnName: 'id_producto' }),
     __metadata("design:type", Producto_1.Producto)
 ], Producto_Precio.prototype, "producto", void 0);
-__decorate([
-    (0, typeorm_1.JoinColumn)({ name: "id_producto" }),
-    (0, typeorm_1.ManyToOne)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, (tiendaProductoPrecio) => tiendaProductoPrecio.producto_precios, { nullable: true }),
-    (0, typeorm_1.JoinColumn)({ name: "id_tiendaProductoPrecio" }),
-    __metadata("design:type", TiendaProductoPrecio_1.TiendaProductoPrecio)
-], Producto_Precio.prototype, "tiendaProductoPrecio", void 0);
 exports.Producto_Precio = Producto_Precio = __decorate([
     (0, typeorm_1.Entity)()
 ], Producto_Precio);
