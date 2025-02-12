@@ -91,7 +91,7 @@ CORS_ALLOW_HEADERS = [
 
 ROOT_URLCONF = 'backEnd_Python.urls'
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 TEMPLATES = [
     {
