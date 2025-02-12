@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     "backEnd_PythonApp",
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +53,28 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'drf_yasg.middleware.SwaggerExceptionMiddleware',
 ]
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+    'DEFAULTS': {
+        'USE_SESSION_AUTH': False,
+        'SECURITY_DEFINITIONS': {
+            'basic': {
+                'type': 'basic'
+            }
+        }
+    }
+}
+
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
+    'http://localhost:8000',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -70,6 +90,8 @@ CORS_ALLOW_HEADERS = [
 ]
 
 ROOT_URLCONF = 'backEnd_Python.urls'
+
+APPEND_SLASH = False
 
 TEMPLATES = [
     {

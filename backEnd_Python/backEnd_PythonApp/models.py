@@ -5,7 +5,6 @@ class Tienda(models.Model):
     id_tienda = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255)
-    usuarios = models.ForeignKey('Usuario', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre
@@ -16,6 +15,7 @@ class Usuario(models.Model):
     nombre_usuario = models.CharField(max_length=255)
     contrasenna = models.CharField(max_length=255)
     rol = models.CharField(max_length=255)
+    tienda = models.ForeignKey('Tienda', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre_usuario
