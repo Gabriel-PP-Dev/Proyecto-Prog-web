@@ -2,29 +2,16 @@
     <mat-card class="form-card">
       <h3 class="form-title">Formulario de Venta</h3>
       <form [formGroup]="form_venta" (ngSubmit)="agregarVenta()">
-  
+         
         <div class="form-field">
-          <mat-form-field class="ancho">
-            <mat-label>Tienda</mat-label>
-            <mat-select formControlName="tienda">
-              <mat-option *ngFor="let tienda of tiendas" [value]="tienda">
-                {{tienda.nombre}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <label for="producto_precio">Selecciona un precio:</label>
+          <select id="producto_precio" formControlName="producto_precio" (change)="onPrecioChange($event)">
+          <option *ngFor="let producto_precio of productos_precios" [value]="producto_precio.id_producto_precio">
+            {{producto_precio.producto.nombre}} - {{producto_precio.precio}}
+          </option>
+          </select>
         </div>
-  
-        <div class="form-field">
-          <mat-form-field class="ancho">
-            <mat-label>Producto Precio</mat-label>
-            <mat-select formControlName="producto_precio">
-              <mat-option *ngFor="let producto_precio of productos_precios" [value]="producto_precio">
-                {{producto_precio.producto.nombre}} - {{producto_precio.precio}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-  
+
         <div class="form-field">
           <mat-form-field class="ancho">
             <mat-label>Cantidad</mat-label>

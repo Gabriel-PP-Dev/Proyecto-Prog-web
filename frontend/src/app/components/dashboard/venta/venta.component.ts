@@ -52,7 +52,14 @@ export class VentaComponent implements OnInit{
   }
 
   editarVenta(venta:Venta) {
-    this.router.navigate(['/dashboard/ventas/crear-venta'], { state: { tiendaId: venta.id_venta }});
+    const ventaData = { 
+      id_venta: venta.id_venta,
+      precio: venta.precio,
+      cantidad: venta.cantidad,
+      producto_precio: venta.producto_precio,
+      tienda: venta.tienda}
+    const queryParams = { venta: JSON.stringify(ventaData) };
+    this.router.navigate(['/dashboard/ventas/crear-venta'], { queryParams });
   }
 
   async eliminarVenta(venta:Venta) {
