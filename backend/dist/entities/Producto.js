@@ -11,24 +11,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Producto = void 0;
 const typeorm_1 = require("typeorm");
-const Producto_Precio_1 = require("./Producto_Precio"); // Asegúrate de importar la entidad Producto_Precio
+const Producto_Precio_1 = require("./Producto_Precio");
 let Producto = class Producto {
 };
 exports.Producto = Producto;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    __metadata("design:type", String)
 ], Producto.prototype, "id_producto", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Producto.prototype, "nombre", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Producto.prototype, "costo", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Producto_Precio_1.Producto_Precio, producto_precio => producto_precio.producto),
+    (0, typeorm_1.OneToMany)(() => Producto_Precio_1.Producto_Precio, producto_precio => producto_precio.producto, { cascade: true }),
+    (0, typeorm_1.JoinColumn)({ name: "id_producto" }),
     __metadata("design:type", Array)
 ], Producto.prototype, "producto_precios", void 0);
 exports.Producto = Producto = __decorate([

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 export declare const getAllTiendasController: (req: Request, res: Response) => Promise<void>;
 export declare const addTiendaController: (req: Request, res: Response) => Promise<void>;
 export declare const getTiendaByIdController: (req: Request, res: Response) => Promise<void>;

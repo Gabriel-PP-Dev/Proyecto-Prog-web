@@ -1,9 +1,8 @@
-import { TiendaProductoPrecio } from "./TiendaProductoPrecio";
 import { Producto } from "./Producto";
+import { TiendaProductoPrecio } from "./TiendaProductoPrecio";
 export declare class Producto_Precio {
-    id_producto_precio: number;
+    id_producto_precio: string;
     precio: number;
-    productoId: number;
-    tiendaProductoPrecios: TiendaProductoPrecio[];
     producto: Producto;
+    tiendaProductoPrecio?: TiendaProductoPrecio;
 }

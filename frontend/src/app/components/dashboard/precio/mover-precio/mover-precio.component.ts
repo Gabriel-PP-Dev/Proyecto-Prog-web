@@ -97,7 +97,7 @@ export class MoverPrecioComponent implements OnInit {
       };
     }else{
       precioData = {
-        id_prodcuto_precio: this.precio?.id_producto_precio,
+        id_producto_precio: this.precio?.id_producto_precio,
         id_tienda: this.form_mover_precio.value.tienda.id_tienda,
         cantidad_en_tienda: this.form_mover_precio.value.cantidad
       };  
@@ -107,9 +107,12 @@ export class MoverPrecioComponent implements OnInit {
 
       if (this.isEditMode) {
         console.log("editar")
+        console.log(precioData)
         method = 'PUT';
         url = `http://localhost:4000'/tiendaProductoPrecio/updateTiendaProductoPrecio/${this.precio?.tiendaProductoPrecio?.id_tiendaProductoPrecio}`;
       } else {
+        console.log("Agregar")
+        console.log(precioData)
         method = 'POST';
         url = 'http://localhost:4000/tiendaProductoPrecio/createTiendaProductoPrecio'; // URL para crear un nuevo producto
       }

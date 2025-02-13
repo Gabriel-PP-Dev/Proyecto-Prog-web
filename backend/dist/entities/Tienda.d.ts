@@ -2,7 +2,7 @@ import { Usuario } from "./Usuario";
 import { TiendaProductoPrecio } from "./TiendaProductoPrecio";
 import { Venta } from "./Venta";
 export declare class Tienda {
-    id_tienda: number;
+    id_tienda: string;
     nombre: string;
     direccion: string;
     usuarios: Usuario[];

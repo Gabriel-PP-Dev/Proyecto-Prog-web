@@ -30,22 +30,8 @@ exports.getAllProductos = getAllProductos;
 const addProducto = (productoData) => __awaiter(void 0, void 0, void 0, function* () {
     if ((yield (0, exports.getProductosByName)(String(productoData.nombre))).length == 0) {
         const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-        const precioRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);
-        // Crear un nuevo producto
         const newProducto = productoRepository.create(productoData);
-        yield productoRepository.save(newProducto);
-        // Crear un nuevo precio asociado al producto
-        const newPrecio = precioRepository.create({ precio: productoData.precio });
-        newPrecio.producto = newProducto; // Establecer la relación con el producto
-        yield precioRepository.save(newPrecio);
-        // Agregar el precio recién creado al producto
-        if (!newProducto.producto_precios) {
-            newProducto.producto_precios = [newPrecio];
-        }
-        else {
-            newProducto.producto_precios.push(newPrecio);
-        }
-        return newProducto.producto_precios; // Devolver el producto recién creado
+        return yield productoRepository.save(newProducto);
     }
     return null;
 });
@@ -75,19 +61,8 @@ exports.getProductoByName = getProductoByName;
 // Actualizar un producto
 const updateProducto = (id, productoData) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-    const element = yield productoRepository.findOneBy({ id_producto: id });
-    //si existe el producto
-    if (element) {
-        const elementWithSameName = yield (0, exports.getProductoByName)(String(productoData.nombre));
-        //si el nombre pasado es diferente al nombre existente y no existe otro elemento con ese nombre pasado como parámetro
-        if ((element.nombre != productoData.nombre && !elementWithSameName) || element.nombre == productoData.nombre) {
-            const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
-            yield productoRepository.update(id, productoData);
-            //devolver elemento actualizado
-            return yield productoRepository.findOneBy({ id_producto: id });
-        }
-    }
-    return null;
+    yield productoRepository.update(id, productoData);
+    return yield productoRepository.findOneBy({ id_producto: id });
 });
 exports.updateProducto = updateProducto;
 //editar tienda en tiendaProductoPrecio
@@ -111,37 +86,48 @@ const moveTiendaProductoPrecio = (idTiendaProductoPrecio, idTienda) => __awaiter
     return elemento; // Devolver el registro actualizado
 });
 exports.moveTiendaProductoPrecio = moveTiendaProductoPrecio;
-// Mover producto y precios a nueva tienda
-const moveProducto = (idProducto, idNuevaTienda) => __awaiter(void 0, void 0, void 0, function* () {
+// Mover producto a otra tienda
+const moveProducto = (id_producto, id_tienda_destino, cantidad) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
+    const productoPrecioRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);
     const tiendaProductoPrecioRepository = data_source_1.AppDataSource.getRepository(TiendaProductoPrecio_1.TiendaProductoPrecio);
-    // Buscar el producto por su ID y obtener todos los Producto_Precio asociados
+    // Buscar el producto por su ID
     const producto = yield productoRepository.findOne({
-        where: { id_producto: idProducto },
+        where: { id_producto },
         relations: ['producto_precios']
     });
     if (!producto) {
-        return null; // Devolver null si no se encuentra el producto
+        return false; // Devolver false si no se encuentra el producto
     }
-    const productosPrecio = producto.producto_precios;
-    const tiendaProductoPrecioActualizados = [];
-    for (const productoPrecio of productosPrecio) {
-        // Obtener todos los registros de TiendaProductoPrecio asociados al Producto_Precio
-        const tiendaProductoPrecios = yield tiendaProductoPrecioRepository.find({
-            where: { producto_precio: { id_producto_precio: productoPrecio.id_producto_precio } }
-        });
-        for (const tiendaProductoPrecio of tiendaProductoPrecios) {
-            // Utilizar el servicio existente para cambiar la tienda en TiendaProductoPrecio
-            const tiendaProductoActualizado = yield (0, exports.moveTiendaProductoPrecio)(tiendaProductoPrecio.id_tiendaProductoPrecio, idNuevaTienda);
-            if (tiendaProductoActualizado) {
-                tiendaProductoPrecioActualizados.push(tiendaProductoActualizado);
+    // Obtener los Producto_Precio asociados al producto
+    const productoPrecios = yield productoPrecioRepository.find({
+        where: { producto: { id_producto } },
+        relations: ['tiendaProductoPrecio']
+    });
+    for (const productoPrecio of productoPrecios) {
+        // Obtener el TiendaProductoPrecio asociado al Producto_Precio
+        const tiendaProductoPrecio = productoPrecio.tiendaProductoPrecio;
+        if (tiendaProductoPrecio) {
+            // Verificar si el TiendaProductoPrecio es de la tienda de origen
+            if (tiendaProductoPrecio.tienda.id_tienda === id_tienda_destino) {
+                // Actualizar la cantidad en la tienda de destino
+                tiendaProductoPrecio.cantidad_en_tienda += cantidad;
+                yield tiendaProductoPrecioRepository.save(tiendaProductoPrecio);
+            }
+            else {
+                // Verificar si el TiendaProductoPrecio es de la tienda de origen y tiene suficiente cantidad
+                if (tiendaProductoPrecio.tienda.id_tienda !== id_tienda_destino && tiendaProductoPrecio.cantidad_en_tienda >= cantidad) {
+                    // Actualizar la cantidad en la tienda de origen
+                    tiendaProductoPrecio.cantidad_en_tienda -= cantidad;
+                    yield tiendaProductoPrecioRepository.save(tiendaProductoPrecio);
+                }
             }
         }
     }
-    return tiendaProductoPrecioActualizados;
+    return true;
 });
 exports.moveProducto = moveProducto;
-// Eliminar un producto y sus registros relacionados en las entidades vinculadas
+// Eliminar un producto
 const deleteProducto = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const productoRepository = data_source_1.AppDataSource.getRepository(Producto_1.Producto);
     const productoPrecioRepository = data_source_1.AppDataSource.getRepository(Producto_Precio_1.Producto_Precio);

@@ -35,7 +35,7 @@ async cargarPrecios() {
         id_producto_precio: precio.id_producto_precio,
         precio: precio.precio,
         producto: precio.producto,
-        tienda_precios: precio.tiendaProductoPrecio // Si necesitas mostrar esto también
+        tiendaProductoPrecio: precio.tiendaProductoPrecio // Si necesitas mostrar esto también
       }));
       console.log(mappedPrecios);
       

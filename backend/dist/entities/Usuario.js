@@ -16,8 +16,8 @@ let Usuario = class Usuario {
 };
 exports.Usuario = Usuario;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    __metadata("design:type", String)
 ], Usuario.prototype, "id_usuario", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -37,6 +37,7 @@ __decorate([
 ], Usuario.prototype, "rol", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Tienda_1.Tienda, tienda => tienda.usuarios),
+    (0, typeorm_1.JoinColumn)({ name: "id_tienda" }),
     __metadata("design:type", Tienda_1.Tienda)
 ], Usuario.prototype, "tienda", void 0);
 exports.Usuario = Usuario = __decorate([

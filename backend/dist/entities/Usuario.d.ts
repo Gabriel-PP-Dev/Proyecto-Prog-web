@@ -1,6 +1,6 @@
 import { Tienda } from "./Tienda";
 export declare class Usuario {
-    id_usuario: number;
+    id_usuario: string;
     nombre: string;
     nombre_usuario: string;
     contrasenna: string;

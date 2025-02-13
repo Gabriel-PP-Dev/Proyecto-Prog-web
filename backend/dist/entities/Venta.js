@@ -17,15 +17,17 @@ let Venta = class Venta {
 };
 exports.Venta = Venta;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    __metadata("design:type", String)
 ], Venta.prototype, "id_venta", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Tienda_1.Tienda, tienda => tienda.ventas),
+    (0, typeorm_1.JoinColumn)({ name: "id_tienda" }),
     __metadata("design:type", Tienda_1.Tienda)
 ], Venta.prototype, "tienda", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => TiendaProductoPrecio_1.TiendaProductoPrecio, producto_precio => producto_precio.ventas),
+    (0, typeorm_1.JoinColumn)({ name: "id_tiendaProductoPrecio" }),
     __metadata("design:type", TiendaProductoPrecio_1.TiendaProductoPrecio)
 ], Venta.prototype, "producto_precio", void 0);
 __decorate([

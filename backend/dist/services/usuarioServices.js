@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByName = exports.deleteUser = exports.updateUser = exports.getUserById = exports.addUser = exports.getAllUsers = void 0;
+exports.authenticateUser = exports.getUserByName = exports.checkUniqueUsername = exports.deleteUser = exports.updateUser = exports.getUserById = exports.addUser = exports.getAllUsers = void 0;
 const data_source_1 = require("../data-source");
 const Tienda_1 = require("../entities/Tienda");
 const Usuario_1 = require("../entities/Usuario");
@@ -105,6 +105,12 @@ const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
         result.affected > 0);
 });
 exports.deleteUser = deleteUser;
+const checkUniqueUsername = (nombre_usuario) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRepository = data_source_1.AppDataSource.getRepository(Usuario_1.Usuario);
+    const existingUser = yield userRepository.findOneBy({ nombre_usuario });
+    return existingUser === null;
+});
+exports.checkUniqueUsername = checkUniqueUsername;
 // Obtener usuarios cuyo nombre contenga la cadena proporcionada
 const getUserByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     if (!name) {
@@ -122,3 +128,15 @@ const getUserByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
     return users.filter(user => (0, AuxiliarFunctions_1.removeAccents)(user.nombre.toLowerCase()).includes(normalizedName));
 });
 exports.getUserByName = getUserByName;
+const authenticateUser = (nombre_usuario, contrasenna) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRepository = data_source_1.AppDataSource.getRepository(Usuario_1.Usuario);
+    const user = yield userRepository.findOneBy({ nombre_usuario });
+    if (user) {
+        const isValidPassword = yield (0, passwordService_1.comparePassword)(contrasenna, user.contrasenna);
+        if (isValidPassword) {
+            return user;
+        }
+    }
+    return null;
+});
+exports.authenticateUser = authenticateUser;
