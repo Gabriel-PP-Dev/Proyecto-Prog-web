@@ -26,7 +26,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
 class Producto_PrecioSerializer(serializers.ModelSerializer):
     producto = ProductoSerializer(read_only=True)
-    tiendaProductoPrecio = TiendaProductoPrecio(read_only=True)
 
     class Meta:
         model = Producto_Precio
@@ -34,7 +33,6 @@ class Producto_PrecioSerializer(serializers.ModelSerializer):
 
 class TiendaProductoPrecioSerializer(serializers.ModelSerializer):
     tienda = TiendaSerializer(read_only=True)
-    producto_precios = Producto_PrecioSerializer(read_only=True, many=True)
 
     class Meta:
         model = TiendaProductoPrecio
