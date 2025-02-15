@@ -14,6 +14,8 @@ router.register(r'venta', VentaViewSet)
 urlpatterns = [
     path('', include(router.urls)),  # Incluye las rutas del router
     path('tienda/buscar/<str:nombre>/', TiendaViewSet.as_view({'get': 'buscar_por_nombre'})),
+    path('usuarios/buscar/<str:nombre>/', UsuarioViewSet.as_view({'get': 'buscar_por_nombre'})),
+    path('usuarios/login/', UsuarioViewSet.as_view({'post': 'login'})),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Endpoint para obtener el token
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint para refrescar el token
 ]

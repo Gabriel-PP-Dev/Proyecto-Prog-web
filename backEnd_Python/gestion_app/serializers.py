@@ -11,16 +11,22 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__' 
-
 class UsuarioSerializer(serializers.ModelSerializer):
-    tienda = TiendaSerializer(read_only=True)
+    tienda = serializers.UUIDField()
 
     class Meta:
         model = Usuario
-        fields = '__all__'
+        fields = ['id', 'nombre', 'nombre_usuario', 'contrasenna', 'rol', 'tienda']
+
+    def create(self, validated_data):
+        tienda_id = validated_data.pop('tienda')
+        tienda = Tienda.objects.get(id=tienda_id)
+        usuario = Usuario.objects.create(tienda=tienda, **validated_data)
+        return usuario
 
 class Producto_PrecioSerializer(serializers.ModelSerializer):
     producto = ProductoSerializer(read_only=True)
+    tiendaProductoPrecio = TiendaProductoPrecio(read_only=True)
 
     class Meta:
         model = Producto_Precio
@@ -28,7 +34,7 @@ class Producto_PrecioSerializer(serializers.ModelSerializer):
 
 class TiendaProductoPrecioSerializer(serializers.ModelSerializer):
     tienda = TiendaSerializer(read_only=True)
-    producto_precio = Producto_PrecioSerializer(read_only=True)
+    producto_precios = Producto_PrecioSerializer(read_only=True, many=True)
 
     class Meta:
         model = TiendaProductoPrecio

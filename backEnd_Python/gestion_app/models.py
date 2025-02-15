@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 
 
 # Create your models here.
@@ -28,6 +29,9 @@ class Usuario(models.Model):
     def __str__(self):
         return self.nombre_usuario
     
+    def check_password(self, password):
+        return check_password(password, self.contrasenna)
+    
 class Producto(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=255, unique=True)
@@ -36,23 +40,23 @@ class Producto(models.Model):
         return self.nombre
     
     
-class Producto_Precio(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.producto.nombre} - {self.precio}"
     
 class TiendaProductoPrecio(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cantidad_en_tienda = models.IntegerField()
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
-    producto_precio = models.ForeignKey(Producto_Precio, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.tienda.nombre} - {self.producto_precio.producto.nombre} - {self.cantidad_en_tienda}"
-    
+
+class Producto_Precio(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    tiendaProductoPrecio = models.ForeignKey(TiendaProductoPrecio, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.precio}"    
 class Venta(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cantidad = models.IntegerField()
