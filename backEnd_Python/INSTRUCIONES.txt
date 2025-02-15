@@ -1,0 +1,4 @@
+1- Ve a Setings y cambia para tu configuracion de la base de datos
+2- Ejecuta el comando "python manage.py makemigrations gestion_app"
+3- Ejecuta el comando "python manage.py migrate gestion_app"
+4- Ejecuta el comando "python manage.py runserver"

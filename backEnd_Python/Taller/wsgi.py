@@ -1,5 +1,5 @@
 """
-WSGI config for backEnd_Python project.
+WSGI config for Taller project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backEnd_Python.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Taller.settings')
 
 application = get_wsgi_application()

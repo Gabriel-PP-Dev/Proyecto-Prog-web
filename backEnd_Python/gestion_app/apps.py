@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class BackendPythonappConfig(AppConfig):
+class GestionAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'backEnd_PythonApp'
+    name = 'gestion_app'

@@ -1,5 +1,5 @@
 """
-ASGI config for backEnd_Python project.
+ASGI config for Taller project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backEnd_Python.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Taller.settings')
 
 application = get_asgi_application()
