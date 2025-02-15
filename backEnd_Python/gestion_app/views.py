@@ -26,6 +26,27 @@ class TiendaViewSet(viewsets.ModelViewSet):
     serializer_class = TiendaSerializer
     #permission_classes = [IsAuthenticated]
 
+    @action(methods=['get'], detail=False)
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'nombre',
+                openapi.IN_PATH,
+                description='Nombre de la tienda',
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ],
+        responses={
+            200: openapi.Response('Tiendas encontradas', TiendaSerializer(many=True))
+        }
+    )
+    def buscar_por_nombre(self, request, *args, **kwargs):
+        nombre = kwargs['nombre']
+        tiendas = Tienda.objects.filter(nombre__icontains=nombre)
+        serializer = TiendaSerializer(tiendas, many=True)
+        return Response(serializer.data)
+
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
