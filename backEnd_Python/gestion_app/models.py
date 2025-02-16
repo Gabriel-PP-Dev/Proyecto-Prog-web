@@ -53,7 +53,7 @@ class Producto_Precio(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    tiendaProductoPrecio = models.ForeignKey(TiendaProductoPrecio, on_delete=models.CASCADE)
+    tiendaProductoPrecio = models.ForeignKey(TiendaProductoPrecio, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.producto.nombre} - {self.precio}"    
@@ -62,7 +62,6 @@ class Venta(models.Model):
     cantidad = models.IntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     tienda_producto_precio = models.ForeignKey(TiendaProductoPrecio, on_delete=models.CASCADE)
-    tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.tienda_producto_precio.tienda.nombre} - {self.tienda_producto_precio.producto_precio.producto.nombre} - {self.cantidad} - {self.precio}"

@@ -16,6 +16,13 @@ urlpatterns = [
     path('tienda/buscar/<str:nombre>/', TiendaViewSet.as_view({'get': 'buscar_por_nombre'})),
     path('usuarios/buscar/<str:nombre>/', UsuarioViewSet.as_view({'get': 'buscar_por_nombre'})),
     path('usuarios/login/', UsuarioViewSet.as_view({'post': 'login'})),
+    path('producto_precio/producto/<str:producto_id>/', Producto_PrecioViewSet.as_view({'get': 'producto_precio_por_producto'}), name='producto_precio_por_producto'),
+    path('tiendaProductoPrecio/tienda/<str:tienda_id>/', TiendaProductoPrecioViewSet.as_view({'get': 'tienda_por_id'})),
+    path('tiendaProductoPrecio/producto/<str:producto_id>/', TiendaProductoPrecioViewSet.as_view({'get': 'producto_por_id'})),
+    path('tiendaProductoPrecio/tienda/ordenado/<str:tienda_id>/', TiendaProductoPrecioViewSet.as_view({'get': 'tienda_por_id_ordenado'})),
+    path('venta/tienda/<str:tienda_id>/', VentaViewSet.as_view({'get': 'ventas_por_tienda'})),
+    path('venta/exportar/', VentaViewSet.as_view({'get': 'exportar_ventas'})),
+    path('tiendaProductoPrecio/mover/', TiendaProductoPrecioViewSet.as_view({'post': 'mover_producto'})),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Endpoint para obtener el token
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint para refrescar el token
 ]
