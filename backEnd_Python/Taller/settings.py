@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,6 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&bxyd6ob9fk&uoh+7g36tq=4%=*++^wwd1yg0g+)cg67(*w7=='
+SIMPLE_JWT = {
+    'SIGNING_KEY': 'testToken',
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -112,6 +118,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'DOC_EXPANSION':'none',
+    'SECURITY_DEFINITIONS': {
+        'Bearer':  {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

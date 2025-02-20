@@ -106,6 +106,16 @@ class VentaSerializer(serializers.ModelSerializer):
         venta = Venta.objects.create(tienda_producto_precio=tienda_producto_precio, **validated_data)
         return venta
 
+    def update(self, instance, validated_data):
+        tienda_producto_precio_id = validated_data.pop('tienda_producto_precio', None)
+        if tienda_producto_precio_id:
+            try:
+                tienda_producto_precio = TiendaProductoPrecio.objects.get(id=tienda_producto_precio_id)
+                instance.tienda_producto_precio = tienda_producto_precio
+            except TiendaProductoPrecio.DoesNotExist:
+                raise serializers.ValidationError({'tienda_producto_precio': 'No existe el TiendaProductoPrecio con el ID proporcionado'})
+        return super().update(instance, validated_data)
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['tienda_producto_precio_data'] = TiendaProductoPrecioSerializer(instance.tienda_producto_precio).data

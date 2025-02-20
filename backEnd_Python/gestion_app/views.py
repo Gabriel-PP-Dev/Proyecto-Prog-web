@@ -17,13 +17,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 from openpyxl import Workbook
 from openpyxl.styles import Font
+from rest_framework_simplejwt.tokens import RefreshToken
+from .authenticate import token_required
 
 # Create your views here.
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    #permission_classes = [IsAuthenticated]
 
     @action(methods=['post'], detail=False, permission_classes=[AllowAny])
     @swagger_auto_schema(
@@ -57,8 +58,12 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         if not usuario.check_password(contrasenna):
             return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        # Generar token con JWT
+        refresh = RefreshToken.for_user(usuario)
+        token = refresh.access_token
+
         serializer = UsuarioSerializer(usuario)
-        return Response(serializer.data)
+        return Response({'token': str(token), 'usuario': serializer.data})
     
     @action(methods=['get'], detail=False)
     @swagger_auto_schema(
@@ -80,6 +85,21 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         usuarios = Usuario.objects.filter(nombre__icontains=nombre)
         serializer = UsuarioSerializer(usuarios, many=True)
         return Response(serializer.data)
+
+    def list(self, request):
+        return super().list(request)
+
+    def retrieve(self, request, pk=None):
+        return super().retrieve(request, pk)
+
+    def create(self, request):
+        return super().create(request)
+
+    def update(self, request, pk=None):
+        return super().update(request, pk)
+
+    def destroy(self, request, pk=None):
+        return super().destroy(request, pk)
 
 class TiendaViewSet(viewsets.ModelViewSet):
     queryset = Tienda.objects.all()
