@@ -26,8 +26,12 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         tienda_id = validated_data.pop('tienda', None)
-        if tienda_id and tienda_id != instance.tienda.id:
-            raise serializers.ValidationError({'tienda': 'No se puede cambiar la tienda del usuario'})
+        if tienda_id:
+            try:
+                tienda = Tienda.objects.get(id=tienda_id)
+                instance.tienda = tienda
+            except Tienda.DoesNotExist:
+                raise serializers.ValidationError({'tienda': 'No existe la tienda con el ID proporcionad'})
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
