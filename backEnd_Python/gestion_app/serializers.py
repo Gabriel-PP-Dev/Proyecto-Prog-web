@@ -36,7 +36,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         return representation
 
 class Producto_PrecioSerializer(serializers.ModelSerializer):
-    producto = serializers.UUIDField(write_only=True)
+    producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all(), write_only=True)
     tiendaProductoPrecio = serializers.PrimaryKeyRelatedField(read_only=True, allow_null=True)
 
     class Meta:
@@ -44,10 +44,16 @@ class Producto_PrecioSerializer(serializers.ModelSerializer):
         fields = ['id', 'precio', 'producto', 'tiendaProductoPrecio']
 
     def create(self, validated_data):
-        producto_id = validated_data.pop('producto')
-        producto = Producto.objects.get(id=producto_id)
+        producto = validated_data.pop('producto')
         producto_precio = Producto_Precio.objects.create(producto=producto, tiendaProductoPrecio=None, **validated_data)
         return producto_precio
+
+    def update(self, instance, validated_data):
+        producto = validated_data.get('producto')
+        instance.precio = validated_data.get('precio', instance.precio)
+        instance.producto = producto
+        instance.save()
+        return instance
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
